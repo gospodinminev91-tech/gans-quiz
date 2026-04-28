@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GANS — Здравен профил</title>
+<style>
+/* ── ПРОМЕНЛИВИ ── */
+:root {
+  --bg:        #0d0f14;
+  --card:      #161a24;
+  --card2:     #1c2130;
+  --border:    rgba(255,255,255,0.07);
+  --border-sel:rgba(255,255,255,0.18);
+  --text:      #f0f2f8;
+  --muted:     rgba(255,255,255,0.35);
+  --muted2:    rgba(255,255,255,0.55);
+  --accent:    #f0a500;
+  --blue:      #1a90ff;
+  --blue2:     #4aaeff;
+  --grn:       #1fce6e;
+  --grn2:      #3de88a;
+  --pur:       #a04fff;
+  --org:       #ff7c1a;
+  --radius:    14px;
+  --radius-sm: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── LAYOUT ── */
+.app { max-width: 480px; margin: 0 auto; padding: 0 16px 100px; }
+
+.page { display: none; animation: fadeUp .35s ease; }
+.page.active { display: block; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
+@keyframes popIn  { 0%{transform:scale(0.5);opacity:0} 70%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1} }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  padding: 12px 0 10px;
+  margin-bottom: 8px;
+}
+.progress-top {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--muted2); margin-bottom: 6px;
+}
+.progress-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .4s ease; }
+
+/* ── BADGE ── */
+.q-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px; font-weight: 600; color: var(--muted2);
+  margin-bottom: 14px;
+}
+
+/* ── ВЪПРОС ── */
+.q-title { font-size: 20px; font-weight: 800; line-height: 1.35; margin-bottom: 8px; }
+.q-sub   { font-size: 13px; color: var(--muted2); line-height: 1.6; margin-bottom: 20px; }
+
+/* ── ОТГОВОРИ ── */
+.answers { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+
+.answer-btn {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.45;
+  transition: border-color .15s, background .15s;
+  width: 100%;
+}
+.answer-btn:hover  { border-color: var(--border-sel); background: var(--card2); }
+.answer-btn.selected { border-color: var(--accent); background: rgba(240,165,0,0.06); }
+
+/* ── TEXT INPUT ── */
+.text-input {
+  width: 100%; padding: 14px 16px;
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: var(--radius); color: var(--text);
+  font-size: 16px; font-family: inherit;
+  margin-bottom: 24px; outline: none;
+  transition: border-color .15s;
+}
+.text-input:focus { border-color: var(--border-sel); }
+.text-input::placeholder { color: var(--muted); }
+
+/* ── БУТОНИ ── */
+.btn-next {
+  width: 100%; padding: 15px;
+  background: var(--accent); color: #0d0f14;
+  font-size: 16px; font-weight: 700;
+  border: none; border-radius: var(--radius);
+  cursor: pointer; font-family: inherit;
+  transition: opacity .2s;
+}
+.btn-next:hover { opacity: 0.9; }
+.btn-next:disabled { opacity: 0.35; cursor: default; }
+
+.btn-back {
+  background: none; border: none;
+  color: var(--muted2); font-size: 13px;
+  cursor: pointer; font-family: inherit;
+  padding: 8px 0; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-back:hover { color: var(--text); }
+
+/* ── WELCOME ── */
+.welcome-hero {
+  text-align: center; padding: 32px 0 24px;
+}
+.welcome-logo {
+  font-size: 13px; letter-spacing: 5px; color: var(--muted);
+  text-transform: uppercase; margin-bottom: 20px;
+}
+.welcome-title {
+  font-size: clamp(26px, 7vw, 40px); font-weight: 900;
+  line-height: 1.2; margin-bottom: 12px;
+}
+.welcome-title em { color: var(--blue2); font-style: normal; }
+.welcome-sub {
+  font-size: 14px; color: var(--muted2);
+  line-height: 1.7; max-width: 340px; margin: 0 auto 28px;
+}
+
+.focus-title { font-size: 17px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+.focus-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.focus-card  {
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 16px 14px;
+  cursor: pointer; text-align: center; transition: all .18s;
+}
+.focus-card:hover    { border-color: var(--border-sel); background: var(--card2); }
+.focus-card.selected { border-color: var(--accent); background: rgba(240,165,0,0.06); }
+.focus-ico  { font-size: 28px; margin-bottom: 8px; }
+.focus-name { font-size: 13px; font-weight: 700; }
+.focus-sub  { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+
+.trust-row  {
+  display: flex; justify-content: center; gap: 16px;
+  flex-wrap: wrap; margin-bottom: 24px;
+}
+.trust-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted2); }
+
+.btn-start  {
+  width: 100%; padding: 16px;
+  background: var(--grn); color: #0d0f14;
+  font-size: 16px; font-weight: 700;
+  border: none; border-radius: var(--radius);
+  cursor: pointer; font-family: inherit;
+  transition: opacity .2s;
+}
+.btn-start:hover    { opacity: 0.9; }
+.btn-start:disabled { opacity: 0.35; cursor: default; }
+
+/* ── PRE-RESULT ── */
+.pre-page { text-align: center; padding: 32px 0 24px; }
+.pre-trophy { font-size: 80px; margin-bottom: 16px; animation: popIn .5s ease; }
+.pre-title  { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+.pre-sub    { font-size: 14px; color: var(--muted2); margin-bottom: 24px; }
+.pre-bar-wrap { margin-bottom: 24px; }
+.pre-bar-row  { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+.pre-bar-lbl  { color: var(--muted2); }
+.pre-bar-pct  { font-weight: 700; color: var(--grn); }
+.pre-bar      { height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+.pre-bar-fill { height: 100%; background: var(--grn); border-radius: 4px; width: 0; transition: width 1.5s ease; }
+.pre-cats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.pre-cat  {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px 14px;
+  display: flex; align-items: center; gap: 10px; font-size: 13px;
+}
+.pre-cat-ico   { font-size: 20px; }
+.pre-cat-name  { font-weight: 600; }
+.pre-cat-sub   { font-size: 11px; color: var(--muted); }
+.pre-cat-check { margin-left: auto; color: var(--grn); font-size: 18px; }
+.btn-reveal {
+  width: 100%; padding: 16px;
+  background: var(--grn); color: #0d0f14;
+  font-size: 16px; font-weight: 700;
+  border: none; border-radius: var(--radius);
+  cursor: pointer; font-family: inherit;
+  transition: opacity .2s;
+}
+.btn-reveal:hover { opacity: 0.9; }
+
+/* ── РЕЗУЛТАТ ── */
+.result-logo {
+  text-align: center;
+  font-size: 11px; letter-spacing: 4px; color: var(--muted);
+  text-transform: uppercase; padding: 24px 0 16px;
+}
+
+.result-greeting {
+  text-align: center;
+  font-size: 15px; color: var(--muted2);
+  margin-bottom: 20px;
+}
+
+/* Кръгов скор */
+.score-circle-wrap {
+  position: relative; width: 160px; height: 160px;
+  margin: 0 auto 8px;
+}
+.score-svg {
+  width: 160px; height: 160px;
+  transform: rotate(-90deg);
+}
+.score-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.06);
+  stroke-width: 10;
+}
+.score-arc {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 339.29;
+  stroke-dashoffset: 339.29;
+  transition: stroke-dashoffset 1.6s ease, stroke .3s;
+}
+.score-inner {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.score-pct   { font-size: 34px; font-weight: 900; line-height: 1; }
+.score-lbl   { font-size: 10px; color: var(--muted2); margin-top: 3px; letter-spacing: 1px; text-transform: uppercase; }
+
+.result-product-name {
+  text-align: center;
+  font-size: 22px; font-weight: 900;
+  margin-bottom: 4px;
+}
+.result-product-tag {
+  text-align: center;
+  font-size: 13px; color: var(--muted2);
+  margin-bottom: 28px;
+}
+
+/* Секция "Ето защо" */
+.result-section { margin-bottom: 24px; }
+.result-section-title {
+  font-size: 13px; font-weight: 700;
+  color: var(--muted2); text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 12px;
+}
+
+.obs-list { display: flex; flex-direction: column; gap: 8px; }
+.obs-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px 14px;
+  font-size: 13px; line-height: 1.5;
+}
+.obs-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0; margin-top: 4px;
+}
+
+/* Продуктова карта */
+.product-card {
+  border-radius: var(--radius);
+  border: 2px solid;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.product-card-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px;
+}
+.product-card-ico  { font-size: 32px; }
+.product-card-name { font-size: 18px; font-weight: 800; }
+.product-card-tag  { font-size: 12px; color: var(--muted2); margin-top: 2px; }
+.product-card-body { font-size: 13px; color: rgba(255,255,255,0.78); line-height: 1.7; margin-bottom: 12px; }
+.product-card-why  {
+  font-size: 13px; line-height: 1.6;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.04);
+}
+.product-card-why strong { font-weight: 700; }
+
+/* Combo карта */
+.combo-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+  margin-bottom: 24px;
+}
+.combo-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted2); margin-bottom: 10px;
+}
+.combo-product {
+  display: flex; align-items: center; gap: 10px;
+}
+.combo-dot   { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.combo-name  { font-size: 15px; font-weight: 700; }
+.combo-sub   { font-size: 12px; color: var(--muted2); margin-top: 2px; }
+.combo-pct   { margin-left: auto; font-size: 15px; font-weight: 700; }
+
+/* Ревюта */
+.review-card {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px;
+  margin-bottom: 10px;
+}
+.review-header {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 6px;
+}
+.review-initials { font-size: 13px; font-weight: 700; }
+.review-stars    { font-size: 11px; }
+.review-text     { font-size: 13px; color: var(--muted2); line-height: 1.6; font-style: italic; }
+
+/* CTA */
+.result-cta { margin: 28px 0 20px; display: flex; flex-direction: column; gap: 10px; }
+.btn-shop {
+  display: block; width: 100%; padding: 16px;
+  background: var(--accent); color: #0d0f14;
+  font-size: 16px; font-weight: 700;
+  border: none; border-radius: var(--radius);
+  cursor: pointer; font-family: inherit;
+  text-align: center; text-decoration: none;
+  transition: opacity .2s;
+}
+.btn-shop:hover { opacity: 0.9; }
+.btn-ask {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 12px 16px;
+  background: transparent;
+  border: 2px solid var(--border);
+  color: var(--muted2);
+  font-size: 14px; font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer; font-family: inherit;
+  text-decoration: none;
+  transition: border-color .2s, color .2s;
+}
+.btn-ask:hover { border-color: var(--border-sel); color: var(--text); }
+.btn-ask-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  border: 2px solid var(--border-sel);
+}
+.btn-ask-avatar-initials {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #1a90ff, #a04fff);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.btn-ask-text { display: flex; flex-direction: column; align-items: flex-start; }
+.btn-ask-label { font-size: 11px; color: var(--muted); font-weight: 500; }
+.btn-ask-name  { font-size: 14px; font-weight: 700; color: var(--text); }
+
+/* Контактна форма */
+.contact-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 4px 0 16px;
+  color: var(--muted); font-size: 12px;
+}
+.contact-divider::before,
+.contact-divider::after {
+  content: ''; flex: 1;
+  height: 1px; background: var(--border);
+}
+.contact-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.contact-input, .contact-textarea {
+  width: 100%; padding: 12px 14px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text); font-size: 14px;
+  font-family: inherit;
+  transition: border-color .2s;
+  outline: none;
+}
+.contact-input:focus, .contact-textarea:focus {
+  border-color: var(--border-sel);
+}
+.contact-textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
+.contact-input::placeholder, .contact-textarea::placeholder { color: var(--muted); }
+.btn-send {
+  width: 100%; padding: 14px;
+  background: var(--card2);
+  border: 2px solid var(--border-sel);
+  color: var(--text); font-size: 14px; font-weight: 700;
+  border-radius: var(--radius); cursor: pointer;
+  font-family: inherit; transition: background .2s, border-color .2s;
+}
+.btn-send:hover { background: rgba(255,255,255,0.07); }
+.contact-success {
+  display: none; text-align: center; padding: 16px;
+  background: rgba(31,206,110,0.08);
+  border: 1px solid rgba(31,206,110,0.25);
+  border-radius: var(--radius-sm);
+  color: var(--grn); font-size: 14px; line-height: 1.6;
+}
+
+/* Disclaimer */
+.disclaimer {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.disclaimer-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px;
+}
+.disclaimer-ico   { font-size: 16px; color: rgba(255,255,255,0.75); }
+.disclaimer-title { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); }
+.disclaimer-text  { font-size: 12px; color: rgba(255,255,255,0.70); line-height: 1.7; }
+
+/* Хидратация бележка */
+.water-note {
+  background: rgba(26,144,255,0.07);
+  border: 1px solid rgba(26,144,255,0.2);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  display: none;
+}
+.water-note-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 6px;
+}
+.water-note-ico   { font-size: 16px; }
+.water-note-title { font-size: 13px; font-weight: 700; color: var(--blue2); }
+.water-note-text  { font-size: 13px; color: rgba(255,255,255,0.78); line-height: 1.65; }
+
+/* Cerebro предупреждение */
+.cerebro-warn {
+  background: rgba(255,124,26,0.08);
+  border: 1px solid rgba(255,124,26,0.25);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13px; color: var(--org);
+  line-height: 1.6; margin-bottom: 16px;
+  display: none;
+}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(13,15,20,0.96); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  display: flex; padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+}
+.nav-tab {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px; cursor: pointer;
+  background: none; border: none;
+  padding: 6px 0; transition: color .2s; color: var(--muted);
+  font-family: inherit;
+}
+.nav-tab.active { color: var(--accent); }
+.nav-tab-ico { font-size: 20px; }
+.nav-tab-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.3px; }
+.nav-tab-dot { width: 4px; height: 4px; border-radius: 50%; background: transparent; transition: background .2s; }
+.nav-tab.active .nav-tab-dot { background: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══ WELCOME ══ -->
+  <div class="page active" id="p-welcome">
+    <div class="welcome-hero">
+      <div class="welcome-logo">GANS · Нанотехнология</div>
+      <h1 class="welcome-title">Открий своя<br><em>здравен профил</em></h1>
+      <p class="welcome-sub">3 минути. 14 въпроса. Персонализирана препоръка базирана на твоите отговори.</p>
+    </div>
+
+    <div class="focus-title">Кое те интересува най-много?</div>
+    <div class="focus-grid">
+      <div class="focus-card" onclick="selectFocus('extra', this)">
+        <div class="focus-ico">🛡️</div>
+        <div class="focus-name">Имунитет & Енергия</div>
+        <div class="focus-sub">Умора, боледуване, детокс</div>
+      </div>
+      <div class="focus-card" onclick="selectFocus('emotion', this)">
+        <div class="focus-ico">🧘</div>
+        <div class="focus-name">Стрес & Сън</div>
+        <div class="focus-sub">Тревожност, безсъние</div>
+      </div>
+      <div class="focus-card" onclick="selectFocus('move', this)">
+        <div class="focus-ico">🏃</div>
+        <div class="focus-name">Стави & Движение</div>
+        <div class="focus-sub">Болки, скованост</div>
+      </div>
+      <div class="focus-card" onclick="selectFocus('cerebro', this)">
+        <div class="focus-ico">🧠</div>
+        <div class="focus-name">Мозък & Фокус</div>
+        <div class="focus-sub">Памет, концентрация</div>
+      </div>
+    </div>
+
+    <div class="trust-row">
+      <div class="trust-item">🔒 100% анонимен</div>
+      <div class="trust-item">⚡ 3 минути</div>
+      <div class="trust-item">🔬 Научен подход</div>
+    </div>
+
+    <button class="btn-start" id="btn-start" onclick="startQuiz()" disabled>
+      Започни безплатно →
+    </button>
+  </div>
+
+  <!-- ══ ВЪПРОСИ ══ -->
+  <div class="page" id="p-quiz">
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span id="q-counter">Въпрос 1 от 14</span>
+        <span id="q-pct">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <button class="btn-back" id="btn-back" onclick="goBack()">← Назад</button>
+
+    <div class="q-badge" id="q-badge">🎯 Въпрос</div>
+    <div class="q-title" id="q-title"></div>
+    <div class="q-sub"   id="q-sub"></div>
+    <div class="answers" id="q-answers"></div>
+
+    <button class="btn-next" id="btn-next" onclick="goNext()" disabled>
+      Продължи →
+    </button>
+  </div>
+
+  <!-- ══ PRE-RESULT ══ -->
+  <div class="page" id="p-preresult">
+    <div class="pre-page">
+      <div class="pre-trophy">🏆</div>
+      <div class="pre-title" id="pre-title">Отлична работа!</div>
+      <div class="pre-sub"  id="pre-sub">Анализирам твоя профил...</div>
+      <div class="pre-bar-wrap">
+        <div class="pre-bar-row">
+          <span class="pre-bar-lbl">Анализ завършен</span>
+          <span class="pre-bar-pct">100%</span>
+        </div>
+        <div class="pre-bar"><div class="pre-bar-fill" id="pre-bar-fill"></div></div>
+      </div>
+      <div class="pre-cats">
+        <div class="pre-cat"><div class="pre-cat-ico">🛡️</div><div><div class="pre-cat-name">Имунитет</div><div class="pre-cat-sub">Анализиран</div></div><div class="pre-cat-check">✅</div></div>
+        <div class="pre-cat"><div class="pre-cat-ico">😴</div><div><div class="pre-cat-name">Сън & Стрес</div><div class="pre-cat-sub">Оценени</div></div><div class="pre-cat-check">✅</div></div>
+        <div class="pre-cat"><div class="pre-cat-ico">🏃</div><div><div class="pre-cat-name">Движение</div><div class="pre-cat-sub">Измерено</div></div><div class="pre-cat-check">✅</div></div>
+        <div class="pre-cat"><div class="pre-cat-ico">🧠</div><div><div class="pre-cat-name">GANS профил</div><div class="pre-cat-sub">Готов</div></div><div class="pre-cat-check">✅</div></div>
+      </div>
+      <button class="btn-reveal" onclick="showResult()">Виж своя резултат →</button>
+    </div>
+  </div>
+
+  <!-- ══ РЕЗУЛТАТ ══ -->
+  <div class="page" id="p-result">
+    <div class="result-logo">GANS · Здравен профил</div>
+    <div class="result-greeting" id="result-greeting"></div>
+
+    <!-- Кръгов скор -->
+    <div class="score-circle-wrap">
+      <svg class="score-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <circle class="score-track" cx="60" cy="60" r="54"/>
+        <circle class="score-arc"   cx="60" cy="60" r="54" id="score-arc"/>
+      </svg>
+      <div class="score-inner">
+        <div class="score-pct" id="score-pct">0%</div>
+        <div class="score-lbl">Съвпадение</div>
+      </div>
+    </div>
+
+    <div class="result-product-name" id="result-product-name"></div>
+    <div class="result-product-tag"  id="result-product-tag"></div>
+
+    <!-- Наблюдения -->
+    <div class="result-section">
+      <div class="result-section-title">Ето какво казаха твоите отговори</div>
+      <div class="obs-list" id="result-obs"></div>
+    </div>
+
+    <!-- Продуктова карта -->
+    <div id="result-product-card"></div>
+
+    <!-- Cerebro предупреждение — веднага след продуктовата карта -->
+    <div class="cerebro-warn" id="cerebro-warn">
+      ⚠️ <strong>Важно:</strong> Cerebro GANS <strong>не се препоръчва при онкологични заболявания</strong> — настоящи или минали. При съмнение се консултирайте с лекар преди употреба.
+    </div>
+
+    <!-- Combo карта -->
+    <div id="result-combo" style="display:none"></div>
+
+    <!-- Ревюта -->
+    <div class="result-section">
+      <div class="result-section-title">Какво споделят потребителите</div>
+      <div id="result-reviews"></div>
+    </div>
+
+    <!-- CTA -->
+    <div class="result-cta">
+      <a id="btn-shop" href="https://skylab.bg/magazin/ap/181/" target="_blank" class="btn-shop">
+        Разгледай в магазина →
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61578697514413" target="_blank" class="btn-ask">
+        <div class="btn-ask-avatar-initials">ГМ</div>
+        <div class="btn-ask-text">
+          <span class="btn-ask-label">Имаш въпрос?</span>
+          <span class="btn-ask-name">Пиши ми директно във Facebook →</span>
+        </div>
+      </a>
+
+      <div class="contact-divider">или пиши директно</div>
+
+      <form class="contact-form" id="contact-form"
+            action="https://formspree.io/f/xeevbpba" method="POST">
+        <!-- Скрити полета — попълват се автоматично от резултата -->
+        <input type="hidden" name="_subject"       id="cf-subject">
+        <input type="hidden" name="result_product" id="cf-product">
+        <input type="hidden" name="result_match"   id="cf-match">
+        <input type="hidden" name="all_answers"    id="cf-all-answers">
+        <!-- Видими полета -->
+        <input  class="contact-input"    type="text"  name="name"    placeholder="Твоето име"        required>
+        <input  class="contact-input"    type="email" name="email"   placeholder="Имейл за отговор" id="cf-email-input" required>
+        <div id="cf-email-preview" style="font-size:12px; color:rgba(255,255,255,0.45); margin-top:-4px; min-height:18px; padding-left:2px;"></div>
+        <textarea class="contact-textarea"            name="message" placeholder="Съобщението ти…"   required></textarea>
+        <button class="btn-send" type="submit">Изпрати съобщение</button>
+      </form>
+      <div class="contact-success" id="contact-success">
+        ✅ Съобщението е изпратено! Господин ще се свърже с теб на посочения имейл.
+      </div>
+    </div>
+
+    <!-- Хидратация бележка — след CTA, преди disclaimer -->
+    <div class="water-note" id="water-note">
+      <div class="water-note-header">
+        <span class="water-note-ico">💧</span>
+        <span class="water-note-title">Хидратация</span>
+      </div>
+      <div class="water-note-text" id="water-note-text"></div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+      <div class="disclaimer-header">
+        <span class="disclaimer-ico">ⓘ</span>
+        <span class="disclaimer-title">Важно</span>
+      </div>
+      <div class="disclaimer-text">
+        Този тест е информативен и не представлява медицинска диагноза. GANS продуктите са средства за подкрепа на организма — не са лекарства и не заместват медицинска консултация. При здравословни оплаквания се консултирайте с лекар.
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /app -->
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bottom-nav">
+  <button class="nav-tab active" id="nav-quiz" onclick="showSection('quiz')">
+    <div class="nav-tab-ico">🧬</div>
+    <div class="nav-tab-lbl">ТЕСТ</div>
+    <div class="nav-tab-dot"></div>
+  </button>
+  <button class="nav-tab" id="nav-faq" onclick="showSection('faq')">
+    <div class="nav-tab-ico">❓</div>
+    <div class="nav-tab-lbl">FAQ</div>
+    <div class="nav-tab-dot"></div>
+  </button>
+  <button class="nav-tab" id="nav-contact" onclick="showSection('contact')">
+    <div class="nav-tab-ico">📱</div>
+    <div class="nav-tab-lbl">КОНТАКТ</div>
+    <div class="nav-tab-dot"></div>
+  </button>
+</nav>
+
+<!-- ══ SCORING ENGINE ══ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="scoring.js?v=4"></script>
+
+<script>
+// =============================================================
+// ДАННИ ЗА РЕЗУЛТАТНАТА СТРАНИЦА
+// =============================================================
+
+var PRODUCT_DATA = {
+  extra: {
+    name: 'Extra Health',
+    color: '#1a90ff',
+    ico: '🛡️',
+    tag: 'Имунитет & Клетъчна енергия',
+    desc: 'Extra Health GANS подкрепя организма на клетъчно ниво — имунната система, дихателната система и вътрешните органи. Действа чрез преструктуриране на водата в тялото, без въвеждане на вещества в организма.',
+    reviews: [
+      { initials:'И. Г.', text:'От година и половина всички в къщи сме много по-здрави и вирусите отшумяват много по-бързо.' },
+      { initials:'В. Д.', text:'Нормализира ми се кръвното. След грип се лекувам за 1-2 дни. Чувствам се жизнена.' },
+      { initials:'М. П.', text:'Когато получих пратката бях сериозно настинала. Настинката мина за 2-3 дни — много по-бързо от обичайното.' }
+    ]
+  },
+  emotion: {
+    name: 'Emotion Balance',
+    color: '#a04fff',
+    ico: '🧘',
+    tag: 'Стрес & Емоционално равновесие',
+    desc: 'Emotion Balance GANS подкрепя нервната система и емоционалното равновесие. Съдейства за по-спокоен сън, намален стрес и по-стабилно вътрешно равновесие — без седативи и без хормонални вещества.',
+    reviews: [
+      { initials:'В. Й.', text:'Започнах да спя спокойно, без да се събуждам нощем. Сутрин имам енергия и денят ми започва с добро настроение.' },
+      { initials:'М. П.', text:'Имах проблем със съня. От месец спя спокойно и непробудно.' },
+      { initials:'И. К.', text:'Сънят ми е много по-спокоен, не се събуждам изобщо, а сутрин съм отпочинала.' }
+    ]
+  },
+  move: {
+    name: 'Move Complex',
+    color: '#1fce6e',
+    ico: '🏃',
+    tag: 'Стави & Свобода на движение',
+    desc: 'Move Complex GANS подкрепя опорно-двигателната система — ставите, сухожилията, хрущяла и синовиалната течност. Без инжекции, без противовъзпалителни, без въвеждане на вещества в тялото.',
+    reviews: [
+      { initials:'З. Л.', text:'Имах болка в тазобедрената става, която ме будеше нощем. На рентген — дегенеративни промени. След месец употреба болката изчезна.' },
+      { initials:'Н. П.', text:'Майка ми е на 83 години, след тежка операция много я бляха ставите. С наколенките на GANS болката спира.' },
+      { initials:'И. П.', text:'Болките по тялото и изтръпванията на крайниците буквално забравих. Чувствам се пълен с енергия.' }
+    ]
+  },
+  cerebro: {
+    name: 'Cerebro',
+    color: '#ff7c1a',
+    ico: '🧠',
+    tag: 'Концентрация & Мозъчна яснота',
+    desc: 'Cerebro GANS подкрепя мозъчната дейност и нервната система чрез процес на метилация. Подпомага концентрацията, паметта и когнитивните функции — без стимуланти, без кофеин.',
+    reviews: [
+      { initials:'Д. С.', text:'Работя умствено по 10 часа на ден. Мозъчната мъгла след обяд почти изчезна. Фокусът ми е значително по-стабилен.' },
+      { initials:'Г. М.', text:'Имам хронично ниско желязо. След 6 месеца пиене на заредена вода всички показатели са в норма — без хранителни добавки.' },
+      { initials:'Е. М.', text:'Бях скептична, но след 3 седмици забелязах разлика в концентрацията. Запомням по-лесно и реагирам по-бързо.' }
+    ]
+  }
+};
+
+// Наблюдения — само ако отговорът НЕ е "без проблем" (индекс 0)
+var OBSERVATIONS = {
+  main_symptom: [
+    'Описваш постоянна умора и по-честа боледуваемост',
+    'Описваш стрес, тревожност или проблеми със съня',
+    'Описваш болки или скованост при движение',
+    'Описваш трудна концентрация и проблеми с паметта'
+  ],
+  secondary_symptom: [
+    'Усещаш честа умора дори след почивка',
+    'Усещаш раздразнителност, тревожност или лош сън',
+    'Имаш болки в коленете, кръста или раменете',
+    'Усещаш мозъчна мъгла или трудно запомняне'
+  ],
+  immunity:   [null, 'Боледуваш 2-3 пъти годишно', 'Боледуваш 4 и повече пъти годишно'],
+  skin:       [null, 'Кожата ти реагира при стрес или смяна на сезона', 'Имаш редовни кожни оплаквания'],
+  digestion:  [null, 'Понякога усещаш тежест или дискомфорт след хранене', 'Имаш редовен стомашен дискомфорт'],
+  sleep:      [null, 'Трудно заспиваш или се събуждаш нощем', 'Събуждаш се уморен/а дори след достатъчно сън', 'Спиш малко и се чувстваш изтощен/а'],
+  movement:   [null, 'Понякога усещаш дискомфорт при движение', 'Редовно усещаш скованост при движение', 'Дискомфортът при движение ограничава ежедневието ти'],
+  stress:     [null, 'Имаш периоди на напрежение', 'Стресът е постоянен и ти пречи да се отпуснеш', 'Чувстваш се емоционално изтощен/а'],
+  focus:      [null, 'Понякога ти е трудно да се фокусираш', 'Редовно забравяш неща или мислите ти се бъркат', 'Умствената умора е ежедневна — мозъчна мъгла'],
+  water:      [null, 'Пиеш 1-2 литра вода дневно', 'Пиеш по-малко от 1 литър вода дневно', 'Рядко пиеш вода съзнателно']
+};
+
+// "Защо точно този продукт" — базирано на главния симптом
+var WHY_TEXT = {
+  extra: {
+    0: 'Главното ти оплакване — постоянна умора и честа боледуваемост — сочи директно към имунната система и клетъчната среда.',
+    default: 'Комбинацията от твоите отговори сочи към нарушена клетъчна среда и намален имунен ресурс.'
+  },
+  emotion: {
+    1: 'Описваш стрес, тревожност и проблеми със съня — класически симптоми на претоварена нервна система.',
+    default: 'Твоите отговори сочат към хроничен стрес и нарушено равновесие на нервната система.'
+  },
+  move: {
+    2: 'Описваш болки и скованост при движение — точно профилът, за който Move Complex GANS е създаден.',
+    default: 'Твоите отговори сочат към нужда от подкрепа на ставите и опорно-двигателната система.'
+  },
+  cerebro: {
+    3: 'Описваш трудна концентрация и умствена умора — директни сигнали за нарушени процеси на метилация.',
+    default: 'Твоите отговори сочат към умствено изтощение и нужда от подкрепа на мозъчната функция.'
+  }
+};
+
+// =============================================================
+// STATE
+// =============================================================
+var state = {
+  focusArea: null,
+  qIndex:    0,
+  answers:   {},
+  history:   [],
+  result:    null
+};
+
+// =============================================================
+// WELCOME
+// =============================================================
+function selectFocus(key, el) {
+  document.querySelectorAll('.focus-card').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  state.focusArea = key;
+  document.getElementById('btn-start').disabled = false;
+}
+
+function startQuiz() {
+  state.qIndex  = 0;
+  state.answers = {};
+  state.history = [];
+  state.result  = null;
+  showPage('p-quiz');
+  renderQuestion();
+}
+
+// =============================================================
+// ВЪПРОСИ
+// =============================================================
+function renderQuestion() {
+  var q     = QUESTIONS[state.qIndex];
+  var total = QUESTIONS.length;
+  var pct   = Math.round((state.qIndex / total) * 100);
+
+  document.getElementById('q-counter').textContent = 'Въпрос ' + (state.qIndex + 1) + ' от ' + total;
+  document.getElementById('q-pct').textContent     = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('btn-back').style.visibility = state.qIndex > 0 ? 'visible' : 'hidden';
+  document.getElementById('q-badge').innerHTML = q.badge + ' ' + q.badgeText;
+  document.getElementById('q-title').textContent = q.q;
+  document.getElementById('q-sub').textContent   = q.sub || '';
+
+  var answersEl = document.getElementById('q-answers');
+  var nextBtn   = document.getElementById('btn-next');
+  answersEl.innerHTML = '';
+  nextBtn.disabled = true;
+
+  if (q.type === 'text') {
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'text-input';
+    inp.placeholder = q.placeholder || '';
+    inp.value = state.answers[q.id] || '';
+    inp.addEventListener('input', function() {
+      state.answers[q.id] = inp.value.trim();
+    });
+    answersEl.appendChild(inp);
+    nextBtn.disabled = false;
+    setTimeout(function(){ inp.focus(); }, 100);
+
+  } else {
+    var saved = state.answers[q.id];
+    q.answers.forEach(function(ans, i) {
+      var btn = document.createElement('button');
+      btn.className = 'answer-btn' + (saved === i ? ' selected' : '');
+      btn.textContent = ans.text;
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.answer-btn').forEach(function(b){ b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        state.answers[q.id] = i;
+        nextBtn.disabled = false;
+      });
+      answersEl.appendChild(btn);
+    });
+    if (saved !== undefined) nextBtn.disabled = false;
+  }
+}
+
+// =============================================================
+// НАВИГАЦИЯ (без TR екрани)
+// =============================================================
+function goNext() {
+  state.history.push(state.qIndex);
+  state.qIndex++;
+  if (state.qIndex >= QUESTIONS.length) {
+    showPreResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function goBack() {
+  if (state.history.length === 0) return;
+  state.qIndex = state.history.pop();
+  renderQuestion();
+}
+
+// =============================================================
+// PRE-RESULT
+// =============================================================
+function showPreResult() {
+  var name = state.answers['name'] || '';
+  document.getElementById('pre-title').textContent = name ? ('Браво, ' + name + '!') : 'Отлична работа!';
+  document.getElementById('pre-sub').textContent   = name
+    ? ('Анализирам профила ти, ' + name + '...')
+    : 'Анализирам твоя профил...';
+  showPage('p-preresult');
+  setTimeout(function() {
+    document.getElementById('pre-bar-fill').style.width = '100%';
+  }, 100);
+}
+
+// =============================================================
+// РЕЗУЛТАТ
+// =============================================================
+function showResult() {
+  var result = computeFinalScores(state.answers, state.focusArea);
+
+  // ── Защитна проверка за онкология (двойна – срещу кеш на стар scoring.js) ──
+  if (state.answers['oncology'] === 1) {
+    result.noCerebro = true;
+    result.scores.cerebro = 0;
+    // Cerebro не може да е нито winner, нито runnerUp
+    if (result.winner === 'cerebro') {
+      var fallback = (result.sorted || ['extra','emotion','move'])
+        .filter(function(k){ return k !== 'cerebro'; });
+      result.winner = fallback.length > 0 ? fallback[0] : 'extra';
+    }
+    if (result.runnerUp === 'cerebro') {
+      result.runnerUp = null;
+      result.isCombo  = false;
+    }
+  }
+
+  state.result = result;
+
+  var name    = state.answers['name'] || '';
+  var prod    = PRODUCT_DATA[result.winner];
+  var pct     = result.pcts[result.winner];
+  var color   = prod.color;
+
+  // Поздрав
+  document.getElementById('result-greeting').textContent = name
+    ? (name + ', ето твоят здравен профил')
+    : 'Ето твоят здравен профил';
+
+  // Кръгов скор — анимация
+  var arc = document.getElementById('score-arc');
+  arc.style.stroke = color;
+  document.getElementById('score-pct').style.color = color;
+  setTimeout(function() {
+    var offset = 339.29 * (1 - pct / 100);
+    arc.style.strokeDashoffset = offset;
+    animateCounter('score-pct', 0, pct, 1400, '%');
+  }, 100);
+
+  // Продукт
+  document.getElementById('result-product-name').textContent = prod.name;
+  document.getElementById('result-product-name').style.color = color;
+  document.getElementById('result-product-tag').textContent  = prod.tag;
+
+  // Наблюдения
+  renderObservations(result);
+
+  // Продуктова карта
+  renderProductCard(result.winner, result.pcts[result.winner], result);
+
+  // Combo
+  if (result.isCombo && result.runnerUp) {
+    renderCombo(result);
+  }
+
+  // Ревюта
+  renderReviews(prod.reviews);
+
+  // Хидратация бележка
+  renderWaterNote(state.answers['water']);
+
+  // Cerebro предупреждение:
+  // ВИНАГИ се показва ако Cerebro е winner или runnerUp — независимо от отговора на онкологията.
+  // Cerebro е забранен при онкологични заболявания → предупреждението е задължително.
+  var cerebroInResults = (result.winner === 'cerebro') || (result.runnerUp === 'cerebro');
+  if (cerebroInResults) {
+    document.getElementById('cerebro-warn').style.display = 'block';
+  }
+
+  // Попълване на скритите полета на контактната форма
+  var winnerProd = PRODUCT_DATA[result.winner];
+  // Изграждаме пълния профил на потребителя
+  var labelMap = {
+    for_whom:           'За кого',
+    age:                'Възраст',
+    main_symptom:       'Главен симптом',
+    secondary_symptom:  'Вторичен симптом',
+    immunity:           'Боледуване',
+    skin:               'Кожа',
+    digestion:          'Храносмилане',
+    sleep:              'Сън',
+    movement:           'Движение',
+    stress:             'Стрес',
+    focus:              'Концентрация',
+    lifestyle:          'Начин на живот',
+    water:              'Вода на ден',
+    experience:         'Опит с GANS',
+    oncology:           'Онкология'
+  };
+
+  var allLines = [];
+  allLines.push('── РЕЗУЛТАТ ──');
+  allLines.push('Препоръчан продукт: ' + winnerProd.name + ' (' + result.pcts[result.winner] + '%)');
+  allLines.push((result.isCombo && result.runnerUp)
+    ? 'Допълващ: ' + PRODUCT_DATA[result.runnerUp].name
+    : 'Без допълващ продукт');
+  allLines.push('');
+  allLines.push('── ОТГОВОРИ ──');
+
+  QUESTIONS.forEach(function(q) {
+    if (q.id === 'name') return; // пропускаме името — вече е в полето
+    var idx = state.answers[q.id];
+    if (idx === undefined || idx === null) return;
+    var label = labelMap[q.id] || q.id;
+    var ansText = (q.type === 'radio' && q.answers[idx]) ? q.answers[idx].text : idx;
+    allLines.push(label + ': ' + ansText);
+  });
+
+  var allAnswersText = allLines.join('\n');
+
+  document.getElementById('cf-subject').value      = 'GANS Тест — ' + winnerProd.name + ' (' + result.pcts[result.winner] + '%)';
+  document.getElementById('cf-product').value      = winnerProd.name;
+  document.getElementById('cf-match').value        = result.pcts[result.winner] + '%';
+  document.getElementById('cf-all-answers').value  = allAnswersText;
+
+  // Записваме в Supabase
+  saveToSupabase(result);
+
+  // Нулираме формата при всеки нов резултат
+  var form = document.getElementById('contact-form');
+  if (form) { form.style.display = 'flex'; form.reset(); }
+  var succ = document.getElementById('contact-success');
+  if (succ) succ.style.display = 'none';
+
+  showPage('p-result');
+}
+
+function renderObservations(result) {
+  var container = document.getElementById('result-obs');
+  container.innerHTML = '';
+  var items = [];
+
+  // Q3 — главен симптом (винаги)
+  var ms = state.answers['main_symptom'];
+  if (ms !== undefined && OBSERVATIONS.main_symptom[ms]) {
+    items.push(OBSERVATIONS.main_symptom[ms]);
+  }
+
+  // Q4 — вторичен симптом (ако е различен от главния)
+  var ss = state.answers['secondary_symptom'];
+  if (ss !== undefined && ss !== ms && OBSERVATIONS.secondary_symptom[ss]) {
+    items.push(OBSERVATIONS.secondary_symptom[ss]);
+  }
+
+  // Q5-Q11 — показваме само отговори с реален проблем (idx > 0), max 4 общо
+  var detailKeys = ['immunity','skin','digestion','sleep','movement','stress','focus','water'];
+  detailKeys.forEach(function(key) {
+    if (items.length >= 6) return;
+    var idx = state.answers[key];
+    if (idx === undefined || idx === 0) return;
+    var obs = OBSERVATIONS[key] && OBSERVATIONS[key][idx];
+    if (obs) items.push(obs);
+  });
+
+  // Ако нямаме наблюдения (профилактичен профил)
+  if (items.length === 0) {
+    items.push('Нямаш сериозни активни оплаквания — профилът ти е подходящ за профилактична подкрепа.');
+  }
+
+  items.forEach(function(text) {
+    var div = document.createElement('div');
+    div.className = 'obs-item';
+    div.innerHTML = '<div class="obs-dot"></div><div>' + text + '</div>';
+    container.appendChild(div);
+  });
+}
+
+function renderProductCard(winner, pct, result) {
+  var prod  = PRODUCT_DATA[winner];
+  var color = prod.color;
+
+  // "Защо" текст
+  var mainSymptom = state.answers['main_symptom'];
+  var whyMap  = WHY_TEXT[winner];
+  var whyText = (whyMap[mainSymptom] !== undefined) ? whyMap[mainSymptom] : whyMap['default'];
+
+  var html = '<div class="product-card" style="border-color:' + color + '20; background: ' + color + '08">'
+    + '<div class="product-card-header">'
+    + '<div class="product-card-ico">' + prod.ico + '</div>'
+    + '<div><div class="product-card-name" style="color:' + color + '">' + prod.name + '</div>'
+    + '<div class="product-card-tag">' + prod.tag + '</div></div>'
+    + '</div>'
+    + '<div class="product-card-body">' + prod.desc + '</div>'
+    + '<div class="product-card-why"><strong>Защо за теб:</strong> ' + whyText + '</div>'
+    + '</div>';
+
+  document.getElementById('result-product-card').innerHTML = html;
+}
+
+function renderCombo(result) {
+  var comboEl  = document.getElementById('result-combo');
+  var runner   = result.runnerUp;
+  var prod     = PRODUCT_DATA[runner];
+  var pct      = result.pcts[runner];
+
+  var html = '<div class="combo-card">'
+    + '<div class="combo-label">Допълващ избор</div>'
+    + '<div class="combo-product">'
+    + '<div class="combo-dot" style="background:' + prod.color + '"></div>'
+    + '<div><div class="combo-name">' + prod.name + '</div>'
+    + '<div class="combo-sub">' + prod.tag + '</div></div>'
+    + '</div></div>';
+
+  comboEl.innerHTML = html;
+  comboEl.style.display = 'block';
+}
+
+function renderReviews(reviews) {
+  var container = document.getElementById('result-reviews');
+  container.innerHTML = '';
+  reviews.forEach(function(r) {
+    var div = document.createElement('div');
+    div.className = 'review-card';
+    div.innerHTML = '<div class="review-header">'
+      + '<span class="review-initials">' + r.initials + '</span>'
+      + '<span class="review-stars">★★★★★</span>'
+      + '</div>'
+      + '<div class="review-text">&bdquo;' + r.text + '&ldquo;</div>';
+    container.appendChild(div);
+  });
+}
+
+function renderWaterNote(idx) {
+  var el   = document.getElementById('water-note');
+  var text = document.getElementById('water-note-text');
+  var notes = [
+    // А) Над 2 литра
+    'Тялото ти е добре хидратирано. Водата поддържа клетъчния метаболизъм, транспорта на хранителни вещества и отвеждането на отпадните продукти — всичко това работи оптимално при добра хидратация.',
+    // Б) 1–2 литра
+    'Добра основа, но за повечето възрастни оптималното количество е около 1.5–2 литра дневно. При по-малко количество, умората, концентрацията и ставите са първите, които усещат разликата.',
+    // В) По-малко от 1 литър
+    'Под 1 литър на ден тялото работи в условия на хронично обезводняване. Резултатът е спад в енергията, по-бавно мислене, напрежение в ставите и по-трудно възстановяване — дори когато всичко останало е наред.',
+    // Г) Рядко пия вода съзнателно
+    'Без достатъчно вода клетките не могат да функционират нормално — независимо от всичко останало, което правиш за здравето си. Хроничното обезводняване засяга концентрацията, имунитета, ставите и кожата едновременно.'
+  ];
+  if (idx === undefined || idx === null || !notes[idx]) return;
+  text.textContent = notes[idx];
+  el.style.display = 'block';
+}
+
+// Анимиране на брояч
+function animateCounter(id, from, to, duration, suffix) {
+  var el    = document.getElementById(id);
+  var start = null;
+  function step(ts) {
+    if (!start) start = ts;
+    var progress = Math.min((ts - start) / duration, 1);
+    var val = Math.round(from + (to - from) * progress);
+    el.textContent = val + (suffix || '');
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// =============================================================
+// ПОМОЩНИ
+// =============================================================
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  var el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showSection(s) {
+  console.log('Секция:', s);
+}
+
+// ── SUPABASE ──────────────────────────────────────────────────
+var _supabase = supabase.createClient(
+  'https://oqdkzofkrcdybftpgktg.supabase.co',
+  'sb_publishable_uV_QrrI8HKWDQxX4cdEE4g_AGaIUIbB'
+);
+
+function getAnswerText(questionId) {
+  var idx = state.answers[questionId];
+  if (idx === undefined || idx === null) return null;
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    if (QUESTIONS[i].id === questionId) {
+      var ans = QUESTIONS[i].answers[idx];
+      return ans ? ans.text : null;
+    }
+  }
+  return null;
+}
+
+function saveToSupabase(result) {
+  var payload = {
+    name:               state.answers['name'] || null,
+    focus_area:         state.focusArea || null,
+    for_whom:           getAnswerText('for_whom'),
+    age:                getAnswerText('age'),
+    main_symptom:       getAnswerText('main_symptom'),
+    secondary_symptom:  getAnswerText('secondary_symptom'),
+    immunity:           getAnswerText('immunity'),
+    skin:               getAnswerText('skin'),
+    digestion:          getAnswerText('digestion'),
+    sleep:              getAnswerText('sleep'),
+    movement:           getAnswerText('movement'),
+    stress:             getAnswerText('stress'),
+    focus:              getAnswerText('focus'),
+    lifestyle:          getAnswerText('lifestyle'),
+    water:              getAnswerText('water'),
+    experience:         getAnswerText('experience'),
+    oncology:           state.answers['oncology'] === 1,
+    product:            result.winner,
+    product_pct:        result.pcts[result.winner],
+    combo_product:      (result.isCombo && result.runnerUp) ? result.runnerUp : null,
+    no_cerebro:         result.noCerebro || false
+  };
+
+  _supabase.from('quiz_results_v2').insert(payload).then(function(res) {
+    if (res.error) {
+      console.warn('Supabase грешка:', res.error.message);
+    } else {
+      console.log('Supabase: записано успешно');
+    }
+  });
+}
+
+// Имейл превю в реално време
+(function() {
+  var inp     = document.getElementById('cf-email-input');
+  var preview = document.getElementById('cf-email-preview');
+  if (!inp || !preview) return;
+  inp.addEventListener('input', function() {
+    preview.textContent = inp.value.trim()
+      ? 'Ще се свържем с теб на: ' + inp.value.trim()
+      : '';
+  });
+})();
+
+// Контактна форма — Formspree AJAX изпращане
+(function() {
+  var form = document.getElementById('contact-form');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = form.querySelector('.btn-send');
+    btn.textContent = 'Изпращане…';
+    btn.disabled = true;
+    var data = new FormData(form);
+    fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        document.getElementById('contact-success').style.display = 'block';
+      } else {
+        btn.textContent = 'Грешка — опитай отново';
+        btn.disabled = false;
+      }
+    }).catch(function() {
+      btn.textContent = 'Грешка — опитай отново';
+      btn.disabled = false;
+    });
+  });
+})();
+</script>
+</body>
+</html>
