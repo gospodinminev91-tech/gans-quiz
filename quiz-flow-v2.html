@@ -1908,6 +1908,27 @@ function showCat(id,btn){
   btn.classList.add('active');
 }
 
+
+// ── TRACKING НА БУТОНИ ────────────────────────────────────────
+function trackButtonClick(button) {
+  var product = (state.result && state.result.winner) ? state.result.winner : null;
+  var name    = (state.answers && state.answers['name']) ? state.answers['name'] : null;
+  _supabase.from('click_events').insert({
+    button:  button,
+    product: product,
+    name:    name
+  }).then(function(res) {
+    if (res.error) console.warn('Click track грешка:', res.error.message);
+  });
+}
+
+(function() {
+  var shopBtn = document.getElementById('btn-shop');
+  var fbBtn   = document.querySelector('a.btn-ask');
+  if (shopBtn) shopBtn.addEventListener('click', function() { trackButtonClick('shop'); });
+  if (fbBtn)   fbBtn.addEventListener('click',   function() { trackButtonClick('facebook'); });
+})();
+
 </script>
 </body>
 </html>
