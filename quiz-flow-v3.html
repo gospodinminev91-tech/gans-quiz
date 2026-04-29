@@ -1238,7 +1238,7 @@ body {
     <div style="font-size:26px;font-weight:900;color:var(--white);margin-bottom:4px;">Господин Минев</div>
     <div style="font-size:13px;color:var(--blue2);letter-spacing:2px;text-transform:uppercase;margin-bottom:28px;">Партньор &middot; SKYLAB Industries</div>
   </div>
-  <a href="https://skylab.bg/magazin/ap/181/" target="_blank" class="vcard-item">
+  <a href="https://skylab.bg/magazin/ap/181/" target="_blank" class="vcard-item" onclick="trackButtonClick('shop-vcard')">
     <div class="vcard-ico" style="background:rgba(26,144,255,0.15);color:var(--blue2);">&#127760;</div>
     <div class="vcard-info"><div class="vcard-label">Уебсайт за поръчки</div><div class="vcard-val">skylab.bg/magazin/ap/181/</div></div>
     <div class="vcard-arrow">&#8250;</div>
@@ -1279,7 +1279,7 @@ body {
       <div class="vcard-quick-name">Сведения за GANS</div>
       <div class="vcard-quick-sub">Всичко за продуктите</div>
     </button>
-    <a href="https://skylab.bg/magazin/ap/181/" target="_blank" class="vcard-quick" style="text-decoration:none;">
+    <a href="https://skylab.bg/magazin/ap/181/" target="_blank" class="vcard-quick" style="text-decoration:none;" onclick="trackButtonClick('shop-vcard')">
       <div style="font-size:24px;margin-bottom:6px;">&#128722;</div>
       <div class="vcard-quick-name">Поръчай</div>
       <div class="vcard-quick-sub">Онлайн магазин</div>
@@ -1427,6 +1427,14 @@ var state = {
   answers:   {},
   history:   [],
   result:    null
+};
+
+// Глобален речник с директни линкове към продуктите
+var PRODUCT_LINKS = {
+  extra:   'https://skylab.bg/produkt/extra-health-gans/ap/181/',
+  emotion: 'https://skylab.bg/produkt/emotion-balance-gans/ap/181/',
+  move:    'https://skylab.bg/produkt/move-complex-gans/ap/181/',
+  cerebro: 'https://skylab.bg/produkt/cerebro-gans/ap/181/'
 };
 
 // =============================================================
@@ -1595,13 +1603,7 @@ function showResult() {
   var pct     = result.pcts[result.winner];
   var color   = prod.color;
 
-  // Директен линк към продукта
-  var PRODUCT_LINKS = {
-    extra:   'https://skylab.bg/produkt/extra-health-gans/ap/181/',
-    emotion: 'https://skylab.bg/produkt/emotion-balance-gans/ap/181/',
-    move:    'https://skylab.bg/produkt/move-complex-gans/ap/181/',
-    cerebro: 'https://skylab.bg/produkt/cerebro-gans/ap/181/'
-  };
+  // Директен линк към продукта (използва глобалния PRODUCT_LINKS)
   var shopLink = PRODUCT_LINKS[result.winner] || 'https://skylab.bg/magazin/ap/181/';
   document.getElementById('btn-shop-top').href = shopLink;
   document.getElementById('btn-shop-top').textContent = 'Разгледайте ' + prod.name + ' →';
@@ -1750,6 +1752,30 @@ function renderObservations(result) {
     div.innerHTML = '<div class="obs-dot"></div><div>' + text + '</div>';
     container.appendChild(div);
   });
+
+  // Q3 custom текст — ако клиентът е написал свой симптом
+  var msOther = state.answers['main_symptom_other'];
+  var msIdx   = state.answers['main_symptom'];
+  if (msIdx === 4 && msOther && msOther.trim()) {
+    var d = document.createElement('div');
+    d.className = 'obs-item';
+    d.style.cssText = 'border-left:2px solid var(--accent); padding-left:10px; margin-top:4px;';
+    d.innerHTML = '<div class="obs-dot" style="background:var(--accent)"></div>'
+      + '<div><em>Вие споменахте: ' + msOther.trim() + '</em></div>';
+    container.appendChild(d);
+  }
+
+  // Q4 custom текст — ако клиентът е написал свой вторичен симптом
+  var ssOther = state.answers['secondary_symptom_other'];
+  var ssIdx   = state.answers['secondary_symptom'];
+  if (ssIdx === 4 && ssOther && ssOther.trim()) {
+    var d2 = document.createElement('div');
+    d2.className = 'obs-item';
+    d2.style.cssText = 'border-left:2px solid var(--accent); padding-left:10px; margin-top:4px;';
+    d2.innerHTML = '<div class="obs-dot" style="background:var(--accent)"></div>'
+      + '<div><em>Вие също споменахте: ' + ssOther.trim() + '</em></div>';
+    container.appendChild(d2);
+  }
 }
 
 function renderProductCard(winner, pct, result) {
@@ -1761,6 +1787,8 @@ function renderProductCard(winner, pct, result) {
   var whyMap  = WHY_TEXT[winner];
   var whyText = (whyMap[mainSymptom] !== undefined) ? whyMap[mainSymptom] : whyMap['default'];
 
+  var cardLink = PRODUCT_LINKS[winner] || 'https://skylab.bg/magazin/ap/181/';
+
   var html = '<div class="product-card" style="border-color:' + color + '20; background: ' + color + '08">'
     + '<div class="product-card-header">'
     + '<div class="product-card-ico">' + prod.ico + '</div>'
@@ -1769,6 +1797,8 @@ function renderProductCard(winner, pct, result) {
     + '</div>'
     + '<div class="product-card-body">' + prod.desc + '</div>'
     + '<div class="product-card-why"><strong>Защо за Вас:</strong> ' + whyText + '</div>'
+    + '<a href="' + cardLink + '" target="_blank" onclick="trackButtonClick(\'shop-card\')" '
+    + 'style="display:block;margin-top:14px;padding:11px 0;text-align:center;background:' + color + ';color:#fff;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;">Поръчайте ' + prod.name + ' →</a>'
     + '</div>';
 
   document.getElementById('result-product-card').innerHTML = html;
@@ -1899,7 +1929,7 @@ function showSection(sec) {
   var tabId = sec==='faq' ? 'nav-faq' : sec==='contact' ? 'nav-contact' : 'nav-quiz';
   var tabEl = document.getElementById(tabId);
   if (tabEl) tabEl.classList.add('active');
-  if (sec==='quiz')    { appEl.style.display = ''; }
+  if (sec==='quiz')         { appEl.style.display = ''; }
   else if (sec==='faq')     { if (faqEl)  faqEl.classList.add('active'); }
   else if (sec==='contact') { if (cardEl) cardEl.classList.add('active'); }
 }
@@ -1944,7 +1974,11 @@ function saveToSupabase(result) {
     product:            result.winner,
     product_pct:        result.pcts[result.winner],
     combo_product:      (result.isCombo && result.runnerUp) ? result.runnerUp : null,
-    no_cerebro:         result.noCerebro || false
+    no_cerebro:         result.noCerebro || false,
+    main_symptom_other:      (state.answers['main_symptom'] === 4 && state.answers['main_symptom_other'])
+                               ? state.answers['main_symptom_other'].trim() : null,
+    secondary_symptom_other: (state.answers['secondary_symptom'] === 4 && state.answers['secondary_symptom_other'])
+                               ? state.answers['secondary_symptom_other'].trim() : null
   };
 
   _supabase.from('quiz_results_v2').insert(payload).then(function(res) {
@@ -1963,7 +1997,7 @@ function saveToSupabase(result) {
   if (!inp || !preview) return;
   inp.addEventListener('input', function() {
     preview.textContent = inp.value.trim()
-      ? 'Ще се свържем с теб на: ' + inp.value.trim()
+      ? 'Ще се свържем с Вас на: ' + inp.value.trim()
       : '';
   });
 })();
@@ -1975,7 +2009,7 @@ function saveToSupabase(result) {
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     var btn = form.querySelector('.btn-send');
-    btn.textContent = 'Изпращане…';
+    btn.textContent = 'Изпращане...';
     btn.disabled = true;
     var data = new FormData(form);
     fetch(form.action, {
@@ -1987,50 +2021,49 @@ function saveToSupabase(result) {
         form.style.display = 'none';
         document.getElementById('contact-success').style.display = 'block';
       } else {
-        btn.textContent = 'Грешка — опитай отново';
+        btn.textContent = 'Грешка — опитайте отново';
         btn.disabled = false;
       }
     }).catch(function() {
-      btn.textContent = 'Грешка — опитай отново';
+      btn.textContent = 'Грешка — опитайте отново';
       btn.disabled = false;
     });
   });
 })();
 
-
-function toggle(item){
-  var wasOpen=item.classList.contains('open');
-  var section=item.closest('.faq-section');
-  section.querySelectorAll('.faq-item.open').forEach(function(i){i.classList.remove('open');});
-  if(!wasOpen) item.classList.add('open');
+function toggle(item) {
+  var wasOpen = item.classList.contains('open');
+  var section = item.closest('.faq-section');
+  section.querySelectorAll('.faq-item.open').forEach(function(i){ i.classList.remove('open'); });
+  if (!wasOpen) item.classList.add('open');
 }
 
-function showCat(id,btn){
-  document.querySelectorAll('.faq-section').forEach(function(s){s.classList.remove('active');});
-  document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active');});
-  document.getElementById('cat-'+id).classList.add('active');
+function showCat(id, btn) {
+  document.querySelectorAll('.faq-section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.cat-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('cat-' + id).classList.add('active');
   btn.classList.add('active');
 }
 
 
-// ── TRACKING НА БУТОНИ ────────────────────────────────────────
+// ── TRACKING НА БУТОНИ ────────────────────────────────────────────
 function trackButtonClick(button) {
   var product = (state.result && state.result.winner) ? state.result.winner : null;
   var name    = (state.answers && state.answers['name']) ? state.answers['name'] : null;
   _supabase.from('click_events').insert({
-    button:  button,
-    product: product,
-    name:    name
+    button:     button,
+    product:    product,
+    name:       name,
+    focus_area: state.focusArea || null
   }).then(function(res) {
-    if (res.error) console.warn('Click track грешка:', res.error.message);
+    if (res.error) console.warn('Click track error:', res.error.message);
   });
 }
 
+// Facebook btn-ask listener
 (function() {
-  var shopBtn = document.getElementById('btn-shop');
-  var fbBtn   = document.querySelector('a.btn-ask');
-  if (shopBtn) shopBtn.addEventListener('click', function() { trackButtonClick('shop'); });
-  if (fbBtn)   fbBtn.addEventListener('click',   function() { trackButtonClick('facebook'); });
+  var fbBtn = document.querySelector('a.btn-ask');
+  if (fbBtn) fbBtn.addEventListener('click', function() { trackButtonClick('facebook'); });
 })();
 
 </script>
