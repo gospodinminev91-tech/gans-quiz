@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ORIA · Колко спестявам?</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(160deg,#08111f 0%,#0d1f3c 60%,#08111f 100%);min-height:100vh;color:#fff;padding:24px 16px 60px}
+    .container{max-width:500px;margin:0 auto}
+    .header{text-align:center;margin-bottom:32px}
+    .badge{display:inline-block;background:rgba(26,144,255,.15);border:1px solid rgba(26,144,255,.35);color:#1a90ff;font-size:10px;font-weight:800;letter-spacing:2px;padding:5px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase}
+    .header h1{font-size:30px;font-weight:900;line-height:1.15;margin-bottom:10px}
+    .header h1 .accent{color:#1a90ff}
+    .header p{font-size:14px;color:rgba(220,235,255,.65);line-height:1.55}
+    .card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:22px;margin-bottom:14px}
+    .card-title{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(220,235,255,.45);margin-bottom:18px}
+    .slider-group{margin-bottom:20px}
+    .slider-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .slider-label-row span{font-size:14px;color:rgba(220,235,255,.82)}
+    .slider-val{font-size:16px;font-weight:800;color:#fff;background:rgba(26,144,255,.18);border:1px solid rgba(26,144,255,.3);padding:3px 10px;border-radius:8px;min-width:60px;text-align:center}
+    input[type=range]{width:100%;height:6px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.13);border-radius:4px;outline:none;cursor:pointer}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;background:#1a90ff;border-radius:50%;cursor:pointer;box-shadow:0 0 10px rgba(26,144,255,.6)}
+    input[type=range]::-moz-range-thumb{width:24px;height:24px;background:#1a90ff;border-radius:50%;border:none;cursor:pointer}
+    .select-wrap{position:relative}
+    .select-wrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:rgba(220,235,255,.5);pointer-events:none}
+    select{width:100%;padding:13px 16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:11px;color:#fff;font-size:14px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none}
+    select option{background:#0d1f3c;color:#fff}
+    .manual-input-wrap{margin-top:12px;display:none}
+    .manual-input-wrap.show{display:flex;align-items:center;gap:10px}
+    .manual-label{font-size:13px;color:rgba(220,235,255,.7);flex:1}
+    .manual-inp{width:100px;padding:10px 12px;background:rgba(255,255,255,.08);border:1px solid rgba(26,144,255,.4);border-radius:10px;color:#fff;font-size:16px;font-weight:700;text-align:right;outline:none}
+    .manual-unit{font-size:14px;color:rgba(220,235,255,.5)}
+    .adv-toggle{text-align:center;margin-bottom:12px}
+    .adv-toggle button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:rgba(220,235,255,.75);font-size:13px;font-weight:600;cursor:pointer;padding:10px 18px;border-radius:10px;width:100%;transition:background .2s}
+    .adv-toggle button:hover{background:rgba(255,255,255,.1)}
+    .adv-card{display:none}
+    .adv-card.open{display:block}
+    .price-row{display:flex;align-items:center;gap:8px;margin-bottom:11px}
+    .price-lbl{flex:1;font-size:13px;color:rgba(220,235,255,.68)}
+    .price-inp{width:88px;padding:8px 10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:9px;color:#fff;font-size:14px;font-weight:700;text-align:right;outline:none}
+    .price-unit{font-size:12px;color:rgba(220,235,255,.4);width:18px}
+    .price-note{font-size:11px;color:rgba(220,235,255,.35);margin-top:-8px;margin-bottom:10px;padding-left:2px}
+    .divider{height:1px;background:rgba(255,255,255,.07);margin:16px 0}
+    .monthly-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+    .m-box{border-radius:12px;padding:14px 12px;text-align:center;background:rgba(255,255,255,.05)}
+    .m-box.oria{background:rgba(26,144,255,.12);border:1px solid rgba(26,144,255,.28)}
+    .m-lbl{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(220,235,255,.48);margin-bottom:7px}
+    .m-box.oria .m-lbl{color:rgba(26,144,255,.8)}
+    .m-amt{font-size:30px;font-weight:900;color:#fff;line-height:1}
+    .m-box.oria .m-amt{color:#1a90ff}
+    .m-unit{font-size:12px;color:rgba(220,235,255,.45);margin-top:4px}
+    .be-box{border-radius:13px;padding:15px 18px;text-align:center;margin-bottom:16px;background:rgba(31,206,110,.09);border:1px solid rgba(31,206,110,.28)}
+    .be-box.negative{background:rgba(255,124,26,.09);border:1px solid rgba(255,124,26,.28)}
+    .be-lbl{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(31,206,110,.8);margin-bottom:5px}
+    .be-box.negative .be-lbl{color:rgba(255,124,26,.8)}
+    .be-val{font-size:24px;font-weight:900;color:#1fce6e}
+    .be-box.negative .be-val{color:#ff7c1a;font-size:18px}
+    .be-note{font-size:12px;color:rgba(220,235,255,.5);margin-top:5px}
+    .bars-title{font-size:12px;font-weight:700;color:rgba(220,235,255,.55);margin-bottom:16px}
+    .year-block{margin-bottom:18px}
+    .year-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .year-label{font-size:12px;font-weight:700;color:rgba(220,235,255,.55);text-transform:uppercase;letter-spacing:1px}
+    .year-save{font-size:12px;font-weight:700}
+    .bar-pair{display:flex;flex-direction:column;gap:5px}
+    .bar-line{display:flex;align-items:center;gap:8px}
+    .bar-line-lbl{font-size:10px;color:rgba(220,235,255,.45);width:54px;flex-shrink:0;text-align:right}
+    .bar-track{flex:1;height:28px;background:rgba(255,255,255,.06);border-radius:6px;overflow:hidden}
+    .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:700;white-space:nowrap;transition:width .7s cubic-bezier(.4,0,.2,1)}
+    .bar-fill.without{background:rgba(255,255,255,.14);color:rgba(220,235,255,.65)}
+    .bar-fill.with{background:linear-gradient(90deg,#1a90ff 0%,#1fce6e 100%);color:#fff}
+    .big-savings{background:linear-gradient(135deg,rgba(26,144,255,.13),rgba(31,206,110,.13));border:1px solid rgba(31,206,110,.22);border-radius:16px;padding:22px;text-align:center;margin-bottom:14px}
+    .big-lbl{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(31,206,110,.8);margin-bottom:8px}
+    .big-amt{font-size:54px;font-weight:900;color:#1fce6e;line-height:1;margin-bottom:4px}
+    .big-sub{font-size:14px;color:rgba(220,235,255,.55)}
+    .plastic-box{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.04);border-radius:13px;padding:15px;margin-bottom:14px}
+    .plastic-icon{font-size:32px}
+    .plastic-count{font-size:22px;font-weight:900;color:#fff}
+    .plastic-sub{font-size:12px;color:rgba(220,235,255,.5);margin-top:2px}
+    .health-note{border-left:3px solid #1a90ff;background:rgba(26,144,255,.07);border-radius:0 11px 11px 0;padding:13px 14px;font-size:13px;color:rgba(220,235,255,.72);line-height:1.55;margin-bottom:20px}
+    .health-note strong{color:#1a90ff}
+    /* INSTALLMENTS */
+    .inst-card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:22px;margin-bottom:14px}
+    .inst-intro{font-size:13px;color:rgba(220,235,255,.65);margin-bottom:14px;line-height:1.5}
+    .inst-intro strong{color:#fff}
+    .inst-table{width:100%;border-collapse:collapse}
+    .inst-table tr{border-bottom:1px solid rgba(255,255,255,.06)}
+    .inst-table tr:last-child{border-bottom:none}
+    .inst-table td{padding:10px 5px;font-size:13px;vertical-align:middle}
+    .inst-period{color:rgba(220,235,255,.55);font-weight:600;width:72px}
+    .inst-amount{font-size:15px;font-weight:800;color:#fff;white-space:nowrap}
+    .inst-total{font-size:11px;color:rgba(220,235,255,.35);text-align:right;white-space:nowrap}
+    .inst-tag{display:inline-block;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;letter-spacing:.3px;white-space:nowrap}
+    .inst-tag.cheaper{background:rgba(31,206,110,.18);border:1px solid rgba(31,206,110,.3);color:#1fce6e}
+    .inst-tag.similar{background:rgba(26,144,255,.18);border:1px solid rgba(26,144,255,.3);color:#1a90ff}
+    .inst-tag.higher{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(220,235,255,.38)}
+    /* GANS FORMULAS */
+    .gans-card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:22px;margin-bottom:14px}
+    .gans-intro{font-size:13px;color:rgba(220,235,255,.7);line-height:1.55;margin-bottom:16px}
+    .gans-intro strong{color:#fff}
+    .gans-formula{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.04)}
+    .gans-formula:last-child{margin-bottom:0}
+    .gans-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px}
+    .gans-dot.extra{background:#1a90ff;box-shadow:0 0 8px rgba(26,144,255,.5)}
+    .gans-dot.emotion{background:#a04fff;box-shadow:0 0 8px rgba(160,79,255,.5)}
+    .gans-dot.move{background:#1fce6e;box-shadow:0 0 8px rgba(31,206,110,.5)}
+    .gans-name{font-size:13px;font-weight:800;margin-bottom:3px}
+    .gans-name.extra{color:#1a90ff}
+    .gans-name.emotion{color:#a04fff}
+    .gans-name.move{color:#1fce6e}
+    .gans-desc{font-size:12px;color:rgba(220,235,255,.6);line-height:1.5}
+    .cta{display:block;width:100%;padding:17px;background:#1a90ff;color:#fff;font-size:16px;font-weight:800;text-align:center;border-radius:13px;text-decoration:none;letter-spacing:.3px;box-shadow:0 4px 20px rgba(26,144,255,.35);margin-bottom:10px}
+    .powered{text-align:center;font-size:11px;color:rgba(220,235,255,.25);margin-top:10px}
+    .powered a{color:rgba(220,235,255,.35);text-decoration:none}
+    .hidden{display:none!important}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">💧 ORIA Water Dispenser</div>
+    <h1>Колко <span class="accent">спестявам</span><br>с ORIA?</h1>
+    <p>Въведи данните за дома си и виж реалната разлика —<br>за 1, 3 и 5 години напред.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Твоята ситуация</div>
+    <div class="slider-group">
+      <div class="slider-label-row">
+        <span>Хора в домакинството</span>
+        <span class="slider-val" id="people-val">2 души</span>
+      </div>
+      <input type="range" id="people" min="1" max="10" value="2" oninput="onPeople(this.value);calc()">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label-row">
+        <span>Вода на ден / човек</span>
+        <span class="slider-val" id="liters-val">2.0 л</span>
+      </div>
+      <input type="range" id="liters" min="0.5" max="10" step="0.5" value="2" oninput="onLiters(this.value);calc()">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label-row" style="margin-bottom:10px"><span>Как купувате вода сега?</span></div>
+      <div class="select-wrap">
+        <select id="method" onchange="onMethodChange();calc()">
+          <option value="b15">Бутилирана вода  1.5 л</option>
+          <option value="b11">Туба  11 л  (тежки за носене)</option>
+          <option value="jug">Кана за вода</option>
+          <option value="tap">Чешмяна вода</option>
+          <option value="manual">Въведи сам месечния си разход</option>
+        </select>
+      </div>
+      <div class="manual-input-wrap" id="manual-wrap">
+        <span class="manual-label">Харча за вода на месец</span>
+        <input class="manual-inp" type="number" id="manual-spend" value="40" min="0" step="1" oninput="calc()">
+        <span class="manual-unit">€</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="adv-toggle">
+    <button onclick="toggleAdv()">⚙️ Промени цените (по подразбиране — актуални за България)</button>
+  </div>
+
+  <div class="card adv-card" id="adv-card">
+    <div class="card-title">Цени за изчислението</div>
+    <div class="price-row">
+      <span class="price-lbl">ORIA диспенсер (еднократно)</span>
+      <input class="price-inp" type="number" id="p-oria" value="784" min="0" oninput="calc()">
+      <span class="price-unit">€</span>
+    </div>
+    <div class="price-row">
+      <span class="price-lbl">Годишна поддръжка (филтър)</span>
+      <input class="price-inp" type="number" id="p-maint" value="30" min="0" oninput="calc()">
+      <span class="price-unit">€</span>
+    </div>
+    <p class="price-note">Смяна ~веднъж годишно, в зависимост от качеството на водата в региона</p>
+    <div class="divider"></div>
+    <div class="price-row" id="row-b15">
+      <span class="price-lbl">Цена на 1.5 л бутилка</span>
+      <input class="price-inp" type="number" id="p-b15" value="0.65" min="0" step="0.01" oninput="calc()">
+      <span class="price-unit">€</span>
+    </div>
+    <div class="price-row" id="row-b11">
+      <span class="price-lbl">Цена на 11 л туба</span>
+      <input class="price-inp" type="number" id="p-b11" value="2.90" min="0" step="0.10" oninput="calc()">
+      <span class="price-unit">€</span>
+    </div>
+    <div class="price-row" id="row-jug-price">
+      <span class="price-lbl">Цена на каната (еднократно)</span>
+      <input class="price-inp" type="number" id="p-jug-price" value="25" min="0" oninput="calc()">
+      <span class="price-unit">€</span>
+    </div>
+    <div class="price-row" id="row-jug">
+      <span class="price-lbl">Филтър за кана (на месец)</span>
+      <input class="price-inp" type="number" id="p-jug" value="10" min="0" oninput="calc()">
+      <span class="price-unit">€</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Твоят резултат</div>
+    <div class="monthly-grid">
+      <div class="m-box">
+        <div class="m-lbl">Плащате сега</div>
+        <div class="m-amt" id="r-now">—</div>
+        <div class="m-unit">€ / месец</div>
+      </div>
+      <div class="m-box oria">
+        <div class="m-lbl">С ORIA (поддържка)</div>
+        <div class="m-amt" id="r-oria">—</div>
+        <div class="m-unit">€ / месец</div>
+      </div>
+    </div>
+    <div class="be-box" id="be-box">
+      <div class="be-lbl">ORIA се изплаща за</div>
+      <div class="be-val" id="be-val">—</div>
+      <div class="be-note" id="be-note"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="bars-title">Общ разход — без ORIA срещу с ORIA</div>
+
+    <div class="year-block">
+      <div class="year-header"><span class="year-label">1 година</span><span class="year-save" id="save-1y"></span></div>
+      <div class="bar-pair">
+        <div class="bar-line"><span class="bar-line-lbl">Без ORIA</span><div class="bar-track"><div class="bar-fill without" id="bw1"></div></div></div>
+        <div class="bar-line"><span class="bar-line-lbl" style="color:rgba(26,144,255,.7)">С ORIA</span><div class="bar-track"><div class="bar-fill with" id="bo1"></div></div></div>
+      </div>
+    </div>
+    <div class="year-block">
+      <div class="year-header"><span class="year-label">3 години</span><span class="year-save" id="save-3y"></span></div>
+      <div class="bar-pair">
+        <div class="bar-line"><span class="bar-line-lbl">Без ORIA</span><div class="bar-track"><div class="bar-fill without" id="bw3"></div></div></div>
+        <div class="bar-line"><span class="bar-line-lbl" style="color:rgba(26,144,255,.7)">С ORIA</span><div class="bar-track"><div class="bar-fill with" id="bo3"></div></div></div>
+      </div>
+    </div>
+    <div class="year-block">
+      <div class="year-header"><span class="year-label">5 години</span><span class="year-save" id="save-5y"></span></div>
+      <div class="bar-pair">
+        <div class="bar-line"><span class="bar-line-lbl">Без ORIA</span><div class="bar-track"><div class="bar-fill without" id="bw5"></div></div></div>
+        <div class="bar-line"><span class="bar-line-lbl" style="color:rgba(26,144,255,.7)">С ORIA</span><div class="bar-track"><div class="bar-fill with" id="bo5"></div></div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="big-savings">
+      <div class="big-lbl" id="big-lbl">🎯 Спестявате за 5 години</div>
+      <div class="big-amt" id="big-amt">—</div>
+      <div class="big-sub" id="big-sub">€ чиста икономия</div>
+    </div>
+    <div class="plastic-box hidden" id="plastic-box">
+      <div class="plastic-icon">♻️</div>
+      <div>
+        <div class="plastic-count" id="plastic-count">—</div>
+        <div class="plastic-sub">пластмасови бутилки по-малко за 5 години</div>
+      </div>
+    </div>
+    <div class="health-note">
+      💡 <strong>4-степенна обратна осмоза + GANS структуриране:</strong> В първия етап водата преминава през многостепенно пречистване, при което се отстраняват механични замърсявания, тежки метали, химични остатъци, микроорганизми и разтворени нежелани вещества. Така се постига висока степен на чистота и стабилност на водата. GANS структурирането я прави биологично по-достъпна за клетките — сравнението в пари е само едната част от историята.
+    </div>
+  </div>
+
+  <div class="inst-card">
+    <div class="card-title">ORIA на изплащане</div>
+    <div class="inst-intro">Плащате <strong id="inst-spend">—</strong> €/мес. за вода. Вижте кои вноски са по-малко от това:</div>
+    <table class="inst-table"><tbody id="inst-tbody"></tbody></table>
+  </div>
+
+
+  <div class="inst-card" id="pay-pref-card">
+    <div class="card-title">Как бихте желали да се сдобиете с ORIA?</div>
+    <div style="display:flex;gap:10px;margin-bottom:14px">
+      <button id="btn-cash" onclick="setPayPref('cash')" style="flex:1;padding:12px;border-radius:10px;border:1px solid rgba(31,206,110,.4);background:rgba(31,206,110,.12);color:#1fce6e;font-size:14px;font-weight:700;cursor:pointer;">&#10003; Еднократно</button>
+      <button id="btn-inst" onclick="setPayPref('installment')" style="flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);color:rgba(220,235,255,.7);font-size:14px;font-weight:700;cursor:pointer;">На изплащане</button>
+    </div>
+    <div id="inst-choose" style="display:none;font-size:13px;color:rgba(220,235,255,.65);line-height:1.6;padding:10px 14px;background:rgba(26,144,255,.07);border-radius:10px;border-left:3px solid #1a90ff">
+      Разгледайте вариантите за изплащане директно в магазина &mdash;
+      <a href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" style="color:#1a90ff;font-weight:700;text-decoration:none;">вижте тук &#8594;</a>
+    </div>
+  </div>
+
+  <div class="gans-card">
+    <div class="card-title">Трите GANS формули в ORIA</div>
+    <p class="gans-intro">ORIA съдържа <strong>трите GANS формули</strong> на SKYLAB Industries, които структурират водата и допринасят за здравето на организма:</p>
+    <div class="gans-formula">
+      <div class="gans-dot extra"></div>
+      <div>
+        <div class="gans-name extra">Extra Health</div>
+        <div class="gans-desc">Цялостна подкрепа на организма на клетъчно ниво. Преструктурира водата в тялото. Подпомага имунната система, дихателната система и вътрешните органи. Подходящ при профилактика, умора, чести боледувания.</div>
+      </div>
+    </div>
+    <div class="gans-formula">
+      <div class="gans-dot emotion"></div>
+      <div>
+        <div class="gans-name emotion">Emotion Balance</div>
+        <div class="gans-desc">Подкрепа на нервната система и емоционалното равновесие. Намалява стреса, тревожността и безсънието. Естествено възстановява баланса в организма и човек се чувства по-спокоен.</div>
+      </div>
+    </div>
+    <div class="gans-formula">
+      <div class="gans-dot move"></div>
+      <div>
+        <div class="gans-name move">Move Complex</div>
+        <div class="gans-desc">Подкрепа на опорно-двигателната система. Влияе върху стави, сухожилия и хрущяли. Намалява по естествен начин болката в ставите. Подпомага възстановяването след физическа активност. Подходящ за всякакви възрасти.</div>
+      </div>
+    </div>
+  </div>
+
+  <a class="cta" href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" id="cta-btn" onclick="trackClick()">Разгледай ORIA в магазина →</a>
+
+  <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;margin-bottom:14px">
+    <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(220,235,255,.4);margin-bottom:14px">Свържете се с нас</div>
+    <a href="https://www.facebook.com/profile.php?id=61578697514413" target="_blank" onclick="trackFb()" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(24,119,242,.1);border:1px solid rgba(24,119,242,.2);text-decoration:none;margin-bottom:8px">
+      <span style="font-size:20px">👤</span>
+      <div><div style="font-size:11px;color:rgba(160,200,255,.55);letter-spacing:1px">FACEBOOK</div><div style="font-size:13px;font-weight:700;color:#fff">Господин Минев</div></div>
+    </a>
+    <a href="https://m.me/100004993623972" target="_blank" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(0,132,255,.1);border:1px solid rgba(0,132,255,.2);text-decoration:none;margin-bottom:8px">
+      <span style="font-size:20px">💬</span>
+      <div><div style="font-size:11px;color:rgba(160,200,255,.55);letter-spacing:1px">MESSENGER</div><div style="font-size:13px;font-weight:700;color:#fff">Пишете ни директно</div></div>
+    </a>
+    <a href="https://wa.me/?text=Здравейте%2C%20интересувам%20се%20от%20ORIA%20Water%20Dispenser." target="_blank" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);text-decoration:none;margin-bottom:8px">
+      <span style="font-size:20px">💬</span>
+      <div><div style="font-size:11px;color:rgba(160,200,255,.55);letter-spacing:1px">WHATSAPP</div><div style="font-size:13px;font-weight:700;color:#fff">Пишете ни директно</div></div>
+    </a>
+    <a href="mailto:gospodin.minev@abv.bg" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(31,206,110,.08);border:1px solid rgba(31,206,110,.2);text-decoration:none">
+      <span style="font-size:20px">✉️</span>
+      <div><div style="font-size:11px;color:rgba(160,200,255,.55);letter-spacing:1px">ИМЕЙЛ</div><div style="font-size:13px;font-weight:700;color:#fff">gospodin.minev@abv.bg</div></div>
+    </a>
+  </div>
+
+  <div class="powered">Изчислено от <a href="https://gospodinminev91-tech.github.io/gans-quiz/quiz-flow-v2.html">SKYLAB GANS</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  var _sb = supabase.createClient(
+    'https://oqdkzofkrcdybftpgktg.supabase.co',
+    'sb_publishable_uV_QrrI8HKWDQxX4cdEE4g_AGaIUIbB'
+  );
+
+  // Глобален state за tracking
+  var _payPref = 'cash';
+  var _chosenPlan = null;
+  var _saving5 = 0;
+  var _cheaperPlans = '';
+  var _bestPlan = '';
+  var _mwo = 0;
+
+  function setPayPref(pref) {
+    _payPref = pref;
+    var cashBtn = $id('btn-cash'), instBtn = $id('btn-inst');
+    if (pref === 'cash') {
+      cashBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:1px solid rgba(31,206,110,.4);background:rgba(31,206,110,.12);color:#1fce6e;font-size:14px;font-weight:700;cursor:pointer;';
+      instBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);color:rgba(220,235,255,.7);font-size:14px;font-weight:700;cursor:pointer;';
+      $id('inst-choose').style.display = 'none';
+    } else {
+      instBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:1px solid rgba(26,144,255,.4);background:rgba(26,144,255,.12);color:#1a90ff;font-size:14px;font-weight:700;cursor:pointer;';
+      cashBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);color:rgba(220,235,255,.7);font-size:14px;font-weight:700;cursor:pointer;';
+      $id('inst-choose').style.display = 'block';
+    }
+  }
+
+
+  function trackFb() {
+    _sb.from('oria_clicks').insert({
+      button: 'facebook',
+      people: parseInt($id('people').value),
+      liters: parseFloat($id('liters').value),
+      method: $id('method').value,
+      monthly_without: Math.round(_mwo),
+      saving_5y: Math.round(_saving5),
+      payment_pref: _payPref
+    }).then(function(res) {
+      if (res.error) console.warn('FB track error:', res.error.message);
+    });
+  }
+
+  function trackClick() {
+    var people = parseInt($id('people').value);
+    var liters = parseFloat($id('liters').value);
+    var method = $id('method').value;
+    _sb.from('oria_clicks').insert({
+      people:         people,
+      liters:         liters,
+      method:         method,
+      monthly_without: Math.round(_mwo),
+      saving_5y:      Math.round(_saving5),
+      cheaper_plans:  _cheaperPlans || null,
+      best_plan:      _bestPlan || null,
+      button:         'shop',
+      payment_pref:   _payPref,
+      chosen_plan:    _payPref === 'installment' ? 'installment' : null
+    }).then(function(res) {
+      if (res.error) console.warn('ORIA track error:', res.error.message);
+    });
+  }
+
+  var INST=[
+    {label:'3 мес.',monthly:272.30,months:3},
+    {label:'6 мес.',monthly:140.36,months:6},
+    {label:'12 мес.',monthly:74.51,months:12},
+    {label:'18 мес.',monthly:52.68,months:18},
+    {label:'24 мес.',monthly:41.84,months:24},
+    {label:'36 мес.',monthly:31.17,months:36}
+  ];
+  var TAP=0.00128;
+
+  function $id(id){return document.getElementById(id)}
+  function val(id){return parseFloat($id(id).value)||0}
+  function setText(id,txt){$id(id).textContent=txt}
+  function fmtE(n){n=Math.round(n);return n>=1000?n.toLocaleString('bg-BG'):n.toString()}
+
+  function onPeople(v){$id('people-val').textContent=v+(v==1?' човек':' души')}
+  function onLiters(v){$id('liters-val').textContent=parseFloat(v).toFixed(1)+' л'}
+  function toggleAdv(){$id('adv-card').classList.toggle('open')}
+
+  function onMethodChange(){
+    var m=$id('method').value;
+    $id('manual-wrap').className='manual-input-wrap'+(m==='manual'?' show':'');
+    $id('row-jug-price').style.display=(m==='jug')?'flex':'none';
+  }
+
+  function calc(){
+    var people=parseInt($id('people').value);
+    var litDay=parseFloat($id('liters').value);
+    var method=$id('method').value;
+    var annLt=people*litDay*365;
+    var oriaP=val('p-oria');
+    var oriaMnt=val('p-maint');
+    var oriaW=annLt*TAP;
+    var oriaAnn=oriaMnt+oriaW;
+
+    var annual=0,showPlastic=false,bVol=0;
+    if(method==='b15'){annual=Math.ceil(annLt/1.5)*val('p-b15');showPlastic=true;bVol=1.5}
+    else if(method==='b11'){annual=Math.ceil(annLt/11)*val('p-b11');showPlastic=true;bVol=11}
+    else if(method==='jug'){annual=val('p-jug')*12+val('p-jug-price')/5+oriaW}
+    else if(method==='tap'){annual=oriaW}
+    else if(method==='manual'){annual=(val('manual-spend')||0)*12}
+
+    function wo(y){return annual*y}
+    function wi(y){return oriaP+oriaAnn*y}
+    function save(y){return wo(y)-wi(y)}
+
+    var mwo=annual/12;
+    _mwo=mwo;
+    setText('r-now',Math.round(mwo));
+    setText('r-oria',Math.round(oriaAnn/12));
+
+    var beBox=$id('be-box'),diff=annual-oriaAnn;
+    if(diff>0){
+      beBox.className='be-box';
+      var beMo=(oriaP/diff)*12;
+      setText('be-val',beMo<24?Math.ceil(beMo)+' месеца':(beMo/12).toFixed(1).replace('.',',')+' години');
+      setText('be-note','след което всяка капка е чиста икономия');
+    } else {
+      beBox.className='be-box negative';
+      setText('be-val','Изплащането е дългосрочно');
+      setText('be-note','ORIA носи предимно здравна стойност при евтина вода');
+    }
+
+    var refMax=Math.max(wo(1),wi(1),wo(3),wi(3),wo(5),wi(5));
+    if(refMax===0)refMax=1;
+    [1,3,5].forEach(function(y){
+      var woY=wo(y),wiY=wi(y),saveY=save(y);
+      $id('bw'+y).style.width=(woY/refMax*100)+'%';$id('bw'+y).textContent=fmtE(woY)+' €';
+      $id('bo'+y).style.width=(wiY/refMax*100)+'%';$id('bo'+y).textContent=fmtE(wiY)+' €';
+      var el=$id('save-'+y+'y');
+      if(saveY>0){el.textContent='▲ '+fmtE(saveY)+' € спестени';el.style.color='#1fce6e'}
+      else if(saveY<0){el.textContent='▼ '+fmtE(Math.abs(saveY))+' € разлика';el.style.color='rgba(255,124,26,.8)'}
+      else{el.textContent='= Изравнено';el.style.color='rgba(220,235,255,.5)'}
+    });
+
+    var s5=save(5);
+    _saving5=s5;
+    var ba=$id('big-amt');
+    if(s5>0){
+      setText('big-lbl','🎯 Спестявате за 5 години');
+      ba.textContent=fmtE(s5);ba.style.color='#1fce6e';setText('big-sub','€ чиста икономия');
+    } else {
+      setText('big-lbl','💡 Инвестиция над текущия разход (5 год.)');
+      ba.textContent=fmtE(Math.abs(s5));ba.style.color='#ff7c1a';setText('big-sub','€ над текущия ви разход');
+    }
+
+    var pb=$id('plastic-box');
+    if(showPlastic){pb.classList.remove('hidden');setText('plastic-count',Math.round((annLt/bVol)*5).toLocaleString('bg-BG')+' бутилки')}
+    else{pb.classList.add('hidden')}
+
+    $id('row-b15').style.display=(method==='b15')?'flex':'none';
+    $id('row-b11').style.display=(method==='b11')?'flex':'none';
+    $id('row-jug-price').style.display=(method==='jug')?'flex':'none';
+    $id('row-jug').style.display=(method==='jug')?'flex':'none';
+
+    setText('inst-spend',Math.round(mwo));
+    var tbody=$id('inst-tbody');tbody.innerHTML='';
+    var _cheapArr=[];
+    INST.forEach(function(inst){
+      var total=(inst.monthly*inst.months).toFixed(2);
+      var cls,tag;
+      if(inst.monthly<mwo*0.95){cls='cheaper';tag='✓ По-малко от текущото';_cheapArr.push(inst.label)}
+      else if(inst.monthly<=mwo*1.1){cls='similar';tag='≈ Близо до текущото'}
+      else{cls='higher';tag='+'+Math.round(inst.monthly-mwo)+' € над текущото'}
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td class="inst-period">'+inst.label+'</td>'+
+        '<td class="inst-amount">'+inst.monthly.toFixed(2)+' €<span class="inst-total"> /мес.</span></td>'+
+        '<td class="inst-total">общо '+total+' €</td>'+
+        '<td><span class="inst-tag '+cls+'">'+tag+'</span></td>';
+      tbody.appendChild(tr);
+    });
+    _cheaperPlans=_cheapArr.join(', ');
+    _bestPlan=_cheapArr.length>0?_cheapArr[0]:'';
+  }
+
+  onPeople(2);onLiters(2);calc();
+</script>
+</body>
+</html>
