@@ -83,14 +83,14 @@
     .inst-card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:22px;margin-bottom:14px}
     .inst-intro{font-size:13px;color:rgba(220,235,255,.65);margin-bottom:14px;line-height:1.5}
     .inst-intro strong{color:#fff}
-    .inst-table{width:100%;border-collapse:collapse}
+    .inst-table{width:100%;border-collapse:collapse;table-layout:fixed}
     .inst-table tr{border-bottom:1px solid rgba(255,255,255,.06)}
     .inst-table tr:last-child{border-bottom:none}
-    .inst-table td{padding:10px 5px;font-size:13px;vertical-align:middle}
-    .inst-period{color:rgba(220,235,255,.55);font-weight:600;width:72px}
-    .inst-amount{font-size:15px;font-weight:800;color:#fff;white-space:nowrap}
-    .inst-total{font-size:11px;color:rgba(220,235,255,.35);text-align:right;white-space:nowrap}
-    .inst-tag{display:inline-block;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;letter-spacing:.3px;white-space:nowrap}
+    .inst-table td{padding:8px 4px;font-size:12px;vertical-align:middle;overflow:hidden}
+    .inst-period{color:rgba(220,235,255,.55);font-weight:600;width:60px}
+    .inst-amount{font-size:13px;font-weight:800;color:#fff;white-space:nowrap}
+    .inst-total{font-size:10px;color:rgba(220,235,255,.35);text-align:right;white-space:nowrap}
+    .inst-tag{display:inline-block;font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px;letter-spacing:.2px;white-space:normal;word-break:break-word;max-width:90px;line-height:1.3;text-align:center}
     .inst-tag.cheaper{background:rgba(31,206,110,.18);border:1px solid rgba(31,206,110,.3);color:#1fce6e}
     .inst-tag.similar{background:rgba(26,144,255,.18);border:1px solid rgba(26,144,255,.3);color:#1a90ff}
     .inst-tag.higher{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(220,235,255,.38)}
@@ -122,6 +122,7 @@
     <div class="badge">💧 ORIA Water Dispenser</div>
     <h1>Колко <span class="accent">спестявам</span><br>с ORIA?</h1>
     <p>Въведи данните за дома си и виж реалната разлика —<br>за 1, 3 и 5 години напред.</p>
+    <img src="Oria Dispenser.png" alt="ORIA Water Dispenser" style="width:100%;max-width:320px;border-radius:16px;margin-top:20px;display:block;margin-left:auto;margin-right:auto;box-shadow:0 8px 32px rgba(26,144,255,.2)">
   </div>
 
   <div class="card">
@@ -309,23 +310,20 @@
   <a class="cta" href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" id="cta-btn" onclick="trackClick()">Разгледай ORIA в магазина →</a>
 
   <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;margin-bottom:14px">
-    <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(220,235,255,.4);margin-bottom:14px">Свържете се с нас</div>
-    <a href="https://www.facebook.com/profile.php?id=61578697514413" target="_blank" onclick="trackFb()" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(24,119,242,.1);border:1px solid rgba(24,119,242,.2);text-decoration:none;margin-bottom:8px">
+    <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(220,235,255,.4);margin-bottom:14px">Свържете се с мен</div>
+    <a href="https://www.facebook.com/profile.php?id=61578697514413" target="_blank" onclick="trackFb()" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(24,119,242,.1);border:1px solid rgba(24,119,242,.2);text-decoration:none;margin-bottom:16px">
       <span style="font-size:20px">👤</span>
       <div><div style="font-size:11px;color:rgba(160,200,255,.55);letter-spacing:1px">FACEBOOK</div><div style="font-size:13px;font-weight:700;color:#fff">Господин Минев</div></div>
     </a>
-    <a href="https://m.me/100004993623972" target="_blank" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(0,132,255,.1);border:1px solid rgba(0,132,255,.2);text-decoration:none;margin-bottom:8px">
-      <span style="font-size:20px">💬</span>
-      <div><div style="font-size:11px;color:rgba(160,200,255,.55);letter-spacing:1px">MESSENGER</div><div style="font-size:13px;font-weight:700;color:#fff">Пишете ни директно</div></div>
-    </a>
-    <a href="https://wa.me/?text=Здравейте%2C%20интересувам%20се%20от%20ORIA%20Water%20Dispenser." target="_blank" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);text-decoration:none;margin-bottom:8px">
-      <span style="font-size:20px">💬</span>
-      <div><div style="font-size:11px;color:rgba(160,200,255,.55);letter-spacing:1px">WHATSAPP</div><div style="font-size:13px;font-weight:700;color:#fff">Пишете ни директно</div></div>
-    </a>
-    <a href="mailto:gospodin.minev@abv.bg" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(31,206,110,.08);border:1px solid rgba(31,206,110,.2);text-decoration:none">
-      <span style="font-size:20px">✉️</span>
-      <div><div style="font-size:11px;color:rgba(160,200,255,.55);letter-spacing:1px">ИМЕЙЛ</div><div style="font-size:13px;font-weight:700;color:#fff">gospodin.minev@abv.bg</div></div>
-    </a>
+    <div style="font-size:12px;color:rgba(220,235,255,.45);text-align:center;margin-bottom:14px">или изпратете съобщение</div>
+    <form id="oria-contact-form" action="https://formspree.io/f/xeevbpba" method="POST">
+      <input type="hidden" name="_subject" value="Запитване за ORIA Water Dispenser">
+      <input type="text" name="name" placeholder="Вашето име" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:14px;outline:none;margin-bottom:10px;font-family:inherit">
+      <input type="email" name="email" placeholder="Имейл за отговор" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:14px;outline:none;margin-bottom:10px;font-family:inherit">
+      <textarea name="message" placeholder="Вашето съобщение…" required rows="3" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:14px;outline:none;resize:none;font-family:inherit;margin-bottom:10px"></textarea>
+      <button type="submit" style="width:100%;padding:13px;background:rgba(26,144,255,.85);color:#fff;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer;font-family:inherit">Изпрати съобщение</button>
+    </form>
+    <div id="oria-contact-success" style="display:none;text-align:center;padding:14px;color:#1fce6e;font-size:14px;font-weight:600">✅ Съобщението е изпратено! Ще се свържем с Вас скоро.</div>
   </div>
 
   <div class="powered">Изчислено от <a href="https://gospodinminev91-tech.github.io/gans-quiz/quiz-flow-v2.html">SKYLAB GANS</a></div>
@@ -511,6 +509,34 @@
   }
 
   onPeople(2);onLiters(2);calc();
+
+  // Formspree AJAX за ORIA контактна форма
+  (function() {
+    var form = document.getElementById('oria-contact-form');
+    if (!form) return;
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var btn = form.querySelector('button[type=submit]');
+      btn.textContent = 'Изпращане...';
+      btn.disabled = true;
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      }).then(function(r) {
+        if (r.ok) {
+          form.style.display = 'none';
+          document.getElementById('oria-contact-success').style.display = 'block';
+        } else {
+          btn.textContent = 'Грешка — опитайте отново';
+          btn.disabled = false;
+        }
+      }).catch(function() {
+        btn.textContent = 'Грешка — опитайте отново';
+        btn.disabled = false;
+      });
+    });
+  })();
 </script>
 </body>
 </html>
