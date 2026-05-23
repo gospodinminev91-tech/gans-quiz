@@ -557,25 +557,34 @@ body {
 .vcard-quick-name{font-size:13px;font-weight:700;color:rgba(220,235,255,0.92);margin-bottom:3px;}
 .vcard-quick-sub{font-size:11px;color:rgba(160,200,255,0.65);}
 @keyframes avatarGlow{0%,100%{opacity:1;transform:scale(1)}
-</style>
 
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '980592821368351');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=980592821368351&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
+/* ── COOKIE BANNER ── */
+.cookie-banner {
+  position: fixed; bottom: 74px; left: 0; right: 0; z-index: 9999;
+  background: #1c2130;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  animation: fadeUp .3s ease;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+}
+.cookie-banner p {
+  flex: 1; min-width: 200px;
+  font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; margin: 0;
+}
+.cookie-btns { display: flex; gap: 8px; flex-shrink: 0; }
+.cookie-accept {
+  padding: 9px 18px; background: var(--accent); color: #0d0f14;
+  font-size: 13px; font-weight: 700; border: none; border-radius: 8px;
+  cursor: pointer; font-family: inherit;
+}
+.cookie-decline {
+  padding: 9px 14px; background: transparent;
+  border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.45);
+  font-size: 13px; border-radius: 8px; cursor: pointer; font-family: inherit;
+}
+</style>
 
 </head>
 <body>
@@ -2123,6 +2132,52 @@ function trackButtonClick(button) {
   if (fbBtn) fbBtn.addEventListener('click', function() { trackButtonClick('facebook'); });
 })();
 
+</script>
+<!-- Cookie Consent Banner -->
+<div id="cookie-banner" style="display:none; position:fixed; bottom:74px; left:0; right:0; z-index:9999; background:#1c2130; border-top:1px solid rgba(255,255,255,0.12); box-shadow:0 -4px 24px rgba(0,0,0,0.5); padding:14px 16px; align-items:center; gap:12px; flex-wrap:wrap; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <p style="flex:1; min-width:180px; font-size:13px; color:rgba(255,255,255,0.65); line-height:1.5; margin:0;">Използваме бисквитки за измерване на рекламите (Meta Pixel). Можете да откажете по всяко време.</p>
+  <div style="display:flex; gap:8px; flex-shrink:0;">
+    <button onclick="cookieDecline()" style="padding:9px 14px; background:transparent; border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.5); font-size:13px; border-radius:8px; cursor:pointer; font-family:inherit;">Отказвам</button>
+    <button onclick="cookieAccept()" style="padding:9px 18px; background:#f0a500; color:#0d0f14; font-size:13px; font-weight:700; border:none; border-radius:8px; cursor:pointer; font-family:inherit;">Приемам</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  var consent = localStorage.getItem('cookie_consent');
+  if (consent === 'yes') { loadPixel(); return; }
+  if (consent === 'no')  { return; }
+  // Показваме банера след 1.5с
+  setTimeout(function() {
+    document.getElementById('cookie-banner').style.display = 'flex';
+  }, 1500);
+})();
+
+function loadPixel() {
+  if (window._pixelLoaded) return;
+  window._pixelLoaded = true;
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '980592821368351');
+  fbq('track', 'PageView');
+}
+
+function cookieAccept() {
+  localStorage.setItem('cookie_consent', 'yes');
+  document.getElementById('cookie-banner').style.display = 'none';
+  loadPixel();
+}
+
+function cookieDecline() {
+  localStorage.setItem('cookie_consent', 'no');
+  document.getElementById('cookie-banner').style.display = 'none';
+}
 </script>
 </body>
 </html>
