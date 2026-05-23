@@ -1634,6 +1634,11 @@ function showPreResult() {
 // РЕЗУЛТАТ
 // =============================================================
 function showResult() {
+  // Meta Pixel — Lead event при клик на "Вижте резултата"
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'Lead', { content_name: 'ViewResult' });
+  }
+
   var result = computeFinalScores(state.answers, state.focusArea);
 
   // ── Защитна проверка за онкология (двойна – срещу кеш на стар scoring.js) ──
