@@ -825,6 +825,16 @@ body {
     <!-- Combo карта -->
     <div id="result-combo" style="display:none"></div>
 
+    <!-- ══ ПРОМО блок (превключваем чрез PROMO_ACTIVE) ══ -->
+    <style>
+      .promo-note{display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:3px solid #1fce6e;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:4px;}
+      .promo-note .promo-ico{font-size:18px;flex-shrink:0;line-height:1.45;}
+      .promo-note .promo-text{font-size:13px;color:rgba(220,235,255,0.85);line-height:1.6;}
+      .promo-note .promo-text strong{color:#fff;}
+      .promo-note .promo-text a{color:#1fce6e;font-weight:700;text-decoration:none;white-space:nowrap;}
+    </style>
+    <div id="result-promo" style="display:none"></div>
+
     <!-- Хидратация бележка — преди отзивите -->
     <div class="water-note" id="water-note">
       <div class="water-note-header">
@@ -876,8 +886,9 @@ body {
       </div>
     </div>
 
-    <!-- Ревюта -->
-    <div class="result-section">
+    <!-- Ревюта — СКРИТИ (махнати фалшивите отзиви). За реални отзиви: махни display:none,
+         попълни PRODUCT_DATA[...].reviews с истински (с съгласие) и върни renderReviews call в showResult -->
+    <div class="result-section" id="result-reviews-section" style="display:none">
       <div class="result-section-title">Какво споделят потребителите</div>
       <div id="result-reviews"></div>
     </div>
@@ -1589,6 +1600,19 @@ body {
 // PRODUCT_DATA, PRODUCT_LINKS, QUESTIONS, WHY_TEXT, OBSERVATIONS, computeFinalScores
 // са заредени от scoring-v4.js
 
+// ── G-24 директен продуктов линк (override тук, за да не пипаме scoring-v4.js) ──
+if (typeof PRODUCT_LINKS !== 'undefined') {
+  PRODUCT_LINKS.g24 = 'https://skylab.bg/produkt/g24-gans/ap/181/';
+}
+
+// ════════════════════════════════════════════════════════════════════
+// 🎁 ПРОМОЦИЯ — авто-гасене на крайната дата. За ръчно спиране по-рано: PROMO_ACTIVE = false
+var PROMO_ACTIVE = true;
+var PROMO_END    = '2026-06-30';  // след тази дата офертата ИЗЧЕЗВА автоматично (при нова оферта — смени датата + текста)
+var PROMO_TEXT   = 'Между другото — в момента, при покупка на <strong>Extra Health + Emotion Balance</strong>, получаваш <strong>G-24 като подарък.</strong>';
+var PROMO_LINK   = 'https://www.facebook.com/profile.php?id=61578697514413';
+// ════════════════════════════════════════════════════════════════════
+
 // ── Инжектираме Q "tried_before" преди oncology (не пипаме scoring-v4.js) ──
 (function() {
   var oncIdx = -1;
@@ -2003,8 +2027,11 @@ function showResult() {
     renderCombo(result);
   }
 
-  // Ревюта
-  renderReviews(prod.reviews);
+  // Промоция (превключваема)
+  renderPromo(result);
+
+  // Ревюта — ИЗКЛЮЧЕНИ (махнати фалшивите отзиви; ще се върнат с реални)
+  // renderReviews(prod.reviews);
 
   // Хидратация бележка
   renderWaterNote(state.answers['water']);
@@ -2280,6 +2307,34 @@ function renderCombo(result) {
 
   comboEl.innerHTML = html;
   comboEl.style.display = 'block';
+}
+
+// Промо блок — показва се само ако е активно И резултатът включва Extra/Emotion/G-24
+function renderPromo(result) {
+  var el = document.getElementById('result-promo');
+  if (!el) return;
+  el.innerHTML = '';
+
+  // Активна само ако е включена И сме преди крайната дата (авто-гасене)
+  var active = PROMO_ACTIVE && (new Date() <= new Date(PROMO_END + 'T23:59:59'));
+  if (!active) { el.style.display = 'none'; return; }
+
+  // Показваме само ако резултатът включва Extra, Emotion или G-24
+  var involved = {};
+  involved[result.winner] = true;
+  if (result.runnerUp) involved[result.runnerUp] = true;
+  if (result.g24Foundation && result.winner === 'g24') { involved['extra'] = true; involved['emotion'] = true; }
+  if (!(involved['extra'] || involved['emotion'] || involved['g24'])) {
+    el.style.display = 'none';
+    return;
+  }
+
+  el.innerHTML = '<div class="promo-note">'
+    + '<span class="promo-ico">💡</span>'
+    + '<span class="promo-text">' + PROMO_TEXT
+    + ' <a href="' + PROMO_LINK + '" target="_blank" onclick="trackButtonClick(\'promo\')">Пиши ми →</a></span>'
+    + '</div>';
+  el.style.display = 'block';
 }
 
 function renderReviews(reviews) {
