@@ -539,10 +539,13 @@ body {
 .nav-tab.active .nav-tab-dot { background: var(--accent); }
 
 @keyframes faqPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50%       { transform: scale(1.22); opacity: 0.65; }
+  0%   { transform: scale(1);    opacity: 1; }
+  4%   { transform: scale(1.14); opacity: 0.78; }
+  8%   { transform: scale(1);    opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
 }
-#nav-faq:not(.faq-seen) .nav-tab-ico { animation: faqPulse 2.4s ease-in-out infinite; }
+/* Един лек проблясък на ~9 сек (не постоянно) — забелязва се, но не разсейва */
+#nav-faq:not(.faq-seen) .nav-tab-ico { animation: faqPulse 9s ease-in-out infinite; }
 
 .story-card {
   background: var(--card); border: 1px solid var(--border);
@@ -876,13 +879,13 @@ body {
       <div class="ec-card">
         <div class="ec-ico">📩</div>
         <div class="ec-title">Запазете своя GANS профил</div>
-        <div class="ec-sub">Получете персонализиран наръчник за употреба на <span id="ec-product">продукта</span> — как се приема, за колко време се усещат резултати и как се комбинира с другите продукти.</div>
+        <div class="ec-sub">Оставете имейла си — ще получите <strong>личен линк към Вашия профил</strong> и кратък наръчник за <span id="ec-product">продукта</span>.</div>
         <form id="ec-form" class="ec-form">
           <input type="email" id="ec-email" class="ec-input" placeholder="Вашият имейл" required>
           <button type="submit" class="ec-btn" id="ec-btn">Запазете профила →</button>
         </form>
         <div class="ec-success" id="ec-success">✅ Профилът Ви е запазен. Наръчникът пристига скоро на Вашия имейл.</div>
-        <div class="ec-note">Без спам. Можете да се отпишете по всяко време.</div>
+        <div class="ec-note">Като оставите имейла си, се съгласявате да получавате имейли от мен. Без спам — отписване по всяко време.</div>
       </div>
     </div>
 
@@ -1605,6 +1608,10 @@ if (typeof PRODUCT_LINKS !== 'undefined') {
   PRODUCT_LINKS.g24 = 'https://skylab.bg/produkt/g24-gans/ap/181/';
 }
 
+// ── MailerLite — embedded form action URL (GANS Quiz Form)
+// БЕЗ API токен — само action URL от embedded form кода.
+var MAILERLITE_FORM_URL = 'https://assets.mailerlite.com/jsonp/2397851/forms/189102795837671243/subscribe';
+
 // ════════════════════════════════════════════════════════════════════
 // 🎁 ПРОМОЦИЯ — авто-гасене на крайната дата. За ръчно спиране по-рано: PROMO_ACTIVE = false
 var PROMO_ACTIVE = true;
@@ -2319,6 +2326,9 @@ function renderPromo(result) {
   var active = PROMO_ACTIVE && (new Date() <= new Date(PROMO_END + 'T23:59:59'));
   if (!active) { el.style.display = 'none'; return; }
 
+  // Промото рекламира G-24 като подарък → НЕ се показва при онкология (G-24 е забранен там)
+  if (state.answers['oncology'] === 1) { el.style.display = 'none'; return; }
+
   // Показваме само ако резултатът включва Extra, Emotion или G-24
   var involved = {};
   involved[result.winner] = true;
@@ -2521,6 +2531,7 @@ function genUUID() {
 }
 
 function saveToSupabase(result) {
+  if (state._readonlyMode) return; // read-only режим (?id=) — не записваме нов ред
   var isG24Foundation = !!(result.g24Foundation && result.winner === 'g24');
   var rowId = genUUID();
   state.resultRowId = rowId; // налично веднага — имейл capture ползва същия id
@@ -2560,7 +2571,8 @@ function saveToSupabase(result) {
         var a = q.answers.filter(function(x){ return x.key === key; })[0];
         return a ? a.text : key;
       });
-    })()
+    })(),
+    answers_json:   state.answers   // пълните отговори → за повторно рендиране по ?id=
   };
 
   _supabase.from('quiz_results_v4').insert(payload).then(function(res) {
@@ -2593,8 +2605,37 @@ function saveToSupabase(result) {
         btn.disabled = false; btn.textContent = 'Опитайте отново';
         return;
       }
+      // ── MailerLite POST (best-effort, без токен) ──
+      // Полета: email (built-in), name (built-in), result_link + product (custom fields)
+      if (MAILERLITE_FORM_URL) {
+        try {
+          var prodName = (state.result && PRODUCT_DATA[state.result.winner])
+            ? PRODUCT_DATA[state.result.winner].name : '';
+          var resultLinkFull = 'https://gospodinminev91-tech.github.io/gans-quiz/quiz-flow-v4.html?id='
+            + (state.resultRowId || '');
+          var mlData = 'fields[email]='       + encodeURIComponent(email)
+            + '&fields[name]='        + encodeURIComponent(state.answers['name'] || '')
+            + '&fields[result_link]=' + encodeURIComponent(resultLinkFull)
+            + '&fields[product]='     + encodeURIComponent(prodName)
+            + '&ml-submit=1&anticsrf=true';
+          fetch(MAILERLITE_FORM_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: mlData
+          }).catch(function(){});
+        } catch(e) {}
+      }
+      // ── Показваме резултатния линк в success блока ──
+      var resultLink = 'https://gospodinminev91-tech.github.io/gans-quiz/quiz-flow-v4.html?id='
+        + (state.resultRowId || '');
+      var succEl = document.getElementById('ec-success');
+      succEl.innerHTML = '✅ Профилът Ви е запазен. Ще получите имейл с личен линк скоро.'
+        + '<br><small style="display:block;margin-top:8px;color:rgba(255,255,255,0.45);font-weight:400;">'
+        + 'Или запазете линка сега: '
+        + '<a href="' + resultLink + '" style="color:#1a90ff;" target="_blank">Вашият профил →</a>'
+        + '</small>';
       form.style.display = 'none';
-      document.getElementById('ec-success').style.display = 'block';
+      succEl.style.display = 'block';
     });
   });
 })();
@@ -2673,6 +2714,35 @@ function trackButtonClick(button) {
 (function() {
   var fbBtn = document.querySelector('a.btn-ask');
   if (fbBtn) fbBtn.addEventListener('click', function() { trackButtonClick('facebook'); });
+})();
+
+// ── Дълбок линк: ?gans отваря право секция „ЗА GANS" (за линка в имейла) ──
+(function() {
+  if (/[?&]gans(\b|=)/i.test(location.search)) {
+    try { showSection('faq'); } catch (e) {}
+  }
+})();
+
+// ── Режим „виж по id": ?id=<uuid> зарежда запазения резултат в само-четим режим ──
+// Линкът се изпраща на имейл чрез MailerLite. Не се прави нов Supabase запис.
+// RPC get_quiz_result е security definer → anon може да чете само name + answers_json.
+(function() {
+  var id = new URLSearchParams(location.search).get('id');
+  if (!id) return;
+  state._readonlyMode = true;
+  _supabase.rpc('get_quiz_result', { row_id: id }).then(function(res) {
+    if (res.error || !res.data || !res.data.length) {
+      // Невалиден или изтекъл id — оставяме welcome екрана
+      state._readonlyMode = false;
+      return;
+    }
+    var row = res.data[0];
+    state.answers = row.answers_json || {};
+    showResult();
+    // Скриваме имейл capture — вече са дали имейл
+    var ecSection = document.getElementById('email-capture');
+    if (ecSection) ecSection.style.display = 'none';
+  });
 })();
 
 </script>
