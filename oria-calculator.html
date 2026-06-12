@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ORIA · Колко спестявам?</title>
+  <meta name="description" content="Въведи колко вода пие домакинството ти и виж реалната сметка с ORIA Water Dispenser — за 1, 3 и 5 години напред.">
+  <meta property="og:title" content="Колко спестяваш с ORIA? — направи си сметката">
+  <meta property="og:description" content="Въведи колко вода пие домакинството ти и виж реалната разлика — за 1, 3 и 5 години напред.">
+  <meta property="og:image" content="https://gospodinminev91-tech.github.io/gans-quiz/Oria%20Dispenser.png">
+  <meta property="og:url" content="https://gospodinminev91-tech.github.io/gans-quiz/oria-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="bg_BG">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(160deg,#08111f 0%,#0d1f3c 60%,#08111f 100%);min-height:100vh;color:#fff;padding:24px 16px 60px}
@@ -12,23 +19,23 @@
     .badge{display:inline-block;background:rgba(26,144,255,.15);border:1px solid rgba(26,144,255,.35);color:#1a90ff;font-size:10px;font-weight:800;letter-spacing:2px;padding:5px 14px;border-radius:20px;margin-bottom:14px;text-transform:uppercase}
     .header h1{font-size:30px;font-weight:900;line-height:1.15;margin-bottom:10px}
     .header h1 .accent{color:#1a90ff}
-    .header p{font-size:14px;color:rgba(220,235,255,.65);line-height:1.55}
+    .header p{font-size:15px;color:rgba(220,235,255,.65);line-height:1.55}
     .card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:22px;margin-bottom:14px}
     .card-title{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(220,235,255,.45);margin-bottom:18px}
     .slider-group{margin-bottom:20px}
     .slider-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .slider-label-row span{font-size:14px;color:rgba(220,235,255,.82)}
+    .slider-label-row span{font-size:15px;color:rgba(220,235,255,.82)}
     .slider-val{font-size:16px;font-weight:800;color:#fff;background:rgba(26,144,255,.18);border:1px solid rgba(26,144,255,.3);padding:3px 10px;border-radius:8px;min-width:60px;text-align:center}
     input[type=range]{width:100%;height:6px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.13);border-radius:4px;outline:none;cursor:pointer}
     input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;background:#1a90ff;border-radius:50%;cursor:pointer;box-shadow:0 0 10px rgba(26,144,255,.6)}
     input[type=range]::-moz-range-thumb{width:24px;height:24px;background:#1a90ff;border-radius:50%;border:none;cursor:pointer}
     .select-wrap{position:relative}
     .select-wrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:rgba(220,235,255,.5);pointer-events:none}
-    select{width:100%;padding:13px 16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:11px;color:#fff;font-size:14px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none}
+    select{width:100%;padding:13px 16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:11px;color:#fff;font-size:16px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none}
     select option{background:#0d1f3c;color:#fff}
     .manual-input-wrap{margin-top:12px;display:none}
     .manual-input-wrap.show{display:flex;align-items:center;gap:10px}
-    .manual-label{font-size:13px;color:rgba(220,235,255,.7);flex:1}
+    .manual-label{font-size:14px;color:rgba(220,235,255,.7);flex:1}
     .manual-inp{width:100px;padding:10px 12px;background:rgba(255,255,255,.08);border:1px solid rgba(26,144,255,.4);border-radius:10px;color:#fff;font-size:16px;font-weight:700;text-align:right;outline:none}
     .manual-unit{font-size:14px;color:rgba(220,235,255,.5)}
     /* Т0 — Бутон "Промени цените" — по-видим */
@@ -38,8 +45,8 @@
     .adv-card{display:none}
     .adv-card.open{display:block}
     .price-row{display:flex;align-items:center;gap:8px;margin-bottom:11px}
-    .price-lbl{flex:1;font-size:13px;color:rgba(220,235,255,.68)}
-    .price-inp{width:88px;padding:8px 10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:9px;color:#fff;font-size:14px;font-weight:700;text-align:right;outline:none}
+    .price-lbl{flex:1;font-size:14px;color:rgba(220,235,255,.68)}
+    .price-inp{width:92px;padding:8px 10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:9px;color:#fff;font-size:16px;font-weight:700;text-align:right;outline:none}
     .price-unit{font-size:12px;color:rgba(220,235,255,.4);width:18px}
     .price-note{font-size:11px;color:rgba(220,235,255,.35);margin-top:-8px;margin-bottom:10px;padding-left:2px}
     .divider{height:1px;background:rgba(255,255,255,.07);margin:16px 0}
@@ -51,6 +58,7 @@
     .m-amt{font-size:30px;font-weight:900;color:#fff;line-height:1}
     .m-box.oria .m-amt{color:#1a90ff}
     .m-unit{font-size:12px;color:rgba(220,235,255,.45);margin-top:4px}
+    .m-lv{font-size:12px;color:rgba(220,235,255,.38);margin-top:2px}
     .be-box{border-radius:13px;padding:15px 18px;text-align:center;margin-bottom:16px;background:rgba(31,206,110,.09);border:1px solid rgba(31,206,110,.28)}
     .be-box.negative{background:rgba(255,124,26,.09);border:1px solid rgba(255,124,26,.28)}
     .be-lbl{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(31,206,110,.8);margin-bottom:5px}
@@ -75,6 +83,9 @@
     .big-lbl{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(31,206,110,.9);margin-bottom:10px}
     .big-amt{font-size:62px;font-weight:900;color:#1fce6e;line-height:1;margin-bottom:6px}
     .big-sub{font-size:15px;color:rgba(220,235,255,.65)}
+    .inst-hint{background:rgba(31,206,110,.08);border:1px solid rgba(31,206,110,.25);border-radius:13px;padding:15px 16px;font-size:14px;line-height:1.6;color:rgba(220,235,255,.85);margin-bottom:16px}
+    .inst-hint strong{color:#1fce6e}
+    .inst-hint button{background:none;border:none;color:#1a90ff;font-size:14px;font-weight:700;cursor:pointer;padding:6px 0 0;display:block;font-family:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
     /* Т1 — Втори CTA след главното число */
     .cta-mid{display:block;width:100%;padding:17px;background:#1a90ff;color:#fff;font-size:16px;font-weight:800;text-align:center;border-radius:13px;text-decoration:none;letter-spacing:.3px;box-shadow:0 4px 20px rgba(26,144,255,.35);margin:0 0 16px}
     .plastic-box{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.04);border-radius:13px;padding:15px;margin-bottom:14px}
@@ -82,20 +93,23 @@
     .plastic-count{font-size:22px;font-weight:900;color:#fff}
     .plastic-sub{font-size:12px;color:rgba(220,235,255,.5);margin-top:2px}
     /* Т6 — Здравна бележка с toggle */
-    .health-note{border-left:3px solid #1a90ff;background:rgba(26,144,255,.07);border-radius:0 11px 11px 0;padding:13px 14px;font-size:13px;color:rgba(220,235,255,.72);line-height:1.55;margin-bottom:8px}
+    .health-note{border-left:3px solid #1a90ff;background:rgba(26,144,255,.07);border-radius:0 11px 11px 0;padding:13px 14px;font-size:14px;color:rgba(220,235,255,.72);line-height:1.55;margin-bottom:8px}
     .health-note strong{color:#1a90ff}
-    .health-more{display:none}
-    .health-toggle{background:none;border:none;color:rgba(26,144,255,.8);font-size:12px;cursor:pointer;padding:2px 0 0;display:block;font-family:inherit;text-decoration:underline;text-decoration-style:dotted}
+    .story-quote{font-size:15px;line-height:1.65;color:rgba(220,235,255,.88);font-style:italic;border-left:3px solid #1a90ff;padding:4px 0 4px 14px;margin-bottom:12px}
+    .story-author{font-size:13px;color:rgba(220,235,255,.5)}
+    .why-text{font-size:14px;line-height:1.6;color:rgba(220,235,255,.75);margin-bottom:12px}
+    .why-link{display:inline-block;color:#1a90ff;font-size:14px;font-weight:700;text-decoration:none}
+    .ask-link{display:block;text-align:center;font-size:14px;color:rgba(220,235,255,.6);margin:-4px 0 16px;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
     /* INSTALLMENTS */
     .inst-card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:22px;margin-bottom:14px}
-    .inst-intro{font-size:13px;color:rgba(220,235,255,.65);margin-bottom:14px;line-height:1.5}
+    .inst-intro{font-size:14px;color:rgba(220,235,255,.65);margin-bottom:14px;line-height:1.5}
     .inst-intro strong{color:#fff}
     .inst-table{width:100%;border-collapse:collapse;table-layout:fixed}
     .inst-table tr{border-bottom:1px solid rgba(255,255,255,.06)}
     .inst-table tr:last-child{border-bottom:none}
-    .inst-table td{padding:8px 4px;font-size:12px;vertical-align:middle;overflow:hidden}
+    .inst-table td{padding:8px 4px;font-size:13px;vertical-align:middle;overflow:hidden}
     .inst-period{color:rgba(220,235,255,.55);font-weight:600;width:60px}
-    .inst-amount{font-size:13px;font-weight:800;color:#fff;white-space:nowrap}
+    .inst-amount{font-size:14px;font-weight:800;color:#fff;white-space:nowrap}
     .inst-total{font-size:10px;color:rgba(220,235,255,.35);text-align:right;white-space:nowrap}
     .inst-tag{display:inline-block;font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px;letter-spacing:.2px;white-space:normal;word-break:break-word;max-width:90px;line-height:1.3;text-align:center}
     .inst-tag.cheaper{background:rgba(31,206,110,.18);border:1px solid rgba(31,206,110,.3);color:#1fce6e}
@@ -103,7 +117,7 @@
     .inst-tag.higher{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(220,235,255,.38)}
     /* GANS FORMULAS */
     .gans-card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:22px;margin-bottom:14px}
-    .gans-intro{font-size:13px;color:rgba(220,235,255,.7);line-height:1.55;margin-bottom:16px}
+    .gans-intro{font-size:14px;color:rgba(220,235,255,.7);line-height:1.55;margin-bottom:16px}
     .gans-intro strong{color:#fff}
     .gans-formula{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.04)}
     .gans-formula:last-child{margin-bottom:0}
@@ -115,7 +129,7 @@
     .gans-name.extra{color:#1a90ff}
     .gans-name.emotion{color:#a04fff}
     .gans-name.move{color:#1fce6e}
-    .gans-desc{font-size:12px;color:rgba(220,235,255,.6);line-height:1.5}
+    .gans-desc{font-size:13px;color:rgba(220,235,255,.6);line-height:1.5}
     .cta{display:block;width:100%;padding:17px;background:#1a90ff;color:#fff;font-size:16px;font-weight:800;text-align:center;border-radius:13px;text-decoration:none;letter-spacing:.3px;box-shadow:0 4px 20px rgba(26,144,255,.35);margin-bottom:10px}
     /* Т5 — Контактна секция — по-видима */
     .contact-card{background:rgba(26,144,255,.07);border:1px solid rgba(26,144,255,.2);border-radius:18px;padding:22px;margin-bottom:14px}
@@ -152,7 +166,7 @@
       <input type="range" id="liters" min="0.5" max="10" step="0.5" value="2" oninput="onLiters(this.value);calc()">
     </div>
     <div class="slider-group">
-      <div class="slider-label-row" style="margin-bottom:10px"><span>Как купувате вода сега?</span></div>
+      <div class="slider-label-row" style="margin-bottom:10px"><span>Как купуваш вода сега?</span></div>
       <div class="select-wrap">
         <select id="method" onchange="onMethodChange();calc()">
           <option value="b15">Бутилирана вода 1.5 л</option>
@@ -210,45 +224,20 @@
     </div>
   </div>
 
-  <!-- Т4 — GANS формули преместени тук, преди резултатите -->
-  <div class="gans-card">
-    <div class="card-title">Трите GANS формули в ORIA</div>
-    <p class="gans-intro">ORIA съдържа <strong>трите GANS формули</strong> на SKYLAB Industries, които структурират водата и допринасят за здравето на организма:</p>
-    <div class="gans-formula">
-      <div class="gans-dot extra"></div>
-      <div>
-        <div class="gans-name extra">Extra Health</div>
-        <div class="gans-desc">Цялостна подкрепа на организма на клетъчно ниво. Преструктурира водата в тялото. Подпомага имунната система, дихателната система и вътрешните органи. Подходящ при профилактика, умора, чести боледувания.</div>
-      </div>
-    </div>
-    <div class="gans-formula">
-      <div class="gans-dot emotion"></div>
-      <div>
-        <div class="gans-name emotion">Emotion Balance</div>
-        <div class="gans-desc">Подкрепа на нервната система и емоционалното равновесие. Намалява стреса, тревожността и безсънието. Естествено възстановява баланса в организма и човек се чувства по-спокоен.</div>
-      </div>
-    </div>
-    <div class="gans-formula">
-      <div class="gans-dot move"></div>
-      <div>
-        <div class="gans-name move">Move Complex</div>
-        <div class="gans-desc">Подкрепа на опорно-двигателната система. Влияе върху стави, сухожилия и хрущяли. Намалява по естествен начин болката в ставите. Подпомага възстановяването след физическа активност. Подходящ за всякакви възрасти.</div>
-      </div>
-    </div>
-  </div>
-
   <div class="card">
     <div class="card-title">Твоят резултат</div>
     <div class="monthly-grid">
       <div class="m-box">
-        <div class="m-lbl">Плащате сега</div>
+        <div class="m-lbl">Плащаш сега</div>
         <div class="m-amt" id="r-now">—</div>
         <div class="m-unit">€ / месец</div>
+        <div class="m-lv" id="r-now-lv"></div>
       </div>
       <div class="m-box oria">
-        <div class="m-lbl">С ORIA (поддържка)</div>
+        <div class="m-lbl">С ORIA (поддръжка)</div>
         <div class="m-amt" id="r-oria">—</div>
         <div class="m-unit">€ / месец</div>
+        <div class="m-lv" id="r-oria-lv"></div>
       </div>
     </div>
     <div class="be-box" id="be-box">
@@ -285,13 +274,20 @@
 
     <!-- Т2 — Big savings с по-голям акцент -->
     <div class="big-savings">
-      <div class="big-lbl" id="big-lbl">🎯 Спестявате за 5 години</div>
+      <div class="big-lbl" id="big-lbl">🎯 Спестяваш за 5 години</div>
       <div class="big-amt" id="big-amt">—</div>
       <div class="big-sub" id="big-sub">€ чиста икономия</div>
     </div>
 
+    <!-- Авто-акцент: вноска срещу текущ месечен разход -->
+    <div class="inst-hint hidden" id="inst-hint">
+      💳 <span id="inst-hint-text"></span>
+      <button onclick="openInstallments()">Виж всички варианти за изплащане →</button>
+    </div>
+
     <!-- Т1 — Втори CTA директно след главното число -->
-    <a class="cta-mid" href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" onclick="trackClick()">Разгледай ORIA в магазина →</a>
+    <a class="cta-mid" href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" onclick="trackClick('shop-mid')">Разгледай ORIA в магазина →</a>
+    <a class="ask-link" href="#contact">Имаш въпрос? Пиши ми директно ↓</a>
 
     <div class="plastic-box hidden" id="plastic-box">
       <div class="plastic-icon">♻️</div>
@@ -301,52 +297,91 @@
       </div>
     </div>
 
-    <!-- Т6 — Здравна бележка с "Прочети повече" -->
     <div class="health-note">
-      💡 <strong>4-степенна обратна осмоза + GANS структуриране:</strong> Водата преминава през многостепенно пречистване — тежки метали, химикали и микроорганизми се отстраняват напълно.
-      <span class="health-more" id="health-more"> GANS структурирането я прави биологично по-достъпна за клетките — сравнението в пари е само едната част от историята.</span>
-      <button class="health-toggle" id="health-toggle" onclick="toggleHealth()">Прочети повече ↓</button>
+      💡 <strong>4-степенна обратна осмоза + GANS структуриране:</strong> водата преминава през многостепенно пречистване от тежки метали, химикали и микроорганизми. А GANS структурирането прави това, което обикновеният филтър не прави — сметката в пари е само едната страна. Виж по-долу ↓
+    </div>
+  </div>
+
+  <!-- Лична история -->
+  <div class="card">
+    <div class="card-title">Моят опит с ORIA</div>
+    <div class="story-quote">„Вече не купувам стекове с вода, не ги мъкна до вкъщи и не изхвърлям безброй пластмасови бутилки. Зареждам диспенсера направо от чешмата — и получавам чиста, „заредена" вода."</div>
+    <div class="story-author">— Господин Минев · ползвам ORIA от месец, откакто излезе на пазара</div>
+  </div>
+
+  <!-- Защо ORIA, а не обикновен филтър -->
+  <div class="card">
+    <div class="card-title">Защо ORIA, а не обикновен филтър?</div>
+    <p class="why-text">Честен отговор: спестяването от сметката по-горе би ти го дал всеки добър филтър с обратна осмоза. Разликата е какво се случва с водата <strong style="color:#fff">след</strong> пречистването.</p>
+    <p class="why-text">Обикновеният филтър спира дотам — чиста вода. ORIA добавя GANS структуриране с трите формули по-долу. GANS не лекува — създава условия тялото да се самовъзстановява.</p>
+    <a class="why-link" href="quiz-flow-v4.html?gans" target="_blank">Какво е GANS? Виж пълното обяснение →</a>
+  </div>
+
+  <!-- Трите GANS формули -->
+  <div class="gans-card">
+    <div class="card-title">Трите GANS формули в ORIA</div>
+    <p class="gans-intro">ORIA съдържа <strong>трите GANS формули</strong> на SKYLAB Industries, които структурират водата:</p>
+    <div class="gans-formula">
+      <div class="gans-dot extra"></div>
+      <div>
+        <div class="gans-name extra">Extra Health</div>
+        <div class="gans-desc">Цялостна подкрепа на организма на клетъчно ниво. Подпомага имунната система, дихателната система и вътрешните органи. Подходящ при профилактика, умора, чести боледувания.</div>
+      </div>
+    </div>
+    <div class="gans-formula">
+      <div class="gans-dot emotion"></div>
+      <div>
+        <div class="gans-name emotion">Emotion Balance</div>
+        <div class="gans-desc">Подкрепа на нервната система и емоционалното равновесие. Създава условия за по-спокоен сън и по-добра реакция на стрес и напрежение.</div>
+      </div>
+    </div>
+    <div class="gans-formula">
+      <div class="gans-dot move"></div>
+      <div>
+        <div class="gans-name move">Move Complex</div>
+        <div class="gans-desc">Подкрепа на опорно-двигателната система — стави, сухожилия и хрущяли. Създава условия за по-леко движение и възстановяване след натоварване. Подходящ за всяка възраст.</div>
+      </div>
     </div>
   </div>
 
   <!-- Т3 — Питаме ПЪРВО предпочитанието -->
   <div class="inst-card" id="pay-pref-card">
-    <div class="card-title">Как бихте желали да се сдобиете с ORIA?</div>
+    <div class="card-title">Как предпочиташ да вземеш ORIA?</div>
     <div style="display:flex;gap:10px;margin-bottom:14px">
-      <button id="btn-cash" onclick="setPayPref('cash')" style="flex:1;padding:12px;border-radius:10px;border:1px solid rgba(31,206,110,.4);background:rgba(31,206,110,.12);color:#1fce6e;font-size:14px;font-weight:700;cursor:pointer;">&#10003; Еднократно</button>
-      <button id="btn-inst" onclick="setPayPref('installment')" style="flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);color:rgba(220,235,255,.7);font-size:14px;font-weight:700;cursor:pointer;">На изплащане</button>
+      <button id="btn-cash" onclick="setPayPref('cash')" style="flex:1;padding:14px;border-radius:10px;border:1px solid rgba(31,206,110,.4);background:rgba(31,206,110,.12);color:#1fce6e;font-size:15px;font-weight:700;cursor:pointer;">&#10003; Еднократно</button>
+      <button id="btn-inst" onclick="setPayPref('installment')" style="flex:1;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);color:rgba(220,235,255,.7);font-size:15px;font-weight:700;cursor:pointer;">На изплащане</button>
     </div>
-    <div id="inst-choose" style="display:none;font-size:13px;color:rgba(220,235,255,.65);line-height:1.6;padding:10px 14px;background:rgba(26,144,255,.07);border-radius:10px;border-left:3px solid #1a90ff">
-      Разгледайте вариантите за изплащане директно в магазина &mdash;
-      <a href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" style="color:#1a90ff;font-weight:700;text-decoration:none;">вижте тук &#8594;</a>
+    <div id="inst-choose" style="display:none;font-size:14px;color:rgba(220,235,255,.65);line-height:1.6;padding:10px 14px;background:rgba(26,144,255,.07);border-radius:10px;border-left:3px solid #1a90ff">
+      Разгледай вариантите за изплащане директно в магазина &mdash;
+      <a href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" onclick="trackClick('shop-inst')" style="color:#1a90ff;font-weight:700;text-decoration:none;">виж тук &#8594;</a>
     </div>
   </div>
 
   <!-- Т3 — Таблицата с вноски се показва САМО при избор "На изплащане" -->
   <div class="inst-card" id="inst-card-wrap" style="display:none">
     <div class="card-title">ORIA на изплащане</div>
-    <div class="inst-intro">Плащате <strong id="inst-spend">—</strong> €/мес. за вода. Вижте кои вноски са по-малко от това:</div>
+    <div class="inst-intro">Плащаш <strong id="inst-spend">—</strong> €/мес. за вода. Виж кои вноски са по-малки от това:</div>
     <table class="inst-table"><tbody id="inst-tbody"></tbody></table>
   </div>
 
   <a class="cta" href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" id="cta-btn" onclick="trackClick()">Разгледай ORIA в магазина →</a>
 
   <!-- Т5 — Контактна секция — по-видима -->
-  <div class="contact-card">
-    <div class="contact-title">Свържете се с мен</div>
+  <div class="contact-card" id="contact">
+    <div class="contact-title">Свържи се с мен</div>
     <a href="https://www.facebook.com/profile.php?id=61578697514413" target="_blank" onclick="trackFb()" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(24,119,242,.1);border:1px solid rgba(24,119,242,.2);text-decoration:none;margin-bottom:16px">
       <span style="font-size:20px">👤</span>
       <div><div style="font-size:11px;color:rgba(160,200,255,.55);letter-spacing:1px">FACEBOOK</div><div style="font-size:13px;font-weight:700;color:#fff">Господин Минев</div></div>
     </a>
-    <div style="font-size:12px;color:rgba(220,235,255,.45);text-align:center;margin-bottom:14px">или изпратете съобщение</div>
+    <div style="font-size:13px;color:rgba(220,235,255,.45);text-align:center;margin-bottom:14px">или ми изпрати съобщение</div>
     <form id="oria-contact-form" action="https://formspree.io/f/xeevbpba" method="POST">
       <input type="hidden" name="_subject" value="Запитване за ORIA Water Dispenser">
-      <input type="text" name="name" placeholder="Вашето име" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:14px;outline:none;margin-bottom:10px;font-family:inherit">
-      <input type="email" name="email" placeholder="Имейл за отговор" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:14px;outline:none;margin-bottom:10px;font-family:inherit">
-      <textarea name="message" placeholder="Вашето съобщение…" required rows="3" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:14px;outline:none;resize:none;font-family:inherit;margin-bottom:10px"></textarea>
+      <input type="text" name="name" placeholder="Твоето име" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:16px;outline:none;margin-bottom:10px;font-family:inherit">
+      <input type="email" name="email" placeholder="Имейл за отговор" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:16px;outline:none;margin-bottom:10px;font-family:inherit">
+      <textarea name="message" placeholder="Твоето съобщение…" required rows="3" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:16px;outline:none;resize:none;font-family:inherit;margin-bottom:10px"></textarea>
       <button type="submit" style="width:100%;padding:13px;background:rgba(26,144,255,.85);color:#fff;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer;font-family:inherit">Изпрати съобщение</button>
     </form>
-    <div id="oria-contact-success" style="display:none;text-align:center;padding:14px;color:#1fce6e;font-size:14px;font-weight:600">✅ Съобщението е изпратено! Ще се свържем с Вас скоро.</div>
+    <div id="oria-contact-success" style="display:none;text-align:center;padding:14px;color:#1fce6e;font-size:14px;font-weight:600">✅ Съобщението е изпратено! Ще се свържа с теб скоро.</div>
   </div>
 
   <div class="powered">Изчислено от <a href="https://gospodinminev91-tech.github.io/gans-quiz/quiz-flow-v2.html">SKYLAB GANS</a></div>
@@ -367,13 +402,10 @@
   var _bestPlan = '';
   var _mwo = 0;
 
-  // Т6 — Toggle за здравната бележка
-  function toggleHealth() {
-    var more = document.getElementById('health-more');
-    var btn = document.getElementById('health-toggle');
-    var visible = more.style.display === 'inline';
-    more.style.display = visible ? 'none' : 'inline';
-    btn.textContent = visible ? 'Прочети повече ↓' : 'Скрий ↑';
+  // Отваря таблицата с вноски от авто-акцента
+  function openInstallments() {
+    setPayPref('installment');
+    $id('inst-card-wrap').scrollIntoView({behavior:'smooth'});
   }
 
   // Т3 — setPayPref контролира и таблицата с вноски
@@ -382,13 +414,13 @@
     var cashBtn = $id('btn-cash'), instBtn = $id('btn-inst');
     var instCardWrap = $id('inst-card-wrap');
     if (pref === 'cash') {
-      cashBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:1px solid rgba(31,206,110,.4);background:rgba(31,206,110,.12);color:#1fce6e;font-size:14px;font-weight:700;cursor:pointer;';
-      instBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);color:rgba(220,235,255,.7);font-size:14px;font-weight:700;cursor:pointer;';
+      cashBtn.style.cssText = 'flex:1;padding:14px;border-radius:10px;border:1px solid rgba(31,206,110,.4);background:rgba(31,206,110,.12);color:#1fce6e;font-size:15px;font-weight:700;cursor:pointer;';
+      instBtn.style.cssText = 'flex:1;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);color:rgba(220,235,255,.7);font-size:15px;font-weight:700;cursor:pointer;';
       $id('inst-choose').style.display = 'none';
       instCardWrap.style.display = 'none';
     } else {
-      instBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:1px solid rgba(26,144,255,.4);background:rgba(26,144,255,.12);color:#1a90ff;font-size:14px;font-weight:700;cursor:pointer;';
-      cashBtn.style.cssText = 'flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);color:rgba(220,235,255,.7);font-size:14px;font-weight:700;cursor:pointer;';
+      instBtn.style.cssText = 'flex:1;padding:14px;border-radius:10px;border:1px solid rgba(26,144,255,.4);background:rgba(26,144,255,.12);color:#1a90ff;font-size:15px;font-weight:700;cursor:pointer;';
+      cashBtn.style.cssText = 'flex:1;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.05);color:rgba(220,235,255,.7);font-size:15px;font-weight:700;cursor:pointer;';
       $id('inst-choose').style.display = 'block';
       instCardWrap.style.display = 'block';
     }
@@ -408,7 +440,7 @@
     });
   }
 
-  function trackClick() {
+  function trackClick(btn) {
     var people = parseInt($id('people').value);
     var liters = parseFloat($id('liters').value);
     var method = $id('method').value;
@@ -420,7 +452,7 @@
       saving_5y:      Math.round(_saving5),
       cheaper_plans:  _cheaperPlans || null,
       best_plan:      _bestPlan || null,
-      button:         'shop',
+      button:         btn || 'shop',
       payment_pref:   _payPref,
       chosen_plan:    _payPref === 'installment' ? 'installment' : null
     }).then(function(res) {
@@ -442,6 +474,8 @@
   function val(id){return parseFloat($id(id).value)||0}
   function setText(id,txt){$id(id).textContent=txt}
   function fmtE(n){n=Math.round(n);return n>=1000?n.toLocaleString('bg-BG'):n.toString()}
+  var LV=1.95583;
+  function fmtLv(n){return fmtE(n*LV)}
 
   function onPeople(v){$id('people-val').textContent=v+(v==1?' човек':' души')}
   function onLiters(v){$id('liters-val').textContent=parseFloat(v).toFixed(1)+' л'}
@@ -478,6 +512,8 @@
     _mwo=mwo;
     setText('r-now',Math.round(mwo));
     setText('r-oria',Math.round(oriaAnn/12));
+    setText('r-now-lv','≈ '+fmtLv(mwo)+' лв.');
+    setText('r-oria-lv','≈ '+fmtLv(oriaAnn/12)+' лв.');
 
     var beBox=$id('be-box'),diff=annual-oriaAnn;
     if(diff>0){
@@ -488,7 +524,7 @@
     } else {
       beBox.className='be-box negative';
       setText('be-val','Изплащането е дългосрочно');
-      setText('be-note','ORIA носи предимно здравна стойност при евтина вода');
+      setText('be-note','При евтина вода ORIA е инвестиция в качеството на водата, не в спестяване');
     }
 
     var refMax=Math.max(wo(1),wi(1),wo(3),wi(3),wo(5),wi(5));
@@ -507,15 +543,15 @@
     _saving5=s5;
     var ba=$id('big-amt');
     if(s5>0){
-      setText('big-lbl','🎯 Спестявате за 5 години');
-      ba.textContent=fmtE(s5);ba.style.color='#1fce6e';setText('big-sub','€ чиста икономия');
+      setText('big-lbl','🎯 Спестяваш за 5 години');
+      ba.textContent=fmtE(s5);ba.style.color='#1fce6e';setText('big-sub','€ чиста икономия ('+fmtLv(s5)+' лв.)');
     } else {
       setText('big-lbl','💡 Инвестиция над текущия разход (5 год.)');
-      ba.textContent=fmtE(Math.abs(s5));ba.style.color='#ff7c1a';setText('big-sub','€ над текущия ви разход');
+      ba.textContent=fmtE(Math.abs(s5));ba.style.color='#ff7c1a';setText('big-sub','€ над текущия ти разход ('+fmtLv(Math.abs(s5))+' лв.)');
     }
 
     var pb=$id('plastic-box');
-    if(showPlastic){pb.classList.remove('hidden');setText('plastic-count',Math.round((annLt/bVol)*5).toLocaleString('bg-BG')+' бутилки')}
+    if(showPlastic){pb.classList.remove('hidden');setText('plastic-count',Math.round((annLt/bVol)*5).toLocaleString('bg-BG'))}
     else{pb.classList.add('hidden')}
 
     $id('row-b15').style.display=(method==='b15')?'flex':'none';
@@ -541,9 +577,35 @@
     });
     _cheaperPlans=_cheapArr.join(', ');
     _bestPlan=_cheapArr.length>0?_cheapArr[0]:'';
+
+    // Авто-акцент: най-кратката вноска, по-малка от текущия месечен разход
+    var hint=$id('inst-hint'),firstCheap=null;
+    for(var i=0;i<INST.length;i++){if(INST[i].monthly<mwo*0.95){firstCheap=INST[i];break}}
+    if(firstCheap){
+      $id('inst-hint-text').innerHTML='Вноска от <strong>'+firstCheap.monthly.toFixed(2)+' € ('+fmtLv(firstCheap.monthly)+' лв.)</strong> на месец за '+firstCheap.label+' е по-малка от '+Math.round(mwo)+' €, които харчиш сега за вода — взимаш ORIA, без да вдигаш месечния си разход.';
+      hint.classList.remove('hidden');
+    } else {
+      hint.classList.add('hidden');
+    }
   }
 
   onPeople(2);onLiters(2);calc();
+
+  // Page view tracking — веднъж на сесия
+  (function(){
+    try{
+      if(sessionStorage.getItem('oria_viewed'))return;
+      sessionStorage.setItem('oria_viewed','1');
+      _sb.from('oria_clicks').insert({
+        button:'view',
+        people:parseInt($id('people').value),
+        liters:parseFloat($id('liters').value),
+        method:$id('method').value
+      }).then(function(res){
+        if(res.error)console.warn('View track error:',res.error.message);
+      });
+    }catch(e){}
+  })();
 
   // Formspree AJAX за ORIA контактна форма
   (function() {
@@ -562,6 +624,17 @@
         if (r.ok) {
           form.style.display = 'none';
           document.getElementById('oria-contact-success').style.display = 'block';
+          _sb.from('oria_clicks').insert({
+            button:'contact-form',
+            people:parseInt($id('people').value),
+            liters:parseFloat($id('liters').value),
+            method:$id('method').value,
+            monthly_without:Math.round(_mwo),
+            saving_5y:Math.round(_saving5),
+            payment_pref:_payPref
+          }).then(function(res){
+            if(res.error)console.warn('Form track error:',res.error.message);
+          });
         } else {
           btn.textContent = 'Грешка — опитайте отново';
           btn.disabled = false;
