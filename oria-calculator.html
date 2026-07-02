@@ -100,6 +100,10 @@
     .why-text{font-size:14px;line-height:1.6;color:rgba(220,235,255,.75);margin-bottom:12px}
     .why-link{display:inline-block;color:#1a90ff;font-size:14px;font-weight:700;text-decoration:none}
     .ask-link{display:block;text-align:center;font-size:14px;color:rgba(220,235,255,.6);margin:-4px 0 16px;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+    .share-btn{display:block;width:100%;padding:15px;background:rgba(31,206,110,.12);border:1px solid rgba(31,206,110,.4);color:#1fce6e;font-size:15px;font-weight:800;border-radius:13px;cursor:pointer;font-family:inherit;margin:0 0 16px;letter-spacing:.2px}
+    .shared-banner{background:rgba(26,144,255,.1);border:1px solid rgba(26,144,255,.3);border-radius:13px;padding:14px 16px;font-size:14px;line-height:1.6;color:rgba(220,235,255,.9);margin-bottom:16px}
+    .hydro-text{font-size:14px;line-height:1.6;color:rgba(220,235,255,.85);margin-bottom:10px}
+    .hydro-note{font-size:12px;color:rgba(220,235,255,.45);line-height:1.5;margin-bottom:12px}
     /* INSTALLMENTS */
     .inst-card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:22px;margin-bottom:14px}
     .inst-intro{font-size:14px;color:rgba(220,235,255,.65);margin-bottom:14px;line-height:1.5}
@@ -147,6 +151,11 @@
     <h1>Колко <span class="accent">спестявам</span><br>с ORIA?</h1>
     <p>Въведи данните за дома си и виж реалната разлика —<br>за 1, 3 и 5 години напред.</p>
     <img src="Oria Dispenser.png" alt="ORIA Water Dispenser" style="width:100%;max-width:320px;border-radius:16px;margin-top:20px;display:block;margin-left:auto;margin-right:auto;box-shadow:0 8px 32px rgba(26,144,255,.2)">
+  </div>
+
+  <!-- Банер при отваряне през споделен линк -->
+  <div class="shared-banner hidden" id="shared-banner">
+    👋 Твой близък ти изпрати сметката си за водата. Разгледай я — и направи своята, като промениш данните по-долу.
   </div>
 
   <div class="card">
@@ -289,17 +298,29 @@
     <a class="cta-mid" href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" onclick="trackClick('shop-mid')">Разгледай ORIA в магазина →</a>
     <a class="ask-link" href="#contact">Имаш въпрос? Пиши ми директно ↓</a>
 
+    <!-- Споделяне на сметката (Web Share API / клипборд) -->
+    <button class="share-btn" id="share-btn" onclick="shareCalc()">📤 Сподели сметката с близък</button>
+
     <div class="plastic-box hidden" id="plastic-box">
       <div class="plastic-icon">♻️</div>
       <div>
         <div class="plastic-count" id="plastic-count">—</div>
         <div class="plastic-sub">пластмасови бутилки по-малко за 5 години</div>
+        <div class="plastic-sub" id="plastic-kg" style="margin-top:4px;color:rgba(31,206,110,.75)"></div>
       </div>
     </div>
 
     <div class="health-note">
       💡 <strong>4-степенна обратна осмоза + GANS структуриране:</strong> водата преминава през многостепенно пречистване от тежки метали, химикали и микроорганизми. А GANS структурирането прави това, което обикновеният филтър не прави — сметката в пари е само едната страна. Виж по-долу ↓
     </div>
+  </div>
+
+  <!-- Хидратационна норма — полза независима от покупката -->
+  <div class="card">
+    <div class="card-title">Колко вода трябва да пие домакинството ти?</div>
+    <p class="hydro-text" id="hydro-text"></p>
+    <p class="hydro-note">Ориентировъчно, по препоръките на EFSA (Европейския орган за безопасност на храните): ~2 л течности на ден за жени и ~2,5 л за мъже. Индивидуалната нужда зависи от тегло, физическа активност и климат.</p>
+    <a class="why-link" href="quiz-flow-v4.html" target="_blank">Направи и здравния тест — какво показва твоят профил? →</a>
   </div>
 
   <!-- Лична история -->
@@ -401,11 +422,35 @@
   var _cheaperPlans = '';
   var _bestPlan = '';
   var _mwo = 0;
+  var _bottles5y = 0;
 
   // Отваря таблицата с вноски от авто-акцента
   function openInstallments() {
     setPayPref('installment');
     $id('inst-card-wrap').scrollIntoView({behavior:'smooth'});
+  }
+
+  // Споделяне на сметката — Web Share API (мобилно) / клипборд (десктоп)
+  function shareCalc() {
+    var people = parseInt($id('people').value);
+    var litDay = parseFloat($id('liters').value);
+    var method = $id('method').value;
+    var url = location.origin + location.pathname + '?p=' + people + '&l=' + litDay + '&m=' + method + (method === 'manual' ? '&s=' + (val('manual-spend') || 0) : '');
+    var txt = 'Направих си сметката: нашето домакинство дава ~' + Math.round(_mwo) + ' € (' + fmtLv(_mwo) + ' лв.) на месец за вода';
+    if (_bottles5y > 0) txt += ' — това са ' + _bottles5y.toLocaleString('bg-BG') + ' пластмасови бутилки за 5 години';
+    txt += '. Виж колко излиза при вас: ' + url;
+    trackClick('share');
+    if (navigator.share) {
+      navigator.share({ text: txt }).catch(function(){});
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function(){
+        var b = $id('share-btn');
+        b.textContent = '✓ Копирано — постави го в съобщение до близък';
+        setTimeout(function(){ b.textContent = '📤 Сподели сметката с близък'; }, 4000);
+      }).catch(function(){ window.prompt('Копирай текста:', txt); });
+    } else {
+      window.prompt('Копирай текста:', txt);
+    }
   }
 
   // Т3 — setPayPref контролира и таблицата с вноски
@@ -551,8 +596,28 @@
     }
 
     var pb=$id('plastic-box');
-    if(showPlastic){pb.classList.remove('hidden');setText('plastic-count',Math.round((annLt/bVol)*5).toLocaleString('bg-BG'))}
-    else{pb.classList.add('hidden')}
+    if(showPlastic){
+      pb.classList.remove('hidden');
+      _bottles5y=Math.round((annLt/bVol)*5);
+      setText('plastic-count',_bottles5y.toLocaleString('bg-BG'));
+      var kg=Math.round(_bottles5y*(bVol===1.5?0.03:0.3));
+      var cmp='';
+      if(kg>=250)cmp=' — колкото пиано';
+      else if(kg>=110)cmp=' — колкото два пълни хладилника';
+      else if(kg>=40)cmp=' — колкото автоматична пералня';
+      setText('plastic-kg','≈ '+kg+' кг пластмаса'+cmp);
+    }
+    else{pb.classList.add('hidden');_bottles5y=0}
+
+    // Хидратационна норма (EFSA: ~2–2,5 л/ден за възрастен)
+    var normLow=people*2,normHigh=people*2.5;
+    var fmtL=function(n){return (n%1?n.toFixed(1):n.toString()).replace('.',',')};
+    var hh=' л общо за '+people+(people==1?' човек':' души');
+    var ht;
+    if(litDay<2) ht='При '+fmtL(litDay)+' л на човек дневно домакинството ти е <strong style="color:#ff7c1a">под ориентировъчната норма</strong> ('+fmtL(normLow)+'–'+fmtL(normHigh)+hh+'). Не си изключение — 3 от 4 души, направили здравния ни тест, пият под нормата.';
+    else if(litDay<=2.5) ht='При '+fmtL(litDay)+' л на човек дневно сте <strong style="color:#1fce6e">в ориентировъчната норма</strong> ('+fmtL(normLow)+'–'+fmtL(normHigh)+hh+'). Тялото работи с вода — дръж това ниво.';
+    else ht='При '+fmtL(litDay)+' л на човек дневно сте <strong style="color:#1fce6e">над ориентировъчната норма</strong> ('+fmtL(normLow)+'–'+fmtL(normHigh)+hh+') — чудесно при активно ежедневие и топли дни.';
+    $id('hydro-text').innerHTML=ht;
 
     $id('row-b15').style.display=(method==='b15')?'flex':'none';
     $id('row-b11').style.display=(method==='b11')?'flex':'none';
@@ -591,13 +656,30 @@
 
   onPeople(2);onLiters(2);calc();
 
+  // Отваряне през споделен линк (?p=&l=&m=) — зарежда сметката на близкия
+  var _sharedVisit=false;
+  (function(){
+    try{
+      var q=new URLSearchParams(location.search);
+      if(!q.has('p'))return;
+      var p=parseInt(q.get('p')),l=parseFloat(q.get('l')),m=q.get('m');
+      if(p>=1&&p<=10){$id('people').value=p;onPeople(p);}
+      if(l>=0.5&&l<=10){$id('liters').value=l;onLiters(l);}
+      if(['b15','b11','jug','tap','manual'].indexOf(m)>-1){$id('method').value=m;onMethodChange();}
+      if(m==='manual'&&q.has('s')){var s=parseFloat(q.get('s'));if(s>=0)$id('manual-spend').value=s;}
+      calc();
+      $id('shared-banner').classList.remove('hidden');
+      _sharedVisit=true;
+    }catch(e){}
+  })();
+
   // Page view tracking — веднъж на сесия
   (function(){
     try{
       if(sessionStorage.getItem('oria_viewed'))return;
       sessionStorage.setItem('oria_viewed','1');
       _sb.from('oria_clicks').insert({
-        button:'view',
+        button:_sharedVisit?'view-shared':'view',
         people:parseInt($id('people').value),
         liters:parseFloat($id('liters').value),
         method:$id('method').value
