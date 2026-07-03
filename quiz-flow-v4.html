@@ -845,8 +845,8 @@ body {
 
     <!-- CTA отгоре — директен линк към продукта -->
     <div style="margin-bottom:24px;">
-      <a id="btn-shop-top" href="#" target="_blank" class="btn-shop" onclick="trackButtonClick('shop')">
-        Разгледайте продукта →
+      <a id="btn-shop-top" href="https://m.me/100004993623972" target="_blank" class="btn-shop" onclick="trackButtonClick('messenger')">
+        Пиши ми — ще ти кажа честно дали е за теб →
       </a>
     </div>
 
@@ -2189,10 +2189,10 @@ function showResult() {
   var pct     = result.pcts[result.winner];
   var color   = prod.color;
 
-  // Директен линк към продукта (използва глобалния PRODUCT_LINKS)
+  // Горен CTA = РАЗГОВОР в Messenger (решение 03.07: 111 shop клика → 0 продажби;
+  // аудиторията купува от човек, не от линк). Магазинът остава в продуктовата
+  // карта по-долу (shop-card) за готовите. Линкът/текстът са статични в HTML.
   var shopLink = PRODUCT_LINKS[result.winner] || 'https://skylab.bg/magazin/ap/181/';
-  document.getElementById('btn-shop-top').href = shopLink;
-  document.getElementById('btn-shop-top').textContent = 'Разгледайте ' + prod.name + ' →';
 
   // Поздрав
   document.getElementById('result-greeting').textContent = name
