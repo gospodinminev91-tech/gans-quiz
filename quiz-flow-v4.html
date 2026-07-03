@@ -935,7 +935,10 @@ body {
       .ec-success{display:none;font-size:14px;color:#1fce6e;font-weight:600;line-height:1.6;padding:6px 0;}
       .ec-note{font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;}
     </style>
-    <div class="result-section" id="email-capture">
+    <!-- ⏸️ ИМЕЙЛ CAPTURE — СКРИТ (03.07.2026): без имейли, докато няма AI агент за тях.
+         Личният профил се запазва през ?id= в адреса + иконата на телефона.
+         За връщане: махни display:none (и реши имейл доставката — Brevo/друго). -->
+    <div class="result-section" id="email-capture" style="display:none">
       <div class="ec-card">
         <div class="ec-ico">📩</div>
         <div class="ec-title">Запазете своя GANS профил</div>
@@ -1004,6 +1007,37 @@ body {
       card.style.display = 'block';
     }
     renderPwaHint();
+    </script>
+
+    <!-- ══ СПОДЕЛЯНЕ — изпрати теста на близък ══ -->
+    <div class="result-section" id="share-quiz">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">💚</div>
+        <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:8px;">Сетихте ли се за някого, докато отговаряхте?</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:14px;">Изпратете теста на близък — на него ще покаже неговите отговори и неговия план.</div>
+        <button id="share-quiz-btn" style="width:100%;padding:13px 0;font-size:15px;font-weight:700;font-family:inherit;border:none;border-radius:10px;background:rgba(31,206,110,0.15);border:1px solid rgba(31,206,110,0.4);color:#3de88a;cursor:pointer;">📤 Изпрати теста на близък</button>
+        <div id="share-quiz-done" style="display:none;font-size:13px;color:#3de88a;font-weight:600;margin-top:10px;">Линкът е копиран — поставете го в съобщение.</div>
+      </div>
+    </div>
+    <script>
+    (function() {
+      var btn = document.getElementById('share-quiz-btn');
+      if (!btn) return;
+      btn.addEventListener('click', function() {
+        try { trackButtonClick('share'); } catch (e) {}
+        // Споделя се ЧИСТИЯТ тест (без ?id) — близкият прави своя тест, не гледа чужд резултат
+        var url = location.origin + location.pathname;
+        var text = 'Направих един тест за 2 минути — показва какво е натрупало тялото и какъв да е първият ти ход. Сети се за теб:';
+        if (navigator.share) {
+          navigator.share({ title: 'GANS — Здравен профил', text: text, url: url }).catch(function() {});
+        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text + ' ' + url).then(function() {
+            var d = document.getElementById('share-quiz-done');
+            if (d) d.style.display = 'block';
+          }).catch(function() {});
+        }
+      });
+    })();
     </script>
 
     <!-- Ревюта — СКРИТИ (махнати фалшивите отзиви). За реални отзиви: махни display:none,
@@ -1777,7 +1811,7 @@ var MAILERLITE_FORM_URL = 'https://assets.mailerlite.com/jsonp/2397851/forms/189
 
 // ════════════════════════════════════════════════════════════════════
 // 🎁 ПРОМОЦИЯ — авто-гасене на крайната дата. За ръчно спиране по-рано: PROMO_ACTIVE = false
-var PROMO_ACTIVE = true;
+var PROMO_ACTIVE = false; // ИЗКЛЮЧЕНО ръчно (03.07.2026) — G-24 промото приключи; при нова оферта: true + нова дата + нов текст
 var PROMO_END    = '2026-06-30';  // след тази дата офертата ИЗЧЕЗВА автоматично (при нова оферта — смени датата + текста)
 var PROMO_TEXT   = 'Между другото — в момента, при покупка на <strong>Extra Health + Emotion Balance</strong>, получаваш <strong>G-24 като подарък.</strong>';
 var PROMO_LINK   = 'https://www.facebook.com/profile.php?id=61578697514413';
