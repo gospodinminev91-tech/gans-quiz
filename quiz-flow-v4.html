@@ -1624,6 +1624,12 @@ body {
 
 </div>
 
+<!-- ПЛАН — личният план, достъпен директно, без повторно минаване на теста -->
+
+<div class="app-section" id="app-plan">
+  <div id="plan-screen"></div>
+</div>
+
 <!-- ВИЗИТКА -->
 
 <div class="app-section" id="app-card">
@@ -1667,12 +1673,12 @@ body {
   </div>
     <div style="font-size:11px;font-weight:700;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin:18px 0 12px;">БЪРЗИ ВРЪЗКИ</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px;">
-    <button onclick="switchTab('quiz')" class="vcard-quick">
+    <button onclick="showSection('quiz')" class="vcard-quick">
       <div style="font-size:24px;margin-bottom:6px;">&#129514;</div>
       <div class="vcard-quick-name">Направи теста</div>
       <div class="vcard-quick-sub">Кой GANS е за теб?</div>
     </button>
-    <button onclick="switchTab('faq')" class="vcard-quick">
+    <button onclick="showSection('faq')" class="vcard-quick">
       <div style="font-size:24px;margin-bottom:6px;">&#128218;</div>
       <div class="vcard-quick-name">Сведения за GANS</div>
       <div class="vcard-quick-sub">Всичко за продуктите</div>
@@ -1698,6 +1704,11 @@ body {
   <button class="nav-tab active" id="nav-quiz" onclick="showSection('quiz')">
     <div class="nav-tab-ico">🧬</div>
     <div class="nav-tab-lbl">ТЕСТ</div>
+    <div class="nav-tab-dot"></div>
+  </button>
+  <button class="nav-tab" id="nav-plan" onclick="showSection('plan')">
+    <div class="nav-tab-ico">✅</div>
+    <div class="nav-tab-lbl">ПЛАН</div>
     <div class="nav-tab-dot"></div>
   </button>
   <button class="nav-tab" id="nav-faq" onclick="showSection('faq')">
@@ -2204,8 +2215,16 @@ function showResult() {
     document.getElementById('cerebro-warn').style.display = 'block';
   }
 
-  // 3 безплатни метода за здраве — персонализирани по продукт
+  // Личен план — персонализиран по продукт
   renderHealthTips(result.winner);
+
+  // Запомняме последния резултат на устройството → раздел „ПЛАН" работи без повторен тест
+  try {
+    var _pid = (location.search.match(/[?&]id=([0-9a-f-]{36})/i) || [])[1] || state.resultRowId || null;
+    localStorage.setItem('gans_last_result', JSON.stringify({
+      winner: result.winner, name: state.answers['name'] || '', id: _pid, ts: Date.now()
+    }));
+  } catch (e) {}
 
   // Попълване на скритите полета на контактната форма
   var winnerProd = PRODUCT_DATA[result.winner];
@@ -2536,10 +2555,10 @@ function renderWaterNote(idx) {
   el.style.display = 'block';
 }
 
-function renderHealthTips(winner) {
-  // „Вашият личен план" — навици с отметки (сесия 19). Научен регистър:
-  // терминът остава, обяснението идва след него, без украса.
-  var PLAN = {
+// „Вашият личен план" — данни за навиците (научен регистър: терминът остава,
+// обяснението идва след него, без украса). Глобални — ползват се и от
+// резултатната страница, и от раздел „ПЛАН".
+var PLAN_HABITS = {
     extra: [
       { t: 'Чаша вода веднага след ставане',
         w: 'През нощта тялото губи течности и клетките започват деня в дефицит. Първата чаша го компенсира — преди кафето.' },
@@ -2592,17 +2611,14 @@ function renderHealthTips(winner) {
     ]
   };
 
-  var items = PLAN[winner] || PLAN['extra'];
-  var el = document.getElementById('health-tips');
-  if (!el) return;
-
-  // Дневен ключ — отметките се нулират автоматично на следващия ден
+// Рендира навиците с отметки в даден контейнер (дневен ключ → нулиране всяка сутрин)
+function renderPlanItems(container, winner) {
+  var items = PLAN_HABITS[winner] || PLAN_HABITS['extra'];
   var dayKey = 'gansplan_' + winner + '_' + new Date().toISOString().slice(0, 10);
   var done = [];
   try { done = JSON.parse(localStorage.getItem(dayKey) || '[]'); } catch (e) {}
 
-  var html = '<div class="result-section-title">Вашият личен план</div>'
-    + '<div class="plan-sub">Навиците, които усилват ефекта. Отбелязвайте ги всеки ден — устройството Ви помни днешния напредък.</div>';
+  var html = '';
   items.forEach(function(it, i) {
     html += '<div class="plan-item' + (done.indexOf(i) > -1 ? ' done' : '') + '" data-plan-i="' + i + '">'
       + '<span class="plan-check">✓</span>'
@@ -2612,10 +2628,9 @@ function renderHealthTips(winner) {
   html += '<div class="plan-note">Тези навици са обща грижа за здравето, а не медицински съвет.'
     + (winner === 'g24' ? ' Ако имате диабет, не променяйте лечението си — навиците са допълнение, не замяна.' : '')
     + '</div>';
-  el.innerHTML = html;
-  el.style.display = 'block';
+  container.innerHTML = html;
 
-  Array.prototype.forEach.call(el.querySelectorAll('.plan-item'), function(node) {
+  Array.prototype.forEach.call(container.querySelectorAll('.plan-item'), function(node) {
     node.addEventListener('click', function() {
       var i = parseInt(node.getAttribute('data-plan-i'), 10);
       node.classList.toggle('done');
@@ -2624,6 +2639,53 @@ function renderHealthTips(winner) {
       try { localStorage.setItem(dayKey, JSON.stringify(done)); } catch (e) {}
     });
   });
+}
+
+// Личният план в резултатната страница
+function renderHealthTips(winner) {
+  var el = document.getElementById('health-tips');
+  if (!el) return;
+  el.innerHTML = '<div class="result-section-title">Вашият личен план</div>'
+    + '<div class="plan-sub">Навиците, които усилват ефекта. Отбелязвайте ги всеки ден — устройството Ви помни днешния напредък. Планът Ви е винаги в раздел „ПЛАН" долу.</div>'
+    + '<div class="plan-items-holder"></div>';
+  renderPlanItems(el.querySelector('.plan-items-holder'), winner);
+  el.style.display = 'block';
+}
+
+// ── Раздел „ПЛАН" — директен достъп до навиците, без повторен тест ──
+var PRODUCT_COLORS = { extra: '#1a90ff', emotion: '#a04fff', move: '#1fce6e', cerebro: '#ff7c1a', g24: '#f0c300' };
+
+function renderPlanScreen() {
+  var holder = document.getElementById('plan-screen');
+  if (!holder) return;
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem('gans_last_result') || 'null'); } catch (e) {}
+
+  if (!saved || !saved.winner || !PLAN_HABITS[saved.winner]) {
+    holder.innerHTML = '<div style="text-align:center;padding:48px 10px;">'
+      + '<div style="font-size:44px;margin-bottom:14px;">📋</div>'
+      + '<div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:10px;">Все още нямате личен план</div>'
+      + '<div style="font-size:13.5px;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:22px;">Планът се съставя от отговорите Ви в теста — 5 минути. Той определя кой GANS подход е за Вас и кои дневни навици усилват ефекта му.</div>'
+      + '<button onclick="showSection(\'quiz\')" style="padding:13px 26px;font-size:15px;font-weight:700;font-family:inherit;border:none;border-radius:10px;background:#1a90ff;color:#fff;cursor:pointer;">Направете теста →</button>'
+      + '</div>';
+    return;
+  }
+
+  var pname = (typeof PRODUCT_DATA !== 'undefined' && PRODUCT_DATA[saved.winner]) ? PRODUCT_DATA[saved.winner].name : saved.winner;
+  var color = PRODUCT_COLORS[saved.winner] || '#1a90ff';
+  var hello = saved.name ? (saved.name + ', ето днешния Ви план') : 'Вашият план за днес';
+  holder.innerHTML = '<div style="padding-top:6px;">'
+    + '<div class="result-section-title">' + hello + '</div>'
+    + '<div style="font-size:13px;font-weight:800;color:' + color + ';margin-bottom:2px;">' + pname + '</div>'
+    + '<div class="plan-sub">По резултата от Вашия тест · отметките се нулират всяка сутрин</div>'
+    + '<div id="plan-screen-items"></div>'
+    + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">'
+    + (saved.id
+        ? '<a href="' + location.pathname + '?id=' + saved.id + '" onclick="try{sessionStorage.setItem(\'gans_view_result\',\'1\')}catch(e){}" style="display:block;text-align:center;padding:12px;font-size:13.5px;font-weight:700;border-radius:10px;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.85);text-decoration:none;">Вижте пълния си резултат →</a>'
+        : '')
+    + '<a href="' + (PRODUCT_LINKS[saved.winner] || PRODUCT_LINKS.extra) + '" target="_blank" onclick="trackButtonClick(\'shop-plan\')" style="display:block;text-align:center;padding:12px;font-size:13.5px;font-weight:700;border-radius:10px;background:rgba(26,144,255,0.12);border:1px solid rgba(26,144,255,0.3);color:#4aaeff;text-decoration:none;">Разгледайте ' + pname + ' →</a>'
+    + '</div></div>';
+  renderPlanItems(document.getElementById('plan-screen-items'), saved.winner);
 }
 
 // Анимиране на брояч
@@ -2654,11 +2716,13 @@ function showSection(sec) {
   var appEl  = document.querySelector('.app');
   var faqEl  = document.getElementById('app-faq');
   var cardEl = document.getElementById('app-card');
+  var planEl = document.getElementById('app-plan');
   appEl.style.display = 'none';
   if (faqEl)  faqEl.classList.remove('active');
   if (cardEl) cardEl.classList.remove('active');
+  if (planEl) planEl.classList.remove('active');
   document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.remove('active'); });
-  var tabId = sec==='faq' ? 'nav-faq' : sec==='contact' ? 'nav-contact' : 'nav-quiz';
+  var tabId = sec==='faq' ? 'nav-faq' : sec==='contact' ? 'nav-contact' : sec==='plan' ? 'nav-plan' : 'nav-quiz';
   var tabEl = document.getElementById(tabId);
   if (tabEl) tabEl.classList.add('active');
   if (sec==='quiz')         { appEl.style.display = ''; }
@@ -2668,6 +2732,8 @@ function showSection(sec) {
     if (navFaq) navFaq.classList.add('faq-seen');
   }
   else if (sec==='contact') { if (cardEl) cardEl.classList.add('active'); }
+  else if (sec==='plan')    { if (planEl) { renderPlanScreen(); planEl.classList.add('active'); } }
+  try { window.scrollTo(0, 0); } catch (e) {}
 }
 
 // ── SUPABASE ──────────────────────────────────────────────────
@@ -2781,6 +2847,9 @@ function saveToSupabase(result) {
     try {
       history.replaceState(null, '', location.pathname + '?id=' + rowId);
       if (typeof _updateManifest === 'function') _updateManifest();
+      var lr = JSON.parse(localStorage.getItem('gans_last_result') || '{}');
+      lr.id = rowId;
+      localStorage.setItem('gans_last_result', JSON.stringify(lr));
     } catch (e) {}
   });
 
@@ -2995,6 +3064,24 @@ function cookieDecline() {
   localStorage.setItem('cookie_consent', 'no');
   document.getElementById('cookie-banner').style.display = 'none';
 }
+
+// ── Инсталирано приложение: отваряме направо раздел „ПЛАН" ──
+function isStandalone() {
+  try {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || !!navigator.standalone;
+  } catch (e) { return false; }
+}
+(function() {
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem('gans_last_result') || 'null'); } catch (e) {}
+  var viewResult = false;
+  try {
+    viewResult = sessionStorage.getItem('gans_view_result') === '1';
+    sessionStorage.removeItem('gans_view_result');
+  } catch (e) {}
+  // Клик на „Вижте пълния си резултат" слага флага → не прескачаме към плана
+  if (isStandalone() && saved && saved.winner && !viewResult) { showSection('plan'); }
+})();
 </script>
 </body>
 </html>
