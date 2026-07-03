@@ -4,6 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>GANS — Здравен профил</title>
+<meta name="theme-color" content="#0d0f14">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<meta name="apple-mobile-web-app-title" content="GANS профил">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script>
+// PWA manifest — динамичен: start_url = ТЕКУЩИЯТ адрес. Така „Добави към Начален екран"
+// от ?id= страницата запазва личния профил на човека като приложение (не общия квиз).
+function _updateManifest() {
+  try {
+    var m = {
+      name: 'GANS — Здравен профил',
+      short_name: 'GANS профил',
+      start_url: location.href,
+      display: 'standalone',
+      background_color: '#0d0f14',
+      theme_color: '#0d0f14',
+      icons: [
+        { src: new URL('icon-192.png', location.href).href, sizes: '192x192', type: 'image/png' },
+        { src: new URL('icon-512.png', location.href).href, sizes: '512x512', type: 'image/png' }
+      ]
+    };
+    var link = document.getElementById('manifest-link');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'manifest';
+      link.id = 'manifest-link';
+      document.head.appendChild(link);
+    }
+    if (link._blobUrl) { URL.revokeObjectURL(link._blobUrl); }
+    link._blobUrl = URL.createObjectURL(new Blob([JSON.stringify(m)], { type: 'application/json' }));
+    link.href = link._blobUrl;
+  } catch (e) {}
+}
+_updateManifest();
+</script>
 <style>
 /* ── ПРОМЕНЛИВИ ── */
 :root {
@@ -473,6 +509,30 @@ body {
 .health-tip-ico  { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
 .health-tip-text { font-size: 13px; color: rgba(255,255,255,0.82); line-height: 1.6; }
 
+/* Личен план — навици с отметки */
+.plan-sub { font-size: 12.5px; color: rgba(255,255,255,0.55); margin: -4px 0 12px; line-height: 1.5; }
+.plan-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(31,206,110,0.05);
+  border: 1px solid rgba(31,206,110,0.15);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  cursor: pointer; user-select: none; -webkit-user-select: none;
+}
+.plan-check {
+  width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px;
+  border-radius: 6px; border: 2px solid rgba(31,206,110,0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: transparent;
+  transition: background 0.15s, color 0.15s;
+}
+.plan-item.done .plan-check { background: #1fce6e; border-color: #1fce6e; color: #0d0f14; }
+.plan-item.done .plan-text-title { text-decoration: line-through; opacity: 0.65; }
+.plan-text { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.6; }
+.plan-text-title { display: block; font-size: 13.5px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+.plan-note { font-size: 11.5px; color: rgba(255,255,255,0.45); margin-top: 10px; line-height: 1.5; }
+
 /* Disclaimer */
 .disclaimer {
   background: var(--card);
@@ -888,6 +948,63 @@ body {
         <div class="ec-note">Като оставите имейла си, се съгласявате да получавате имейли от мен. Без спам — отписване по всяко време.</div>
       </div>
     </div>
+
+    <!-- ══ PWA — Запазете профила като приложение (показва се само на телефон) ══ -->
+    <style>
+      .pwa-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;}
+      .pwa-head{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+      .pwa-app-ico{width:44px;height:44px;border-radius:10px;flex-shrink:0;}
+      .pwa-title{font-size:16px;font-weight:800;color:#fff;line-height:1.3;}
+      .pwa-sub{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:10px;}
+      .pwa-step{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--border);font-size:13.5px;color:rgba(255,255,255,0.85);line-height:1.5;}
+      .pwa-step svg{flex-shrink:0;}
+      .pwa-num{width:20px;height:20px;border-radius:50%;background:rgba(31,206,110,0.15);color:#3de88a;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+      .pwa-note{font-size:11.5px;color:rgba(255,255,255,0.4);margin-top:12px;line-height:1.5;}
+    </style>
+    <div class="result-section" id="pwa-install" style="display:none">
+      <div class="pwa-card">
+        <div class="pwa-head">
+          <svg class="pwa-app-ico" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="22" fill="#0e1116"/><circle cx="50" cy="50" r="33" fill="none" stroke="#232a33" stroke-width="8"/><circle cx="50" cy="50" r="33" fill="none" stroke="#34d399" stroke-width="8" stroke-linecap="round" stroke-dasharray="156 208" transform="rotate(-90 50 50)"/><text x="50" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="#f2f6f4">G</text></svg>
+          <div class="pwa-title">Запазете профила си на телефона</div>
+        </div>
+        <div class="pwa-sub">Вашият личен план и препоръка — на една икона разстояние, като приложение.</div>
+        <div id="pwa-steps"></div>
+        <div class="pwa-note">Това е само пряк път — не се инсталира нищо, не иска достъп до данните Ви и не заема място в паметта.</div>
+      </div>
+    </div>
+    <script>
+    // Инструкции по устройство (iOS/Android); на компютър картата не се показва.
+    // force = 'ios' | 'android' — само за тестване.
+    function renderPwaHint(force) {
+      var el = document.getElementById('pwa-steps');
+      var card = document.getElementById('pwa-install');
+      if (!el || !card) return;
+      var ua = navigator.userAgent || '';
+      var isIOS = force === 'ios' || (!force && /iPhone|iPad|iPod/.test(ua));
+      var isAndroid = force === 'android' || (!force && /Android/.test(ua));
+      if (!isIOS && !isAndroid) return;
+      try {
+        if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return;
+        if (navigator.standalone) return;
+      } catch (e) {}
+      var shareIco = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4aaeff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M8 11H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-2"/></svg>';
+      var dotsIco  = '<svg width="20" height="20" viewBox="0 0 24 24" fill="#4aaeff"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
+      var plusIco  = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4aaeff" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 9v6M9 12h6"/></svg>';
+      var html;
+      if (isIOS) {
+        html = '<div class="pwa-step"><span class="pwa-num">1</span>' + shareIco + '<span>Докоснете бутона <strong>„Сподели"</strong> — квадратчето със стрелка нагоре, в долния край на Safari</span></div>'
+          + '<div class="pwa-step"><span class="pwa-num">2</span>' + plusIco + '<span>Изберете <strong>„Добави към Начален екран"</strong></span></div>'
+          + '<div class="pwa-step"><span class="pwa-num">3</span><span>Докоснете <strong>„Добави"</strong> — иконата се появява на екрана Ви</span></div>';
+      } else {
+        html = '<div class="pwa-step"><span class="pwa-num">1</span>' + dotsIco + '<span>Докоснете <strong>трите точки ⋮</strong> горе вдясно в Chrome</span></div>'
+          + '<div class="pwa-step"><span class="pwa-num">2</span>' + plusIco + '<span>Изберете <strong>„Добавяне към началния екран"</strong></span></div>'
+          + '<div class="pwa-step"><span class="pwa-num">3</span><span>Потвърдете с <strong>„Добавяне"</strong> — иконата се появява на екрана Ви</span></div>';
+      }
+      el.innerHTML = html;
+      card.style.display = 'block';
+    }
+    renderPwaHint();
+    </script>
 
     <!-- Ревюта — СКРИТИ (махнати фалшивите отзиви). За реални отзиви: махни display:none,
          попълни PRODUCT_DATA[...].reviews с истински (с съгласие) и върни renderReviews call в showResult -->
@@ -2420,47 +2537,93 @@ function renderWaterNote(idx) {
 }
 
 function renderHealthTips(winner) {
-  var HEALTH_TIPS = {
+  // „Вашият личен план" — навици с отметки (сесия 19). Научен регистър:
+  // терминът остава, обяснението идва след него, без украса.
+  var PLAN = {
     extra: [
-      { ico: '💧', tip: 'Пийте поне 2 литра вода дневно — хидратацията е основата на имунитета и клетъчното почистване.' },
-      { ico: '🌞', tip: 'Излизайте на открито 20 мин. дневно — слънчевата светлина активира имунния отговор и синтеза на витамин D.' },
-      { ico: '😴', tip: 'Спете минимум 7 часа — имунната система се регенерира най-интензивно по време на сън.' }
+      { t: 'Чаша вода веднага след ставане',
+        w: 'През нощта тялото губи течности и клетките започват деня в дефицит. Първата чаша го компенсира — преди кафето.' },
+      { t: 'Половин чиния зеленчуци и плодове на всяко хранене',
+        w: 'Например домати, зеле, моркови, ябълка. Доставят фибри, които забавят усвояването на захарите, и микроелементи — магнезий, калий, цинк — необходими за клетъчните процеси, включително детоксикацията.' },
+      { t: '30 минути ходене дневно',
+        w: 'За разлика от кръвообращението, което се задвижва от сърцето, лимфната система няма собствена помпа — движи се единствено чрез мускулни съкращения. Ходенето я поддържа активна.' },
+      { t: '5 бавни дълбоки вдишвания, 2–3 пъти на ден',
+        w: 'Кислородът е основното гориво на клетъчния метаболизъм — дълбокото дишане подобрява снабдяването на тъканите.' }
     ],
     emotion: [
-      { ico: '🌬️', tip: 'Дишайте дълбоко 5 мин. преди сън — активира парасимпатиковата нервна система и сваля кортизола.' },
-      { ico: '📱', tip: 'Изключете екраните час преди лягане — синята светлина блокира производството на мелатонин.' },
-      { ico: '🚶', tip: 'Направете 10-минутна разходка след работа — физическото движение намалява нивото на стрес значително.' }
+      { t: 'Телефонът настрана 30–60 минути преди лягане',
+        w: 'Синята светлина от екрана потиска мелатонина — хормона, който подготвя тялото за сън.' },
+      { t: '4–6 дълбоки вдишвания в леглото',
+        w: 'Бавното издишване активира парасимпатиковата нервна система — естествения механизъм на тялото за успокояване.' },
+      { t: 'Лягане по едно и също време',
+        w: 'Нервната система работи с вътрешен часовник — при постоянен ритъм заспиването и дълбокият сън идват по-лесно.' },
+      { t: '10 минути дневна светлина сутрин',
+        w: 'Утринната светлина сверява циркадния ритъм и подобрява съня още същата вечер.' }
     ],
     move: [
-      { ico: '🤸', tip: 'Разтягайте се 5 мин. сутрин — намалява сковаността и активира кръвообращението в ставите.' },
-      { ico: '💧', tip: 'Пийте достатъчно вода — синовиалната течност, която смазва ставите, е над 80% вода.' },
-      { ico: '⏱️', tip: 'Ставайте поне веднъж на час при седяща работа — ставите се нуждаят от движение за правилно смазване.' }
+      { t: 'Сутрешна загрявка 5–10 минути',
+        w: 'Движението раздвижва синовиалната течност — течността, която смазва и храни ставата. През нощта тя застоява, затова сковаността е най-силна сутрин.' },
+      { t: 'Ставане поне веднъж на час при седяща работа',
+        w: 'Ставният хрущял няма собствени кръвоносни съдове — храни се единствено чрез движение.' },
+      { t: '20–30 минути ходене дневно',
+        w: 'Умереното натоварване стимулира възстановяването на ставните тъкани, без да ги износва.' },
+      { t: 'Достатъчно вода през деня',
+        w: 'Синовиалната течност е над 80% вода — при обезводняване ставите го усещат първи.' }
     ],
     cerebro: [
-      { ico: '⏸️', tip: 'Правете 5-минутна пауза на всеки 50 мин. умствена работа — мозъкът работи в естествени цикли.' },
-      { ico: '😴', tip: 'Спете редовно и достатъчно — паметта се консолидира и мозъкът се почиства по време на дълбок сън.' },
-      { ico: '🏃', tip: 'Движете се поне 20 мин. дневно — физическата активност увеличава кръвотока към мозъка и подобрява концентрацията.' }
+      { t: '10–15 минути четене дневно',
+        w: 'Редовната умствена работа поддържа и изгражда връзките между невроните.' },
+      { t: 'Кръстословица, судоку или ново умение',
+        w: 'Новите задачи активират участъци на мозъка, които рутината не използва.' },
+      { t: '5-минутна пауза на всеки 50 минути умствена работа',
+        w: 'Мозъкът работи в естествени цикли — паузите поддържат концентрацията през целия ден.' },
+      { t: '7–8 часа сън',
+        w: 'Паметта се консолидира по време на дълбокия сън — без него наученото се губи.' }
     ],
     g24: [
-      { ico: '🚶', tip: 'Разходете се 10–15 мин. след хранене — движението помага на тялото да стабилизира кръвната захар.' },
-      { ico: '🥗', tip: 'Ограничете бързите захари и белия хляб — стабилната кръвна захар пази мозъчната енергия.' },
-      { ico: '🧩', tip: 'Натоварвайте ума ежедневно — четене, пъзели и нови умения поддържат когнитивния резерв.' }
+      { t: '10–15 минути разходка след хранене',
+        w: 'Работещите мускули усвояват глюкозата от кръвта директно — най-добре документираният навик за по-плавна кръвна захар.' },
+      { t: 'Зеленчуците първи, после основното',
+        w: 'Фибрите, приети в началото на храненето, забавят усвояването на захарите от останалата храна.' },
+      { t: 'Плодът — накрая, вместо десерт',
+        w: 'Изяден след храненето, плодът се усвоява бавно. На празен стомах захарите му влизат в кръвта с максимална скорост.' },
+      { t: 'Хранене в редовни часове',
+        w: 'Организмът регулира инсулина по-ефективно при предвидим ритъм.' }
     ]
   };
 
-  var tips = HEALTH_TIPS[winner] || HEALTH_TIPS['extra'];
+  var items = PLAN[winner] || PLAN['extra'];
   var el = document.getElementById('health-tips');
   if (!el) return;
 
-  var html = '';
-  tips.forEach(function(t) {
-    html += '<div class="health-tip-item">'
-      + '<span class="health-tip-ico">' + t.ico + '</span>'
-      + '<span class="health-tip-text">' + t.tip + '</span>'
+  // Дневен ключ — отметките се нулират автоматично на следващия ден
+  var dayKey = 'gansplan_' + winner + '_' + new Date().toISOString().slice(0, 10);
+  var done = [];
+  try { done = JSON.parse(localStorage.getItem(dayKey) || '[]'); } catch (e) {}
+
+  var html = '<div class="result-section-title">Вашият личен план</div>'
+    + '<div class="plan-sub">Навиците, които усилват ефекта. Отбелязвайте ги всеки ден — устройството Ви помни днешния напредък.</div>';
+  items.forEach(function(it, i) {
+    html += '<div class="plan-item' + (done.indexOf(i) > -1 ? ' done' : '') + '" data-plan-i="' + i + '">'
+      + '<span class="plan-check">✓</span>'
+      + '<span class="plan-text"><span class="plan-text-title">' + it.t + '</span>' + it.w + '</span>'
       + '</div>';
   });
-  el.innerHTML = '<div class="result-section-title">3 безплатни стъпки за по-добро здраве</div>' + html;
+  html += '<div class="plan-note">Тези навици са обща грижа за здравето, а не медицински съвет.'
+    + (winner === 'g24' ? ' Ако имате диабет, не променяйте лечението си — навиците са допълнение, не замяна.' : '')
+    + '</div>';
+  el.innerHTML = html;
   el.style.display = 'block';
+
+  Array.prototype.forEach.call(el.querySelectorAll('.plan-item'), function(node) {
+    node.addEventListener('click', function() {
+      var i = parseInt(node.getAttribute('data-plan-i'), 10);
+      node.classList.toggle('done');
+      var idx = done.indexOf(i);
+      if (idx > -1) { done.splice(idx, 1); } else { done.push(i); }
+      try { localStorage.setItem(dayKey, JSON.stringify(done)); } catch (e) {}
+    });
+  });
 }
 
 // Анимиране на брояч
@@ -2613,6 +2776,12 @@ function saveToSupabase(result) {
   _supabase.from('quiz_results_v4').insert(payload).then(function(res) {
     if (res.error) { console.warn('Supabase v4 грешка:', res.error.message); return; }
     console.log('Supabase v4: записано, id =', rowId);
+    // Личният линк влиза в адресната лента → „Добави към Начален екран"
+    // запазва точно ТОЗИ профил като приложение (manifest-ът се обновява)
+    try {
+      history.replaceState(null, '', location.pathname + '?id=' + rowId);
+      if (typeof _updateManifest === 'function') _updateManifest();
+    } catch (e) {}
   });
 
   // Tracking — маркираме теста като завършен
