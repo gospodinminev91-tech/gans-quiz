@@ -206,6 +206,11 @@
       <div class="s">Кратък въпросник — показва кой ГАНС отговаря на твоя случай</div>
     </a>
 
+    <a class="cta cta-soft" href="14-saveti-podrobno.pdf" target="_blank" rel="noopener" id="cta-pdf2">
+      <div class="t">Книжката с 14-те съвета</div>
+      <div class="s">Подробната версия за сваляне — механизъм, изследване, граници. PDF, 17 стр.</div>
+    </a>
+
     <a class="cta cta-soft" href="oria-calculator.html" id="cta-oria">
       <div class="t">Колко даваш за вода всяка година?</div>
       <div class="s">Калкулатор за ORIA — сравнява с бутилирана вода и кана</div>
@@ -248,7 +253,7 @@
 
   track('saveti-view');
 
-  var ids = ['cta-mid','cta-pdf','cta-quiz','cta-oria','cta-shop','cta-fb'];
+  var ids = ['cta-mid','cta-pdf','cta-pdf2','cta-quiz','cta-oria','cta-shop','cta-fb'];
   ids.forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.addEventListener('click', function(){ track('saveti-' + id.replace('cta-','')); });
