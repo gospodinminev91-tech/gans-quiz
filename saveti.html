@@ -184,6 +184,11 @@
     <div class="src">Измервания на осветеност; изследване с къмпинг — 13 пъти повече дневна светлина</div>
   </div>
 
+  <a class="cta cta-soft" href="14-saveti-podrobno.pdf" target="_blank" rel="noopener" id="cta-pdf" style="margin-top:28px">
+    <div class="t">Искаш ли ги по-подробно?</div>
+    <div class="s">Книжка за сваляне — механизмът, върху колко души е мерено и какво изследването не доказва. PDF, 17 страници.</div>
+  </a>
+
   <!-- ===== МОСТЪТ ===== -->
   <div class="bridge">
     <h2>Защо ги давам безплатно</h2>
@@ -243,7 +248,7 @@
 
   track('saveti-view');
 
-  var ids = ['cta-mid','cta-quiz','cta-oria','cta-shop','cta-fb'];
+  var ids = ['cta-mid','cta-pdf','cta-quiz','cta-oria','cta-shop','cta-fb'];
   ids.forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.addEventListener('click', function(){ track('saveti-' + id.replace('cta-','')); });
