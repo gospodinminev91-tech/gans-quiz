@@ -87,7 +87,8 @@
     .inst-hint strong{color:#1fce6e}
     .inst-hint button{background:none;border:none;color:#1a90ff;font-size:14px;font-weight:700;cursor:pointer;padding:6px 0 0;display:block;font-family:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
     /* Т1 — Втори CTA след главното число */
-    .cta-mid{display:block;width:100%;padding:17px;background:#1a90ff;color:#fff;font-size:16px;font-weight:800;text-align:center;border-radius:13px;text-decoration:none;letter-spacing:.3px;box-shadow:0 4px 20px rgba(26,144,255,.35);margin:0 0 16px}
+    .cta-mid{display:block;width:100%;padding:17px;background:#1a90ff;color:#fff;font-size:16px;font-weight:800;text-align:center;border-radius:13px;text-decoration:none;letter-spacing:.3px;box-shadow:0 4px 20px rgba(26,144,255,.35);margin:0 0 10px}
+    .cta-shop{display:block;width:100%;padding:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);color:rgba(220,235,255,.75);font-size:14px;font-weight:700;text-align:center;border-radius:12px;text-decoration:none;margin:0 0 16px}
     .plastic-box{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.04);border-radius:13px;padding:15px;margin-bottom:14px}
     .plastic-icon{font-size:32px}
     .plastic-count{font-size:22px;font-weight:900;color:#fff}
@@ -205,11 +206,11 @@
       <span class="price-unit">€</span>
     </div>
     <div class="price-row">
-      <span class="price-lbl">Годишна поддръжка (филтър)</span>
-      <input class="price-inp" type="number" id="p-maint" value="30" min="0" oninput="calc()">
+      <span class="price-lbl">Комплект филтри (ресурс 2000 л)</span>
+      <input class="price-inp" type="number" id="p-filter" value="30" min="0" oninput="calc()">
       <span class="price-unit">€</span>
     </div>
-    <p class="price-note">Смяна ~веднъж годишно, в зависимост от качеството на водата в региона</p>
+    <p class="price-note" id="filter-note"></p>
     <div class="divider"></div>
     <div class="price-row" id="row-b15">
       <span class="price-lbl">Цена на 1.5 л бутилка</span>
@@ -294,9 +295,9 @@
       <button onclick="openInstallments()">Виж всички варианти за изплащане →</button>
     </div>
 
-    <!-- Т1 — Втори CTA директно след главното число -->
-    <a class="cta-mid" href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" onclick="trackClick('shop-mid')">Разгледай ORIA в магазина →</a>
-    <a class="ask-link" href="#contact">Имаш въпрос? Пиши ми директно ↓</a>
+    <!-- Главен изход = РАЗГОВОР (111 клика към магазина → 0 продажби; при уред за 1533 лв. се купува от човек) -->
+    <a class="cta-mid" href="https://m.me/100004993623972" target="_blank" onclick="trackClick('messenger-mid')">💬 Свържи се с мен — отговарям лично →</a>
+    <a class="cta-shop" href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" onclick="trackClick('shop-mid')">Или разгледай ORIA в магазина →</a>
 
     <!-- Споделяне на сметката (Web Share API / клипборд) -->
     <button class="share-btn" id="share-btn" onclick="shareCalc()">📤 Сподели сметката с близък</button>
@@ -311,7 +312,7 @@
     </div>
 
     <div class="health-note">
-      💡 <strong>4-степенна обратна осмоза + GANS структуриране:</strong> водата преминава през многостепенно пречистване от тежки метали, химикали и микроорганизми. А GANS структурирането прави това, което обикновеният филтър не прави — сметката в пари е само едната страна. Виж по-долу ↓
+      💡 <strong>Какво прави ORIA:</strong> 4-степенна обратна осмоза, която отстранява до <strong>99,99%</strong> от механичните замърсители, тежките метали, химикалите и микроорганизмите. Наливаш до 4 л чешмяна вода, получаваш 2,4 л пречистена. И чак след пречистването водата минава през трите ГАНС формули. Сметката в пари е само едната страна — за другата виж по-долу ↓
     </div>
   </div>
 
@@ -321,13 +322,6 @@
     <p class="hydro-text" id="hydro-text"></p>
     <p class="hydro-note">Ориентировъчно, по препоръките на EFSA (Европейския орган за безопасност на храните): ~2 л течности на ден за жени и ~2,5 л за мъже. Индивидуалната нужда зависи от тегло, физическа активност и климат.</p>
     <a class="why-link" href="quiz-flow-v4.html" target="_blank">Направи и здравния тест — какво показва твоят профил? →</a>
-  </div>
-
-  <!-- Лична история -->
-  <div class="card">
-    <div class="card-title">Моят опит с ORIA</div>
-    <div class="story-quote">„Вече не купувам стекове с вода, не ги мъкна до вкъщи и не изхвърлям безброй пластмасови бутилки. Зареждам диспенсера направо от чешмата — и получавам чиста, „заредена" вода."</div>
-    <div class="story-author">— Господин Минев · ползвам ORIA от месец, откакто излезе на пазара</div>
   </div>
 
   <!-- Защо ORIA, а не обикновен филтър -->
@@ -385,21 +379,26 @@
     <table class="inst-table"><tbody id="inst-tbody"></tbody></table>
   </div>
 
-  <a class="cta" href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" id="cta-btn" onclick="trackClick()">Разгледай ORIA в магазина →</a>
+  <a class="cta" href="https://m.me/100004993623972" target="_blank" id="cta-btn" onclick="trackClick('messenger')">💬 Питай ме за ORIA — отговарям лично →</a>
+  <a class="cta-shop" href="https://skylab.bg/produkt/oria-water-dispenser/ap/181/" target="_blank" onclick="trackClick('shop')">Или разгледай ORIA в магазина →</a>
 
   <!-- Т5 — Контактна секция — по-видима -->
   <div class="contact-card" id="contact">
     <div class="contact-title">Свържи се с мен</div>
+    <a href="https://m.me/100004993623972" target="_blank" onclick="trackClick('messenger-card')" style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:11px;background:rgba(26,144,255,.12);border:1px solid rgba(26,144,255,.3);text-decoration:none;margin-bottom:10px">
+      <span style="font-size:20px">💬</span>
+      <div><div style="font-size:11px;color:rgba(160,200,255,.6);letter-spacing:1px">MESSENGER</div><div style="font-size:14px;font-weight:700;color:#fff">Отговарям лично — пиши ми</div></div>
+    </a>
     <a href="https://www.facebook.com/profile.php?id=61578697514413" target="_blank" onclick="trackFb()" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;background:rgba(24,119,242,.1);border:1px solid rgba(24,119,242,.2);text-decoration:none;margin-bottom:16px">
       <span style="font-size:20px">👤</span>
       <div><div style="font-size:11px;color:rgba(160,200,255,.55);letter-spacing:1px">FACEBOOK</div><div style="font-size:13px;font-weight:700;color:#fff">Господин Минев</div></div>
     </a>
-    <div style="font-size:13px;color:rgba(220,235,255,.45);text-align:center;margin-bottom:14px">или ми изпрати съобщение</div>
+    <div style="font-size:13px;color:rgba(220,235,255,.45);text-align:center;margin-bottom:14px">или ми изпрати съобщение оттук — сметката ти е попълнена вътре</div>
     <form id="oria-contact-form" action="https://formspree.io/f/xeevbpba" method="POST">
       <input type="hidden" name="_subject" value="Запитване за ORIA Water Dispenser">
       <input type="text" name="name" placeholder="Твоето име" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:16px;outline:none;margin-bottom:10px;font-family:inherit">
       <input type="email" name="email" placeholder="Имейл за отговор" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:16px;outline:none;margin-bottom:10px;font-family:inherit">
-      <textarea name="message" placeholder="Твоето съобщение…" required rows="3" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:16px;outline:none;resize:none;font-family:inherit;margin-bottom:10px"></textarea>
+      <textarea name="message" id="msg-box" placeholder="Твоето съобщение…" required rows="4" oninput="_msgTouched=true" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#fff;font-size:16px;outline:none;resize:none;font-family:inherit;margin-bottom:10px"></textarea>
       <button type="submit" style="width:100%;padding:13px;background:rgba(26,144,255,.85);color:#fff;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer;font-family:inherit">Изпрати съобщение</button>
     </form>
     <div id="oria-contact-success" style="display:none;text-align:center;padding:14px;color:#1fce6e;font-size:14px;font-weight:600">✅ Съобщението е изпратено! Ще се свържа с теб скоро.</div>
@@ -514,6 +513,8 @@
     {label:'36 мес.',monthly:31.17,months:36}
   ];
   var TAP=0.00128;
+  var FILTER_L=2000;   // ресурс на комплект филтри, по спецификация на продуктовата страница
+  var _msgTouched=false;
 
   function $id(id){return document.getElementById(id)}
   function val(id){return parseFloat($id(id).value)||0}
@@ -538,9 +539,14 @@
     var method=$id('method').value;
     var annLt=people*litDay*365;
     var oriaP=val('p-oria');
-    var oriaMnt=val('p-maint');
+    // Поддръжката се смята по РЕСУРС (2000 л на комплект, по спецификация), не плоско за година —
+    // голямо домакинство сменя филтрите по-често и сметката трябва да го показва честно.
+    var sets=annLt/FILTER_L;
+    var oriaMnt=val('p-filter')*sets;
     var oriaW=annLt*TAP;
     var oriaAnn=oriaMnt+oriaW;
+    var setsTxt=(Math.round(sets*10)/10).toString().replace('.',',');
+    $id('filter-note').innerHTML='При тази консумация — ~'+setsTxt+' комплекта годишно (~'+Math.round(oriaMnt)+' € / '+fmtLv(oriaMnt)+' лв.). Ресурсът 2000 л е по спецификация на производителя. <strong>Skylab още не е обявил цена на консумативите</strong> — 30 € е ориентировъчно допускане, смени го, щом излезе точната цена.';
 
     var annual=0,showPlastic=false,bVol=0;
     if(method==='b15'){annual=Math.ceil(annLt/1.5)*val('p-b15');showPlastic=true;bVol=1.5}
@@ -642,6 +648,13 @@
     });
     _cheaperPlans=_cheapArr.join(', ');
     _bestPlan=_cheapArr.length>0?_cheapArr[0]:'';
+
+    // Запитването тръгва с числата на човека — Господин отговаря конкретно, не на празно „здравейте"
+    if(!_msgTouched){
+      var mBox=$id('msg-box');
+      if(mBox) mBox.value='Здравейте! Направих сметката за водата: '+people+(people==1?' човек':' души')+
+        ', '+Math.round(mwo)+' € на месец в момента. Интересува ме ORIA — може ли повече информация?';
+    }
 
     // Авто-акцент: най-кратката вноска, по-малка от текущия месечен разход
     var hint=$id('inst-hint'),firstCheap=null;
