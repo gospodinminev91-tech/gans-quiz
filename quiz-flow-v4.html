@@ -786,11 +786,16 @@ body {
     </div>
 
     <div class="trust-row">
-      <div class="trust-item">🔒 100% анонимен</div>
+      <div class="trust-item">🔒 Не се споделя</div>
       <div class="trust-item">🔬 Научен подход</div>
       <div class="trust-item">💯 Безплатно</div>
     </div>
 
+    <label id="consent-wrap" style="display:flex;align-items:flex-start;gap:10px;text-align:left;margin:0 auto 14px;max-width:440px;font-size:12.5px;line-height:1.55;color:rgba(255,255,255,0.7);cursor:pointer;">
+      <input type="checkbox" id="consent-health" style="width:20px;height:20px;flex-shrink:0;margin-top:1px;accent-color:#1fce6e;cursor:pointer;">
+      <span>Съгласен/на съм отговорите ми за здравето (симптоми, сън, онкологичен статус) да се запазят, за да получа своя профил и план. Не се споделят с никого. Мога да поискам изтриването им по всяко време на gospodin.minev@abv.bg.</span>
+    </label>
+    <div id="consent-hint" style="display:none;font-size:13px;color:#ffb347;font-weight:600;margin:-6px 0 12px;">Моля, потвърдете съгласието</div>
     <button class="btn-start" id="btn-start" onclick="startQuiz()">
       Открийте своя профил →
     </button>
@@ -847,6 +852,7 @@ body {
   <div class="page" id="p-result">
     <div class="result-logo">GANS · Здравен профил</div>
     <div class="result-greeting" id="result-greeting"></div>
+    <div id="result-notice" style="display:none;background:rgba(255,179,71,0.08);border:1px solid rgba(255,179,71,0.35);border-radius:14px;padding:16px 18px;margin-bottom:18px;font-size:14px;line-height:1.65;color:rgba(255,255,255,0.88);"></div>
 
     <!-- CTA отгоре — директен линк към продукта -->
     <div style="margin-bottom:24px;">
@@ -1215,7 +1221,7 @@ body {
         <span class="ptag ptag-p">EMOTION BALANCE</span> — Емоционален баланс, сън, тревожност, паник атаки.<br><br>
         <span class="ptag ptag-g">MOVE COMPLEX</span> — Стави, сухожилия, хрущял, синовиална течност.<br><br>
         <span class="ptag ptag-o">CEREBRO</span> — Памет, съсредоточаване, подкрепа на мозъчната дейност и когнитивните функции. Подпомага метилацията — процеса на делене и регенерация на клетките.<br><br>
-        <span class="ptag ptag-y">G-24</span> — Глюкозен метаболизъм, мозъчна превенция, енергиен баланс. Специализиран за 55+.
+        <span class="ptag ptag-y">G-24</span> — Глюкозен метаболизъм, яснота на ума, енергиен баланс. Специализиран за 55+.
       </div>
     </div>
 
@@ -1304,11 +1310,11 @@ body {
       </div>
       <div class="faq-a">
         <span class="ptag ptag-y">G-24</span> е специализиран продукт, насочен към подкрепа на <strong>глюкозния метаболизъм и мозъчната функция</strong>.<br><br>
-        Научни наблюдения свързват нарушения глюкозен метаболизъм в мозъка с когнитивния спад — включително с процеси, характерни за деменция и Алцхаймер; в изследователската литература Алцхаймер дори е наричан <strong>„диабет тип 3"</strong>. Когато мозъчните клетки не могат да преработят глюкозата — тяхното гориво — тя се превръща от енергия в товар. G-24 <strong>не лекува и не предотвратява</strong> тези заболявания, а създава условия за по-добра мозъчна функция и клетъчен енергиен баланс.<br><br>
+        Глюкозата е основното гориво на мозъка, а начинът, по който клетките я усвояват, се променя с възрастта — затова енергията и яснотата на ума често спадат след 55. G-24 <strong>не лекува</strong> заболявания — създава условия за по-добра мозъчна функция и клетъчен енергиен баланс.<br><br>
         Подходящ при:<br>
         ● Влошаваща се памет с напредване на възрастта<br>
         ● Умствена умора и мозъчна мъгла след хранене<br>
-        ● Превантивна грижа за когнитивното здраве (основно 55+)<br>
+        ● Грижа за яснотата на ума (основно 55+)<br>
         ● Нестабилна енергия и пикове/спадове през деня<br><br>
         G-24 работи на клетъчно ниво — там, където глюкозата е горивото на мозъка.<br><br>
         <div class="highlight">💡 <strong>Важно:</strong> G-24 дава най-добри резултати в комбинация с Extra Health и Emotion Balance като основа. Тялото трябва да е в баланс, за да може G-24 да работи пълноценно.</div>
@@ -1459,7 +1465,7 @@ body {
         <strong>НАДСТРОЙКА (по нужда):</strong><br>
         <span class="ptag ptag-g">MOVE COMPLEX</span> — стави и движение<br>
         <span class="ptag ptag-o">CEREBRO</span> — концентрация и фокус (до 55 г.)<br>
-        <span class="ptag ptag-y">G-24</span> — глюкозен метаболизъм и мозъчна превенция (55+)<br><br>
+        <span class="ptag ptag-y">G-24</span> — глюкозен метаболизъм и яснота на ума (55+)<br><br>
         <div class="highlight">Тялото е свързана система. Основата (Extra + Emotion) създава условията — надстройката работи там, където имате нужда.</div>
         <div class="warn"><strong>⚠️</strong> Cerebro и G-24 не се препоръчват при онкологични заболявания.</div>
       </div>
@@ -1551,7 +1557,7 @@ body {
         <strong>🎯 НАДСТРОЙКА — по специфична нужда:</strong><br>
         <span class="ptag ptag-g">MOVE COMPLEX</span> — стави, кръст, движение<br>
         <span class="ptag ptag-o">CEREBRO</span> — концентрация, фокус (по-млади и активни хора)<br>
-        <span class="ptag ptag-y">G-24</span> — глюкозен метаболизъм, мозъчна превенция (55+)<br><br>
+        <span class="ptag ptag-y">G-24</span> — глюкозен метаболизъм, яснота на ума (55+)<br><br>
         <div class="highlight">Надстройката работи върху здрава основа. Без Extra Health и Emotion Balance специализираните продукти дават ограничен ефект — тялото трябва да е в баланс, за да може да се самовъзстановява там, където е нужно.</div>
       </div>
     </div>
@@ -1811,6 +1817,13 @@ if (typeof PRODUCT_LINKS !== 'undefined') {
 }
 
 // ── WHY_TEXT v2 — „огледало → механизъм → живот → простота" (сесия 19; override тук, за да не пипаме scoring-v4.js) ──
+// ── G-24 — без формулировки за превенция на заболяване (override тук, scoring-v4.js не се пипа) ──
+if (typeof PRODUCT_DATA !== 'undefined' && PRODUCT_DATA.g24) {
+  PRODUCT_DATA.g24.tag  = 'Глюкозен метаболизъм · Яснота на ума · Енергиен баланс';
+  PRODUCT_DATA.g24.desc = 'Специализирана подкрепа на глюкозния метаболизъм и мозъчната функция. Създава условия тялото да поддържа енергийния баланс и умствената яснота с напредване на възрастта.';
+  PRODUCT_DATA.g24.reviews = [];
+}
+
 if (typeof WHY_TEXT !== 'undefined') {
   WHY_TEXT.extra = {
     fatigue:           'Умората, която сънят не оправя, идва от клетките — те се изразходват по-бързо, отколкото се възстановяват. Extra Health работи точно там: на клетъчно ниво, като преструктурира водата, която пиете. Целта е проста — денят да Ви стига: за работата, за близките, за Вас. Без режими и хапчета по часовник — пиете си водата, както досега.',
@@ -1840,7 +1853,7 @@ if (typeof WHY_TEXT !== 'undefined') {
     'default':         'Отговорите Ви показват висока умствена натовареност, която търси подкрепа. Cerebro е разработен точно за това — фокус, яснота и издръжливост на ума при активно ежедневие. Без стимуланти — просто пиете водата си.'
   };
   WHY_TEXT.g24 = {
-    memory_decline:    'Когато имената и думите започват да се губят, това не е просто „годините". Науката все по-често свързва възрастовия спад на паметта с глюкозния метаболизъм на мозъка — когато клетките му не могат да преработят захарта, тя се превръща от гориво в товар. Изследователите дори наричат това „диабет тип 3". G-24 е разработен да подкрепя точно този процес — на клетъчно ниво. Целта: да разчитате на ума си — на 60, на 70 и след това. Работи най-добре върху основа — затова върви с Extra Health и Emotion Balance.',
+    memory_decline:    'Когато имената и думите започват да се губят, това не е просто „годините". Глюкозният метаболизъм на мозъка се променя с възрастта, а G-24 е разработен да подкрепя точно този процес — на клетъчно ниво. Целта: да разчитате на ума си — на 60, на 70 и след това. Работи най-добре върху основа — затова върви с Extra Health и Emotion Balance.',
     'default':         'Отговорите Ви показват нужда от превантивна грижа за мозъка — една от най-разумните инвестиции след 55. G-24 работи на ниво глюкозен метаболизъм и клетъчна регенерация, но дава най-много върху балансирано тяло — затова основата Extra Health + Emotion Balance е част от препоръката. Целта: умът да остане Ваш съюзник.'
   };
 }
@@ -1895,6 +1908,13 @@ var state = {
 // WELCOME
 // =============================================================
 function startQuiz() {
+  // GDPR чл. 9 — изрично съгласие за здравни данни преди първия въпрос
+  var cb = document.getElementById('consent-health');
+  if (cb && !cb.checked) {
+    var hint = document.getElementById('consent-hint');
+    if (hint) hint.style.display = 'block';
+    return;
+  }
   state.qIndex       = 0;
   state.answers      = {};
   state.history      = [];
@@ -2197,11 +2217,6 @@ function showPreResult() {
 // РЕЗУЛТАТ
 // =============================================================
 function showResult() {
-  // Meta Pixel — Lead event при клик на "Вижте резултата"
-  if (typeof fbq !== 'undefined') {
-    fbq('track', 'Lead', { content_name: 'ViewResult' });
-  }
-
   var result = computeFinalScores(state.answers);
 
   // ── Защитна проверка за онкология (Cerebro И G-24 са забранени) ──
@@ -2292,11 +2307,39 @@ function showResult() {
   // Личен план — персонализиран по продукт
   renderHealthTips(result.winner);
 
+  // ── Честен изход ──
+  // а) Без оплаквания + добър сън + стресът не влияе + над 2 л вода → НЕ препоръчваме продукт
+  // б) Онкологично заболяване → разговорът с лекаря е пръв, продуктът остава видим
+  var sym = state.answers['symptoms'] || [];
+  var isMaintenance = (sym.length === 1 && sym[0] === 'none')
+    && state.answers['sleep'] === 0 && state.answers['stress'] === 0 && state.answers['water'] === 0;
+  var noticeEl = document.getElementById('result-notice');
+  var cardEl   = document.getElementById('result-product-card');
+  var nameEl   = document.getElementById('result-product-name');
+  var tagEl    = document.getElementById('result-product-tag');
+  noticeEl.style.display = 'none';
+  cardEl.style.display = '';
+  if (isMaintenance) {
+    nameEl.textContent = 'Тяло в добра форма';
+    nameEl.style.color = '#1fce6e';
+    tagEl.textContent  = 'План за поддръжка';
+    noticeEl.innerHTML = 'Вашите отговори показват тяло в добра форма. Честно казано — в момента не Ви препоръчвам продукт. Ето плана за поддръжка, а ако нещо се промени, направете теста отново.';
+    noticeEl.style.display = 'block';
+    cardEl.style.display = 'none';
+    document.getElementById('result-combo').style.display = 'none';
+    document.getElementById('result-promo').style.display = 'none';
+    document.getElementById('cerebro-warn').style.display = 'none';
+  } else if (state.answers['oncology'] === 1) {
+    noticeEl.innerHTML = 'Преди да изберете каквото и да е — говорете с лекуващия си лекар. Ако искате, <a href="https://m.me/100004993623972" target="_blank" onclick="trackButtonClick(\'messenger-onco\')" style="color:#ffb347;font-weight:700;">пишете ми</a> и ще поговорим спокойно.';
+    noticeEl.style.display = 'block';
+  }
+
   // Запомняме последния резултат на устройството → раздел „ПЛАН" работи без повторен тест
   try {
     var _pid = (location.search.match(/[?&]id=([0-9a-f-]{36})/i) || [])[1] || state.resultRowId || null;
     localStorage.setItem('gans_last_result', JSON.stringify({
-      winner: result.winner, name: state.answers['name'] || '', id: _pid, ts: Date.now()
+      winner: result.winner, name: state.answers['name'] || '', id: _pid, ts: Date.now(),
+      maintenance: isMaintenance
     }));
   } catch (e) {}
 
@@ -2457,6 +2500,18 @@ function renderObservations(result) {
   // Профилактичен профил — symptoms празно или само 'none'
   var symptoms = state.answers['symptoms'] || [];
   var isProphylactic = symptoms.length === 0 || (symptoms.length === 1 && symptoms[0] === 'none');
+
+  // Профилактичните наблюдения от scoring-v4.js съдържат недоказуемо твърдение
+  // („многократно по-ефективна") и реклама за превенция — заменят се тук.
+  if (isProphylactic) {
+    var healthyHabits = state.answers['sleep'] === 0 && state.answers['stress'] === 0 && state.answers['water'] === 0;
+    items = healthyHabits
+      ? ['Нямате активни оплаквания — тялото Ви функционира добре.',
+         'Спите добре, стресът не Ви влияе сериозно и пиете достатъчно вода — точно тези три неща пазят тялото най-много.',
+         'Задачата сега е да ги запазите — планът по-долу е точно за това.']
+      : ['Нямате активни оплаквания — тялото Ви функционира добре.',
+         'Болестите рядко идват изведнъж — повечето са натрупване на години. Затова грижата, преди да се появят симптоми, е най-разумният момент.'];
+  }
 
   var titleEl = container.closest('.result-section') && container.closest('.result-section').querySelector('.result-section-title');
   if (titleEl) {
@@ -2777,6 +2832,7 @@ function renderPlanScreen() {
 
   var pname = (typeof PRODUCT_DATA !== 'undefined' && PRODUCT_DATA[saved.winner]) ? PRODUCT_DATA[saved.winner].name : saved.winner;
   var color = PRODUCT_COLORS[saved.winner] || '#1a90ff';
+  if (saved.maintenance) { pname = 'План за поддръжка'; color = '#1fce6e'; }
   var hello = saved.name ? (saved.name + ', ето днешния Ви план') : 'Вашият план за днес';
   holder.innerHTML = '<div style="padding-top:6px;">'
     + '<div class="result-section-title">' + hello + '</div>'
@@ -2787,7 +2843,7 @@ function renderPlanScreen() {
     + (saved.id
         ? '<a href="' + location.pathname + '?id=' + saved.id + '" onclick="try{sessionStorage.setItem(\'gans_view_result\',\'1\')}catch(e){}" style="display:block;text-align:center;padding:12px;font-size:13.5px;font-weight:700;border-radius:10px;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.85);text-decoration:none;">Вижте пълния си резултат →</a>'
         : '')
-    + '<a href="' + (PRODUCT_LINKS[saved.winner] || PRODUCT_LINKS.extra) + '" target="_blank" onclick="trackButtonClick(\'shop-plan\')" style="display:block;text-align:center;padding:12px;font-size:13.5px;font-weight:700;border-radius:10px;background:rgba(26,144,255,0.12);border:1px solid rgba(26,144,255,0.3);color:#4aaeff;text-decoration:none;">Разгледайте ' + pname + ' →</a>'
+    + (saved.maintenance ? '' : '<a href="' + (PRODUCT_LINKS[saved.winner] || PRODUCT_LINKS.extra) + '" target="_blank" onclick="trackButtonClick(\'shop-plan\')" style="display:block;text-align:center;padding:12px;font-size:13.5px;font-weight:700;border-radius:10px;background:rgba(26,144,255,0.12);border:1px solid rgba(26,144,255,0.3);color:#4aaeff;text-decoration:none;">Разгледайте ' + pname + ' →</a>')
     + '</div></div>';
   renderPlanItems(document.getElementById('plan-screen-items'), saved.winner);
 }
@@ -3201,6 +3257,15 @@ function cookieDecline() {
   localStorage.setItem('cookie_consent', 'no');
   document.getElementById('cookie-banner').style.display = 'none';
 }
+
+// Съгласието: подсказката изчезва, щом се отметне
+(function() {
+  var cb = document.getElementById('consent-health');
+  if (cb) cb.addEventListener('change', function() {
+    var hint = document.getElementById('consent-hint');
+    if (hint && cb.checked) hint.style.display = 'none';
+  });
+})();
 
 // ── Инсталирано приложение: отваряме направо раздел „ПЛАН" ──
 function isStandalone() {
