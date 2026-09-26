@@ -1017,7 +1017,59 @@ body {
       el.innerHTML = html;
       card.style.display = 'block';
     }
-    renderPwaHint();
+    // Картата „Сложете профила на началния екран" е изключена (сесия 21) — отвличаше от контакта.
+    // renderPwaHint();
+    </script>
+
+    <!-- ══ КОНТАКТ — „Да Ви пиша след седмица?" (сесия 21) ══
+         Телефонът НЕ се пази в Supabase — отива само като имейл до Господин през Formspree. -->
+    <div class="result-section" id="phone-lead">
+      <div style="background:var(--card);border:1px solid rgba(31,206,110,0.3);border-radius:16px;padding:20px;">
+        <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:6px;text-align:center;">Да Ви пиша след седмица, да видим как върви планът?</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:14px;text-align:center;">Кратко съобщение от мен — по телефона или във Viber.</div>
+        <form id="phone-form" style="display:flex;flex-direction:column;gap:10px;">
+          <input class="contact-input" type="text" id="pl-name" placeholder="Вашето име" required>
+          <input class="contact-input" type="tel" id="pl-phone" placeholder="Телефон" required inputmode="tel" autocomplete="tel">
+          <label style="display:flex;align-items:flex-start;gap:10px;font-size:12.5px;line-height:1.55;color:rgba(255,255,255,0.7);cursor:pointer;">
+            <input type="checkbox" id="pl-consent" required style="width:20px;height:20px;flex-shrink:0;margin-top:1px;accent-color:#1fce6e;">
+            <span>Съгласен/на съм Господин Минев да се свърже с мен по телефона или във Viber.</span>
+          </label>
+          <button type="submit" id="pl-btn" style="width:100%;padding:13px 0;font-size:15px;font-weight:700;font-family:inherit;border:none;border-radius:10px;background:#1fce6e;color:#0d0f14;cursor:pointer;">Да, пишете ми</button>
+        </form>
+        <div id="pl-success" style="display:none;text-align:center;font-size:14px;color:#3de88a;font-weight:600;line-height:1.6;">Благодаря! Ще Ви пиша след около седмица.</div>
+      </div>
+    </div>
+    <script>
+    (function() {
+      var form = document.getElementById('phone-form');
+      if (!form) return;
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var btn = document.getElementById('pl-btn');
+        var phone = document.getElementById('pl-phone').value.trim();
+        if (phone.replace(/\D/g, '').length < 8) { btn.textContent = 'Проверете телефона'; return; }
+        btn.textContent = 'Изпращане...'; btn.disabled = true;
+        var prodKey = state.result && state.result.winner;
+        var prodName = (prodKey && PRODUCT_DATA[prodKey]) ? PRODUCT_DATA[prodKey].name : '';
+        var link = state.resultRowId ? (location.origin + location.pathname + '?id=' + state.resultRowId) : location.href;
+        var data = new FormData();
+        data.append('_subject', 'GANS тест — оставен телефон за връзка');
+        data.append('name', document.getElementById('pl-name').value.trim());
+        data.append('phone', phone);
+        data.append('product', prodName);
+        data.append('source', (state.answers && state.answers.src) || '—');
+        data.append('result_link', link);
+        fetch('https://formspree.io/f/xeevbpba', { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+          .then(function(res) {
+            if (res.ok) {
+              form.style.display = 'none';
+              document.getElementById('pl-success').style.display = 'block';
+              try { trackButtonClick('phone-lead'); } catch (e2) {}
+            } else { btn.textContent = 'Грешка — опитайте отново'; btn.disabled = false; }
+          })
+          .catch(function() { btn.textContent = 'Грешка — опитайте отново'; btn.disabled = false; });
+      });
+    })();
     </script>
 
     <!-- ══ СПОДЕЛЯНЕ — изпрати теста на близък ══ -->
@@ -1786,11 +1838,6 @@ body {
     <div class="nav-tab-lbl">ТЕСТ</div>
     <div class="nav-tab-dot"></div>
   </button>
-  <button class="nav-tab" id="nav-plan" onclick="showSection('plan')">
-    <div class="nav-tab-ico">✅</div>
-    <div class="nav-tab-lbl">ПЛАН</div>
-    <div class="nav-tab-dot"></div>
-  </button>
   <button class="nav-tab" id="nav-faq" onclick="showSection('faq')">
     <div class="nav-tab-ico">ℹ️</div>
     <div class="nav-tab-lbl">ЗА GANS</div>
@@ -1917,6 +1964,10 @@ function startQuiz() {
   }
   state.qIndex       = 0;
   state.answers      = {};
+  // Откъде идва човекът (?src=vermila и т.н.) — записва се в answers_json, без нова колона
+  var _src = null;
+  try { _src = sessionStorage.getItem('gans_src'); } catch (e) {}
+  if (_src) state.answers.src = _src;
   state.history      = [];
   state.result       = null;
   state.progressRowId = null;
@@ -2306,6 +2357,10 @@ function showResult() {
 
   // Личен план — персонализиран по продукт
   renderHealthTips(result.winner);
+
+  // Картата за телефон — името от теста
+  var plName = document.getElementById('pl-name');
+  if (plName && !plName.value) plName.value = state.answers['name'] || '';
 
   // ── Честен изход ──
   // а) Без оплаквания + добър сън + стресът не влияе + над 2 л вода → НЕ препоръчваме продукт
@@ -2805,7 +2860,7 @@ function renderHealthTips(winner) {
   var el = document.getElementById('health-tips');
   if (!el) return;
   el.innerHTML = '<div class="result-section-title">Вашият личен план</div>'
-    + '<div class="plan-sub">Навиците, които усилват ефекта. Отбелязвайте ги всеки ден — устройството Ви помни днешния напредък. Планът Ви е винаги в раздел „ПЛАН" долу.</div>'
+    + '<div class="plan-sub">Навиците, които усилват ефекта. Отбелязвайте ги всеки ден — устройството Ви помни днешния напредък.</div>'
     + '<div class="plan-items-holder"></div>';
   renderPlanItems(el.querySelector('.plan-items-holder'), winner);
   el.style.display = 'block';
@@ -3258,6 +3313,12 @@ function cookieDecline() {
   document.getElementById('cookie-banner').style.display = 'none';
 }
 
+// ── ?src=… етикет на източника — пази се за сесията (до края на теста) ──
+(function() {
+  var m = location.search.match(/[?&]src=([a-z0-9_-]{1,30})/i);
+  if (m) { try { sessionStorage.setItem('gans_src', m[1].toLowerCase()); } catch (e) {} }
+})();
+
 // Съгласието: подсказката изчезва, щом се отметне
 (function() {
   var cb = document.getElementById('consent-health');
@@ -3284,7 +3345,8 @@ function isStandalone() {
   // Клик на „Вижте пълния си резултат" слага флага → не прескачаме към плана.
   // Дълбоките линкове ?gans/?vizitka също имат предимство пред авто-плана.
   var deepLink = /[?&](gans|vizitka)(\b|=)/i.test(location.search);
-  if (isStandalone() && saved && saved.winner && !viewResult && !deepLink) { showSection('plan'); }
+  // Раздел ПЛАН е изваден от менюто (сесия 21) — инсталираната икона вече отваря резултата с плана.
+  // if (isStandalone() && saved && saved.winner && !viewResult && !deepLink) { showSection('plan'); }
 })();
 </script>
 </body>
