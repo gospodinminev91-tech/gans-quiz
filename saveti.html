@@ -248,7 +248,7 @@
 
   function track(btn){
     if(!_sb) return;
-    try { _sb.from('click_events').insert({ button: btn, product: null, name: 'saveti' }); } catch(e) {}
+    try { _sb.from('click_events').insert({ button: btn, product: null, name: 'saveti' }).then(function(){}); } catch(e) {}
   }
 
   track('saveti-view');

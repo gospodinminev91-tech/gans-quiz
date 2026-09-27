@@ -1172,8 +1172,8 @@ body {
     <div style="font-size:11px;font-weight:700;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;text-align:center;">Ново тук? Започнете от тези 3</div>
     <div style="display:flex;flex-direction:column;gap:8px;">
       <button onclick="openFaq('general',0)" class="faq-start-btn">1 · Какво е GANS и как работи?</button>
-      <button onclick="openFaq('usage',0)" class="faq-start-btn">2 · Как се приема GANS продуктът?</button>
-      <button onclick="openFaq('usage',1)" class="faq-start-btn">3 · Кога ще усетя резултати?</button>
+      <button onclick="openFaq('usage',0)" class="faq-start-btn">2 · Как се използва GANS?</button>
+      <button onclick="openFaq('usage',2)" class="faq-start-btn">3 · Кога ще усетя резултати?</button>
     </div>
   </div>
 
@@ -1181,16 +1181,15 @@ body {
 <div class="cats">
   <button class="cat-btn active" onclick="showCat('general',this)">🔬 Какво е GANS?</button>
   <button class="cat-btn" onclick="showCat('products',this)">📦 Продуктите</button>
-  <button class="cat-btn" onclick="showCat('usage',this)">💊 Употреба</button>
-  <button class="cat-btn" onclick="showCat('combos',this)">🔗 Комбинации</button>
+  <button class="cat-btn" onclick="showCat('usage',this)">💧 Употреба</button>
+  <button class="cat-btn" onclick="showCat('combos',this)">🔗 Как работят заедно</button>
   <button class="cat-btn" onclick="showCat('safety',this)">⚠️ Безопасност</button>
-  <button class="cat-btn" onclick="showCat('synergy',this)">🧩 Как работят заедно</button>
   <button class="cat-btn" onclick="showCat('order',this)">🛒 Поръчка</button>
 </div>
 
 <!-- ══ SECTION: GENERAL ══ -->
 <div class="faq-section active" id="cat-general">
-  <div class="section-title">🔬 Какво е GANS нанотехнология?</div>
+  <div class="section-title">🔬 Какво е GANS?</div>
   <div class="faq-list">
 
     <div class="faq-item" onclick="toggle(this)">
@@ -1200,13 +1199,9 @@ body {
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        <strong>GANS</strong> (Gas in Nano Solid State) е иновативна нанотехнология, разработена от SKYLAB Industries. Представлява наночастици, създадени от природни елементи, които взаимодействат с биоенергийното поле на живите организми.<br><br>
-        Технологията работи на принципа на плазмената физика — наночастиците създават енергийно поле, което подпомага естествените процеси на самовъзстановяване на тялото. Не е лекарство, а <strong>допълнителна подкрепа</strong> за организма.
-        <div class="highlight">
-        <strong>Важно:</strong> GANS създава условия, в които тялото може да събуди своите естествени сили за възстановяване и вътрешно равновесие.<br><br>
-        Когато тялото получи подходящата енергийна подкрепа, то само насочва ресурсите си към балансиране и възстановяване. Това означава, че GANS може да подпомогне при различни неразположения — не като ги „лекува" директно, а като дава на организма необходимите условия да се справи сам.<br><br>
-        <em>GANS продуктите подпомагат общото благосъстояние. Те не са лекарствен продукт, нито хранителна добавка и не заместват нуждата от медицинска помощ.</em>
-        </div>
+        <strong>GANS</strong> (от англ. Gas at Nano Solid State) е специално произведен наноструктуриран минерален материал, създаден чрез нискоенергиен електрохимичен процес. SKYLAB Industries го разработва в България от 2015 г.<br><br>
+        GANS <strong>не се поглъща и нищо от него не влиза в тялото</strong>. Наночастиците са вградени в носител — плочка, печат на бутилка, магнит, тъкан — и действат чрез близост: водата до тях се преструктурира, без да се променя химичният ѝ състав.
+        <div class="highlight"><strong>GANS не лекува.</strong> Създава условия тялото само да се самовъзстановява.<br><br><em>GANS продуктите подпомагат общото благосъстояние. Те не са лекарствен продукт, нито хранителна добавка и не заместват нуждата от медицинска помощ.</em></div>
       </div>
     </div>
 
@@ -1217,39 +1212,37 @@ body {
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        GANS технологията е базирана на принципите на плазмената физика и нанонауката. SKYLAB Industries провежда изследвания в сътрудничество с научни институти и клинични лаборатории.<br><br>
-        Хиляди потребители споделят положителни резултати от употребата. Технологията се прилага в медицина, земеделие, козметика и промишленост.
-        <div class="highlight">За повече информация: <strong>skylab.bg/ap/181/</strong></div>
+        Ще бъда откровен: <strong>независими публикувани изследвания за GANS засега няма</strong>. Затова не твърдя, че лекува каквото и да е.<br><br>
+        Това, което имам, е личният ми опит от ежедневна употреба и резултатите на хора, които познавам лично. Ако искате да ги чуете — <a href="https://m.me/100004993623972" target="_blank" onclick="trackButtonClick('messenger-faq')" style="color:var(--blue2);font-weight:700;">пишете ми в Messenger</a>.
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">3</div>
-        <div class="faq-q-text">Каква е разликата между GANS и обикновените хранителни добавки?</div>
+        <div class="faq-q-text">С какво GANS се различава от хранителните добавки?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        За разлика от стандартните хранителни добавки, GANS <strong>не доставя хранителни вещества</strong> — вместо това <strong>зарежда тялото с енергия</strong>. Работи чрез биоенергийно взаимодействие, подпомагайки клетките да функционират по-добре и да се самовъзстановяват естествено.<br><br>
-        Традиционни добавки = <em>доставят вещества отвън</em><br>
-        GANS = <em>зарежда тялото с енергия да се самовъзстановява отвътре</em>
+        Хранителните добавки доставят вещества, които тялото поема.<br><br>
+        GANS <strong>не доставя нищо</strong> — не се поглъща и не се разтваря във водата. Действа чрез близост и променя структурата на водата, която пиете.
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">4</div>
-        <div class="faq-q-text">За какво се използва GANS технологията в живота?</div>
+        <div class="faq-q-text">За какво се използва GANS технологията?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
         GANS технологията има широко приложение:<br><br>
-        🏥 <strong>Здраве</strong> — подкрепа на имунната система, детоксикация, подобряване на общото благосъстояние<br>
+        🏥 <strong>Здраве и благосъстояние</strong> — заредена вода за ежедневна употреба<br>
         🌱 <strong>Земеделие</strong> — по-добро развитие на растенията и почвата<br>
         ⚡ <strong>Енергетика</strong> — подобряване на ефективността на соларни панели<br>
         🧴 <strong>Козметика</strong> — SKYLAB Cosmetics продукти с GANS<br>
         🏭 <strong>Промишленост</strong> — по-здрави и издръжливи материали<br><br>
-        <div class="highlight">🇧🇬 <strong>SKYLAB Industries е българска компания</strong>, основана от <strong>Петър Йовчев</strong>. Базирана е в гр. Пловдив и работи в тясно сътрудничество с научни и индустриални партньори от цял свят.</div>
+        <div class="highlight">🇧🇬 <strong>SKYLAB Industries е българска компания</strong>, основана от <strong>Петър Йовчев</strong>, със седалище в гр. Пловдив.</div>
       </div>
     </div>
 
@@ -1258,106 +1251,84 @@ body {
 
 <!-- ══ SECTION: PRODUCTS ══ -->
 <div class="faq-section" id="cat-products">
-  <div class="section-title">📦 Продуктите на SKYLAB</div>
+  <div class="section-title">📦 Продуктите</div>
   <div class="faq-list">
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">1</div>
-        <div class="faq-q-text">Какви са основните GANS продукти?</div>
+        <div class="faq-q-text">Какви са GANS продуктите?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        SKYLAB предлага 5 основни GANS формули:<br><br>
-        <span class="ptag ptag-b">EXTRA HEALTH</span> — Целостен организъм, детоксикация, имунитет. Основният продукт.<br><br>
-        <span class="ptag ptag-p">EMOTION BALANCE</span> — Емоционален баланс, сън, тревожност, паник атаки.<br><br>
-        <span class="ptag ptag-g">MOVE COMPLEX</span> — Стави, сухожилия, хрущял, синовиална течност.<br><br>
-        <span class="ptag ptag-o">CEREBRO</span> — Памет, съсредоточаване, подкрепа на мозъчната дейност и когнитивните функции. Подпомага метилацията — процеса на делене и регенерация на клетките.<br><br>
-        <span class="ptag ptag-y">G-24</span> — Глюкозен метаболизъм, яснота на ума, енергиен баланс. Специализиран за 55+.
+        <strong>Основните три:</strong><br>
+        <span class="ptag ptag-b">EXTRA HEALTH</span> — общ тонус и естествените възстановителни процеси<br>
+        <span class="ptag ptag-p">EMOTION BALANCE</span> — вътрешен баланс при стрес и напрежение<br>
+        <span class="ptag ptag-g">MOVE COMPLEX</span> — стави, мускули и подвижност<br><br>
+        <strong>По избор:</strong><br>
+        <span class="ptag ptag-o">CEREBRO</span> — концентрация и умствена яснота<br>
+        <span class="ptag ptag-y">G-24</span> — глюкозен метаболизъм и енергиен баланс (основно 55+)<br><br>
+        <strong>С трите основни формули, вградени заедно:</strong><br>
+        ● <strong>ORIA Premium Bottle</strong> — стъклена бутилка, формулите са в печата (550 мл и 750 мл)<br>
+        ● <strong>OMNIUM тениски</strong> — мъжки и дамски, бели и черни<br>
+        ● <strong>OMNIUM G-SET</strong> — комплект тениска и къси панталони, мъжки и дамски<br>
+        ● <strong>Магнити за бойлер</strong> — за водата при къпане<br>
+        ● <strong>ORIA Water Dispenser</strong> — пречиствател с обратна осмоза, който зарежда водата
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">2</div>
-        <div class="faq-q-text">Какво прави Extra Health и защо е „основният" продукт?</div>
+        <div class="faq-q-text">Extra Health — за какво е?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        <strong>Extra Health GANS</strong> е иновативен продукт, създаден за подкрепа на основните функции и системи в човешкото тяло — имунната система, дихателната система, вътрешните органи и общия клетъчен баланс.<br><br>
-        Продуктът действа чрез <strong>преструктуриране на водата</strong> — придава ѝ по-хармонична вибрационна характеристика. Тази „заредена" вода подпомага вътрешния енергиен баланс, детоксикацията и по-добрата хидратация на клетките.<br><br>
-        Подходящ е за:<br>
-        ● Профилактична употреба — укрепване на имунитета<br>
-        ● Възстановяване след вирусни или бактериални инфекции<br>
-        ● Физическа умора и натрупан токсичен стрес<br>
-        ● Детоксикация на вътрешните органи<br><br>
-        Нарича се „основен" защото работи <strong>синергично с всички останали продукти</strong> — неговото действие усилва ефекта на Emotion Balance, Move Complex и Cerebro.
-        <div class="highlight"><strong>Препоръка:</strong> При всяка комбинация включете Extra Health като основа.</div>
+        <span class="ptag ptag-b">EXTRA HEALTH</span> е най-широкият от петте. Не е насочен към една система, а към <strong>общата вътрешна среда на организма</strong>.<br><br>
+        Подходящ е за профилактична употреба, при умора и в периоди на възстановяване — след боледуване, при натоварване или натрупан стрес.
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">3</div>
-        <div class="faq-q-text">За кого е Emotion Balance?</div>
+        <div class="faq-q-text">Emotion Balance — за какво е?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        <strong>Emotion Balance GANS</strong> е иновативен продукт, предназначен за подпомагане на емоционалното здраве и благополучие. В забързаното ежедневие стресът, напрежението и емоционалната нестабилност често водят до умора и изтощение — Emotion Balance работи като подкрепа в тези моменти, създавайки по-хармонична среда за ума и тялото.<br><br>
-        Особено полезен при:<br>
-        ● Стрес и нервно напрежение<br>
-        ● Паник атаки<br>
-        ● Депресивни епизоди<br>
-        ● Проблеми със съня — трудно заспиване, нощни събуждания<br>
-        ● Емоционална нестабилност и изтощение<br><br>
-        Emotion Balance подпомага връщането към вътрешно спокойствие и увереност — естествено средство за всеки, който иска да възстанови баланса си и да се справя по-лесно с ежедневните предизвикателства.<br><br>
-        <div class="highlight"><em>Когато умът е спокоен — тялото е здраво. Когато тялото е здраво — умът е спокоен.</em></div>
+        <span class="ptag ptag-p">EMOTION BALANCE</span> е за периоди на <strong>стрес и нервно напрежение</strong>, раздразнителност, трудно заспиване или неспокоен сън, емоционална умора.<br><br>
+        Подпомага връщането към вътрешно спокойствие.
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">4</div>
-        <div class="faq-q-text">За кого е Move Complex?</div>
+        <div class="faq-q-text">Move Complex — за какво е?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        <strong>Move Complex GANS</strong> е специално разработен за подкрепа на <strong>опорно-двигателния апарат</strong> — ставите, костите, сухожилията, гръбначния стълб и синовиалните течности.<br><br>
-        Оказва благоприятно въздействие при:<br>
-        ● Болки в ставите, гръбнака или кръста<br>
-        ● Артритни заболявания и възпаления<br>
-        ● Скованост сутрин или след почивка<br>
-        ● Износени хрущяли и сухожилия<br>
-        ● Недостатъчна синовиална течност<br>
-        ● Хронични болки и напрежение<br><br>
-        Move Complex подпомага облекчаването на болката, свободата на движение и естественото възстановяване след физическо натоварване. Надежден избор за хора, които искат да се движат свободно и да поддържат здравето на опорно-двигателната система.<br><br>
-        <div class="highlight" style="border-left-color:var(--green);background:rgba(31,206,110,0.08)"><em>✦ Движението е свобода.</em></div>
+        <span class="ptag ptag-g">MOVE COMPLEX</span> е насочен към <strong>ставите, сухожилията, костите и течностите около тях</strong>.<br><br>
+        Подходящ е при скованост сутрин, дискомфорт при движение, натоварване и за възстановяване след физическо усилие.
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">5</div>
-        <div class="faq-q-text">За кого е Cerebro и има ли ограничения?</div>
+        <div class="faq-q-text">Cerebro — за какво е и има ли ограничения?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        <span class="ptag ptag-o">CEREBRO</span> е специално разработен вид наночастици, насочени към подкрепа на <strong>мозъчната дейност и когнитивните функции</strong>.<br><br>
-        Той подпомага процесите на <strong>метилация</strong> — жизненоважен биохимичен механизъм, който влияе върху енергийния баланс, регулацията на гените и възстановяването на клетките.<br><br>
-        Cerebro оказва благоприятно въздействие върху органите и процесите, свързани с желязо, цинк и въглерод. Подходящ е при:<br><br>
-        ● Умствена умора и липса на концентрация<br>
-        ● Забавена мисъл или нужда от повече яснота<br>
-        ● Студенти и учащи<br>
-        ● Хора с висока умствена натовареност в ежедневието<br><br>
-        Cerebro е <strong>естествена подкрепа</strong> за хора, които искат да поддържат ума си свеж, енергичен и устойчив.<br><br>
-        <div class="warn"><strong>⚠️ ВАЖНО:</strong> Cerebro НЕ се препоръчва при онкологични заболявания (рак). При наличие на такова заболяване, моля <strong>НЕ употребявайте GANS Cerebro</strong>.</div>
+        <span class="ptag ptag-o">CEREBRO</span> е за <strong>концентрация и умствена яснота</strong> — при умствена умора, интензивна работа или учене.<br><br>
+        <div class="warn"><strong>⚠️ Да не се използва от хора с онкологично заболяване</strong> — настоящо или минало.</div>
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">6</div>
-        <div class="faq-q-text">За кого е G-24?</div>
+        <div class="faq-q-text">G-24 — за кого е?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
@@ -1365,12 +1336,11 @@ body {
         Глюкозата е основното гориво на мозъка, а начинът, по който клетките я усвояват, се променя с възрастта — затова енергията и яснотата на ума често спадат след 55. G-24 <strong>не лекува</strong> заболявания — създава условия за по-добра мозъчна функция и клетъчен енергиен баланс.<br><br>
         Подходящ при:<br>
         ● Влошаваща се памет с напредване на възрастта<br>
-        ● Умствена умора и мозъчна мъгла след хранене<br>
+        ● Умствена умора и тежест след хранене<br>
         ● Грижа за яснотата на ума (основно 55+)<br>
         ● Нестабилна енергия и пикове/спадове през деня<br><br>
-        G-24 работи на клетъчно ниво — там, където глюкозата е горивото на мозъка.<br><br>
-        <div class="highlight">💡 <strong>Важно:</strong> G-24 дава най-добри резултати в комбинация с Extra Health и Emotion Balance като основа. Тялото трябва да е в баланс, за да може G-24 да работи пълноценно.</div>
-        <div class="warn"><strong>⚠️ ЗАБРАНЕН при онкологични заболявания</strong> — настоящи или минали. При съмнение се консултирайте с лекар.</div>
+        <div class="highlight">💡 <strong>Моята препоръка:</strong> много силно препоръчвам G-24 да се ползва заедно с Extra Health и Emotion Balance. Така ефектът на G-24 е по-силен.</div>
+        <div class="warn"><strong>⚠️ Да не се използва при онкологично заболяване</strong> — настоящо или минало. При съмнение се посъветвайте с лекуващия си лекар.</div>
       </div>
     </div>
 
@@ -1379,28 +1349,42 @@ body {
 
 <!-- ══ SECTION: USAGE ══ -->
 <div class="faq-section" id="cat-usage">
-  <div class="section-title">💊 Употреба и дозировка</div>
+  <div class="section-title">💧 Употреба</div>
   <div class="faq-list">
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">1</div>
-        <div class="faq-q-text">Как се приема GANS продуктът?</div>
+        <div class="faq-q-text">Как се използва GANS?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        GANS продуктите са под формата на <strong>плочки с наночастици</strong>, които се поставят до съд с вода. Плочките не се консумират — ползва се <strong>плазменото поле</strong>, което излъчват и с което зареждат водата.<br><br>
-        🕐 <strong>Зареждане:</strong> Поставете плочката (или няколко плочки) до съда с вода за минимум <strong>1–3 часа</strong>.<br>
-        💧 <strong>Заредената вода</strong> остава активна <strong>8–12 часа</strong> — дори след като плочките бъдат премахнати.<br><br>
-        За подробна информация относно употребата:
-        <div class="highlight"><strong>skylab.bg/ap/181/</strong></div>
-        <div class="highlight">💡 <strong>Съвет:</strong> Плочките могат да стоят постоянно до съда с вода — не е необходимо да се премахват след зареждането. Това осигурява непрекъснато заредена вода.</div>
+        И петте GANS са <strong>плочки</strong>.<br><br>
+        ● Поставете плочката до съд с вода — най-добре стъклен, може и пластмасов<br>
+        ● Плочката не се отваря и не влиза в контакт с водата<br>
+        ● Оставете поне <strong>30–60 минути</strong>; ако водата престои през нощта, ефектът е по-пълен<br>
+        ● Може да сложите няколко вида плочки до един и същ съд<br><br>
+        <div class="highlight">💡 Плочките не се изхабяват и се ползват години наред.</div>
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">2</div>
+        <div class="faq-q-text">Как още може да се ползва заредената вода?</div>
+        <div class="faq-arrow">⌄</div>
+      </div>
+      <div class="faq-a">
+        Освен за пиене:<br><br>
+        ● <strong>Компрес</strong> — напоена кърпа върху мястото, където усещате напрежение, за 20–30 минути<br>
+        ● <strong>Вана или душ</strong> — за отпускане и грижа за кожата<br>
+        ● <strong>Овлажнител или дифузер</strong> — за въздуха в стаята
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <div class="faq-q-num">3</div>
         <div class="faq-q-text">Кога ще усетя резултати?</div>
         <div class="faq-arrow">⌄</div>
       </div>
@@ -1421,24 +1405,25 @@ body {
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
-        <div class="faq-q-num">3</div>
+        <div class="faq-q-num">4</div>
         <div class="faq-q-text">Има ли странични ефекти?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        GANS продуктите са създадени от природни елементи и <strong>нямат странични ефекти</strong>. Тялото използва толкова енергия, колкото му е необходима — поради което <strong>не може да се предозира</strong>. Технологията работи в синхрон с естествените процеси на организма.
+        Нищо от GANS не влиза в тялото — пиете вода, която е стояла до плочката.<br><br>
+        Ако приемате лекарства или имате хронично заболяване, кажете на лекаря си, че пиете заредена вода. Така е най-коректно.
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
-        <div class="faq-q-num">4</div>
-        <div class="faq-q-text">Могат ли деца да приемат GANS продукти?</div>
+        <div class="faq-q-num">5</div>
+        <div class="faq-q-text">Може ли за деца?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        GANS продуктите могат да се използват от хора на <strong>всякакви възрасти</strong>. Свържете се с нас за персонален съвет:
-        <div class="highlight"><strong>gospodin.minev@abv.bg</strong></div>
+        Да — GANS е за цялото семейство.<br><br>
+        За <strong>бебета и малки деца</strong> първо се посъветвайте с педиатъра си.
       </div>
     </div>
 
@@ -1447,7 +1432,7 @@ body {
 
 <!-- ══ SECTION: COMBOS ══ -->
 <div class="faq-section" id="cat-combos">
-  <div class="section-title">🔗 Комбинации и синергия</div>
+  <div class="section-title">🔗 Как работят заедно</div>
   <div class="faq-list">
 
     <div class="faq-item" onclick="toggle(this)">
@@ -1457,69 +1442,61 @@ body {
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        Да! GANS продуктите са специално разработени да работят синергично. Комбинирането им не само е безопасно, но и <strong>увеличава ефекта</strong>.<br><br>
-        <span class="ptag ptag-b">EXTRA HEALTH</span> е ядрото — той усилва действието на всеки друг продукт.
+        Да — може да поставите <strong>няколко плочки до един и същ съд</strong> с вода.<br><br>
+        Трите основни — <span class="ptag ptag-b">EXTRA HEALTH</span> <span class="ptag ptag-p">EMOTION BALANCE</span> <span class="ptag ptag-g">MOVE COMPLEX</span> — са предвидени да работят заедно. Затова точно те са вградени в ORIA бутилката, тениските, магнитите за бойлер и пречиствателя ORIA.
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">2</div>
-        <div class="faq-q-text">Коя е основната препоръчана комбинация?</div>
+        <div class="faq-q-text">Основни и по избор — откъде да започна?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        <strong>Трите основни формули:</strong><br><br>
-        <span class="ptag ptag-b">EXTRA HEALTH</span> + <span class="ptag ptag-p">EMOTION BALANCE</span> + <span class="ptag ptag-g">MOVE COMPLEX</span><br><br>
-        Тази комбинация покрива:<br>
-        ● <strong>Тялото</strong> — детоксикация и имунитет (Extra Health)<br>
-        ● <strong>Ума</strong> — емоции и сън (Emotion Balance)<br>
-        ● <strong>Движението</strong> — стави и подвижност (Move Complex)<br><br>
-        <div class="highlight">Умът и тялото са свързани. Когато умът е спокоен — тялото е здраво. Когато тялото е здраво — умът е спокоен.</div>
+        <strong>Основните три:</strong> <span class="ptag ptag-b">EXTRA HEALTH</span> <span class="ptag ptag-p">EMOTION BALANCE</span> <span class="ptag ptag-g">MOVE COMPLEX</span><br><br>
+        <strong>По избор:</strong><br>
+        <span class="ptag ptag-o">CEREBRO</span> — концентрация и фокус (по-млади и активни хора)<br>
+        <span class="ptag ptag-y">G-24</span> — глюкозен метаболизъм и яснота на ума (55+)<br><br>
+        <div class="highlight">💡 <strong>Моята препоръка:</strong> започнете от основните и добавете Cerebro или G-24 при конкретна нужда.</div>
+        <div class="warn"><strong>⚠️ Cerebro и G-24 не се използват при онкологично заболяване</strong> — настоящо или минало. При съмнение се посъветвайте с лекуващия си лекар.</div>
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">3</div>
-        <div class="faq-q-text">Extra Health + Emotion Balance — защо работят заедно?</div>
+        <div class="faq-q-text">Extra Health + Emotion Balance — защо заедно?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        Extra Health детоксикира тялото и укрепва имунитета. Това директно влияе на нервната система и емоционалното равновесие. Emotion Balance от своя страна успокоява ума, което намалява стреса върху тялото.<br><br>
-        Резултатът: <strong>хармония на тяло и ум</strong> — по-добро здраве, по-добър сън, повече енергия.
+        Тялото и умът не са отделни системи. Продължителният стрес се отразява на съня, имунитета и възстановяването, а физическата умора — на настроението.<br><br>
+        <span class="ptag ptag-b">EXTRA HEALTH</span> поддържа общата вътрешна среда, <span class="ptag ptag-p">EMOTION BALANCE</span> — баланса на нервната система.
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">4</div>
-        <div class="faq-q-text">Extra Health + Move Complex — защо работят заедно?</div>
+        <div class="faq-q-text">Extra Health + Move Complex — защо заедно?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        Extra Health детоксикира организма и подобрява кръвообращението, което подпомага регенерацията на ставите и тъканите. Move Complex се фокусира директно върху хрущяла, сухожилията и синовиалната течност.<br><br>
-        Заедно те осигуряват <strong>пълна подкрепа на опорно-двигателната система</strong>.
+        <span class="ptag ptag-g">MOVE COMPLEX</span> е насочен към ставите и подвижността, <span class="ptag ptag-b">EXTRA HEALTH</span> — към общата среда, в която тъканите се възстановяват.<br><br>
+        Затова препоръчвам двата заедно, а най-добре — и трите основни.
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">5</div>
-        <div class="faq-q-text">Пълна програма — всички 5 продукта?</div>
+        <div class="faq-q-text">G-24 + Extra Health + Emotion Balance — защо заедно?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        Да! Всичките 5 продукта заедно дават максимален ефект:<br><br>
-        <strong>ОСНОВА (задължителна за всеки):</strong><br>
-        <span class="ptag ptag-b">EXTRA HEALTH</span> — детоксикация, имунитет, клетъчен ред<br>
-        <span class="ptag ptag-p">EMOTION BALANCE</span> — нервна система, сън, емоционален баланс<br><br>
-        <strong>НАДСТРОЙКА (по нужда):</strong><br>
-        <span class="ptag ptag-g">MOVE COMPLEX</span> — стави и движение<br>
-        <span class="ptag ptag-o">CEREBRO</span> — концентрация и фокус (до 55 г.)<br>
-        <span class="ptag ptag-y">G-24</span> — глюкозен метаболизъм и яснота на ума (55+)<br><br>
-        <div class="highlight">Тялото е свързана система. Основата (Extra + Emotion) създава условията — надстройката работи там, където имате нужда.</div>
-        <div class="warn"><strong>⚠️</strong> Cerebro и G-24 не се препоръчват при онкологични заболявания.</div>
+        <span class="ptag ptag-y">G-24</span> може да се ползва и самостоятелно, но <strong>силно препоръчвам</strong> да се комбинира с <span class="ptag ptag-b">EXTRA HEALTH</span> и <span class="ptag ptag-p">EMOTION BALANCE</span> — така ефектът на G-24 е по-силен.<br><br>
+        Глюкозният метаболизъм зависи от цялото тяло, включително от стреса, който пряко влияе върху него.
+        <div class="warn"><strong>⚠️ G-24 не се използва при онкологично заболяване</strong> — настоящо или минало.</div>
       </div>
     </div>
 
@@ -1528,7 +1505,7 @@ body {
 
 <!-- ══ SECTION: SAFETY ══ -->
 <div class="faq-section" id="cat-safety">
-  <div class="section-title">⚠️ Безопасност и предупреждения</div>
+  <div class="section-title">⚠️ Безопасност</div>
   <div class="faq-list">
 
     <div class="faq-item" onclick="toggle(this)">
@@ -1538,8 +1515,8 @@ body {
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        GANS продуктите са създадени от природни елементи и са <strong>напълно безопасни</strong>. SKYLAB Industries работи по строги стандарти за качество.<br><br>
-        GANS продуктите подпомагат общото благосъстояние. Те <strong>не са лекарствен продукт</strong>, нито хранителна добавка и не заместват нуждата от медицинска помощ.<br><br>
+        GANS не се поглъща и <strong>нищо от него не влиза в тялото</strong> — действа чрез близост до водата.<br><br>
+        <em>GANS продуктите подпомагат общото благосъстояние. Те не са лекарствен продукт, нито хранителна добавка и не заместват нуждата от медицинска помощ.</em>
       </div>
     </div>
 
@@ -1550,13 +1527,12 @@ body {
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        <div class="warn">
-          <strong>⚠️ ВАЖНО ПРЕДУПРЕЖДЕНИЕ</strong><br><br>
-          Продуктите <strong>CEREBRO и G-24 НЕ СЕ ПРЕПОРЪЧВАТ</strong> при хора с онкологични заболявания (рак) — настоящи или минали.<br><br>
-          При наличие на онкологично заболяване:<br>
-          ● Не приемайте Cerebro или G-24 без консултация с онколог<br>
+        <div class="warn"><strong>⚠️ ВАЖНО</strong><br><br>
+          Продуктите <strong>CEREBRO и G-24 не се използват</strong> от хора с онкологично заболяване — настоящо или минало.<br><br>
+          При онкологично заболяване:<br>
+          ● Не използвайте Cerebro или G-24<br>
           ● Можете да ползвате Extra Health, Emotion Balance и Move Complex<br>
-          ● Винаги информирайте лекаря си за всички добавки
+          ● Информирайте лекуващия си лекар, че използвате заредена вода
         </div>
       </div>
     </div>
@@ -1564,112 +1540,24 @@ body {
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">3</div>
-        <div class="faq-q-text">Мога ли да приемам GANS заедно с лекарства?</div>
+        <div class="faq-q-text">Мога ли да използвам GANS, ако приемам лекарства?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        При прием на медикаменти се препоръчва <strong>консултация с лекар</strong> преди започване на употреба на GANS продукти. GANS не е лекарство, но е важно специалистът да е информиран.<br><br>
-        Свържете се с нас за повече информация:
-        <div class="highlight"><strong>gospodin.minev@abv.bg</strong> | <strong>skylab.bg/ap/181/</strong></div>
+        При прием на медикаменти се посъветвайте с лекаря си, преди да започнете. GANS не е лекарство, но е важно специалистът да е информиран.<br><br>
+        Въпроси: <a href="mailto:gospodin.minev@abv.bg" style="color:var(--blue2);font-weight:700;">gospodin.minev@abv.bg</a>
       </div>
     </div>
 
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q">
         <div class="faq-q-num">4</div>
-        <div class="faq-q-text">Подходящи ли са GANS продуктите за бременни жени?</div>
+        <div class="faq-q-text">Подходящи ли са GANS продуктите при бременност?</div>
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        При бременност или кърмене се препоръчва <strong>консултация с лекар</strong> преди употреба на каквито и да е хранителни добавки, включително GANS продукти.<br><br>
-        За персонален съвет:
-        <div class="highlight"><strong>gospodin.minev@abv.bg</strong></div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ══ SECTION: SYNERGY ══ -->
-<div class="faq-section" id="cat-synergy">
-  <div class="section-title">🧩 Как продуктите работят заедно</div>
-  <div class="faq-list">
-
-    <div class="faq-item" onclick="toggle(this)">
-      <div class="faq-q">
-        <div class="faq-q-num">1</div>
-        <div class="faq-q-text">Схема на 5-те продукта — основа и надстройка</div>
-        <div class="faq-arrow">⌄</div>
-      </div>
-      <div class="faq-a">
-        Продуктите са наредени в два слоя:<br><br>
-        <strong>🏗️ ОСНОВА — за всеки:</strong><br>
-        <span class="ptag ptag-b">EXTRA HEALTH</span> — детоксикира тялото, укрепва имунитета, въвежда клетъчен ред<br>
-        <span class="ptag ptag-p">EMOTION BALANCE</span> — успокоява нервната система, балансира стреса и съня<br><br>
-        <strong>🎯 НАДСТРОЙКА — по специфична нужда:</strong><br>
-        <span class="ptag ptag-g">MOVE COMPLEX</span> — стави, кръст, движение<br>
-        <span class="ptag ptag-o">CEREBRO</span> — концентрация, фокус (по-млади и активни хора)<br>
-        <span class="ptag ptag-y">G-24</span> — глюкозен метаболизъм, яснота на ума (55+)<br><br>
-        <div class="highlight">Надстройката работи върху здрава основа. Без Extra Health и Emotion Balance специализираните продукти дават ограничен ефект — тялото трябва да е в баланс, за да може да се самовъзстановява там, където е нужно.</div>
-      </div>
-    </div>
-
-    <div class="faq-item" onclick="toggle(this)">
-      <div class="faq-q">
-        <div class="faq-q-num">2</div>
-        <div class="faq-q-text">Защо Extra Health е „основата" за всичко?</div>
-        <div class="faq-arrow">⌄</div>
-      </div>
-      <div class="faq-a">
-        Extra Health работи на клетъчно ниво — преструктурира водата в тялото и подпомага детоксикацията. Когато клетките са добре хидратирани и очистени, те приемат по-ефективно сигналите от останалите GANS продукти.<br><br>
-        Без тази основа:<br>
-        ● Move Complex помага по-бавно — ставите се нуждаят от чиста клетъчна среда<br>
-        ● Cerebro и G-24 имат по-слаб ефект — мозъкът е силно зависим от клетъчния баланс<br>
-        ● Emotion Balance действа, но без клетъчния ред на Extra Health — по-ограничено<br><br>
-        <div class="highlight">Extra Health е не просто продукт — той е предпоставка за пълния ефект на останалите.</div>
-      </div>
-    </div>
-
-    <div class="faq-item" onclick="toggle(this)">
-      <div class="faq-q">
-        <div class="faq-q-num">3</div>
-        <div class="faq-q-text">Защо G-24 изисква Extra Health + Emotion Balance като основа?</div>
-        <div class="faq-arrow">⌄</div>
-      </div>
-      <div class="faq-a">
-        Тялото е свързана система — проблем в един орган засяга всичко останало. G-24 работи на ниво глюкозен метаболизъм и мозъчна функция, но за да даде пълен резултат, тялото първо трябва да е в баланс.<br><br>
-        <strong>Extra Health</strong> въвежда клетъчния ред — детоксикира и подготвя вътрешната среда.<br>
-        <strong>Emotion Balance</strong> успокоява нервната система — хроничният стрес нарушава глюкозния метаболизъм директно.<br><br>
-        След като тези две условия са изпълнени — <strong>G-24 работи там, където трябва.</strong><br><br>
-        <div class="highlight">G-24 без основа е като да поливате цвете в почва, която не е подготвена. Основата не е допълнение — тя е условие.</div>
-      </div>
-    </div>
-
-    <div class="faq-item" onclick="toggle(this)">
-      <div class="faq-q">
-        <div class="faq-q-num">4</div>
-        <div class="faq-q-text">Move Complex + Extra Health — защо заедно?</div>
-        <div class="faq-arrow">⌄</div>
-      </div>
-      <div class="faq-a">
-        Move Complex се фокусира директно върху ставите, хрущяла и сухожилията. Extra Health подобрява кръвообращението и детоксикира — което ускорява доставката на хранителни вещества до ставните тъкани.<br><br>
-        Резултатът: Move Complex работи в по-добра вътрешна среда → по-бързо и по-устойчиво облекчение.<br><br>
-        <div class="highlight" style="border-left-color:var(--grn);background:rgba(31,206,110,0.08)">Move Complex е за Вашите стави. Но тялото е свързана система — Extra Health създава клетъчната основа, без която ставите ще се възстановят много по-бавно.</div>
-      </div>
-    </div>
-
-    <div class="faq-item" onclick="toggle(this)">
-      <div class="faq-q">
-        <div class="faq-q-num">5</div>
-        <div class="faq-q-text">Extra Health + Emotion Balance — синергията на ума и тялото</div>
-        <div class="faq-arrow">⌄</div>
-      </div>
-      <div class="faq-a">
-        Умът и тялото не са разделени системи. Хроничният стрес повишава кортизола → нарушава имунитета → забавя клетъчното възстановяване. Extra Health работи на физическо ниво, Emotion Balance — на нервно и емоционално.<br><br>
-        Заедно те затварят цикъла:<br>
-        ● По-малко стрес → по-добра детоксикация<br>
-        ● По-добра детоксикация → по-спокойна нервна система<br><br>
-        <div class="highlight"><em>Когато умът е спокоен — тялото е здраво. Когато тялото е здраво — умът е спокоен.</em></div>
+        При бременност или кърмене се посъветвайте с лекаря си, преди да започнете.<br><br>
+        Въпроси: <a href="mailto:gospodin.minev@abv.bg" style="color:var(--blue2);font-weight:700;">gospodin.minev@abv.bg</a>
       </div>
     </div>
 
@@ -1689,10 +1577,10 @@ body {
       </div>
       <div class="faq-a">
         Можете да поръчате по два начина:<br><br>
-        🌐 <strong>Онлайн:</strong> Директно чрез личния линк на партньора:<br>
-        <div class="highlight"><strong>skylab.bg/magazin/ap/181/</strong><br>или сканирайте QR кода</div>
-        📞 <strong>Лично:</strong> Свържете се с Господин Минев:<br>
-        <div class="highlight"><strong>gospodin.minev@abv.bg</strong><br><strong>linktr.ee/gospodinminev</strong></div>
+        🌐 <strong>Онлайн</strong> — чрез личния ми партньорски линк:<br>
+        <div class="highlight"><a href="https://skylab.bg/magazin/ap/181/" target="_blank" onclick="trackButtonClick('shop-faq')" style="color:var(--blue2);font-weight:700;">skylab.bg/magazin/ap/181/</a></div>
+        📞 <strong>Лично</strong> — свържете се с мен:<br>
+        <div class="highlight"><a href="https://m.me/100004993623972" target="_blank" onclick="trackButtonClick('messenger-faq')" style="color:var(--blue2);font-weight:700;">пишете ми в Messenger</a><br><a href="mailto:gospodin.minev@abv.bg" style="color:var(--blue2);font-weight:700;">gospodin.minev@abv.bg</a><br><a href="https://linktr.ee/gospodinminev" target="_blank" style="color:var(--blue2);font-weight:700;">linktr.ee/gospodinminev</a></div>
       </div>
     </div>
 
@@ -1703,9 +1591,9 @@ body {
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        Актуалните цени можете да намерите на официалния сайт:<br><br>
-        <div class="highlight"><strong>skylab.bg/magazin/ap/181/</strong></div>
-        За информация за промоции и специални оферти се свържете директно с партньора.
+        Актуалните цени са на официалния сайт:<br><br>
+        <div class="highlight"><a href="https://skylab.bg/magazin/ap/181/" target="_blank" onclick="trackButtonClick('shop-faq')" style="color:var(--blue2);font-weight:700;">skylab.bg/magazin/ap/181/</a></div>
+        За промоции и специални оферти — свържете се с мен.
       </div>
     </div>
 
@@ -1716,8 +1604,8 @@ body {
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        Да, SKYLAB Industries доставя до цяла България. За повече информация относно условията на доставка и плащане:<br><br>
-        <div class="highlight"><strong>skylab.bg/magazin/ap/181/</strong></div>
+        Да, SKYLAB Industries доставя до цяла България. Условията за доставка и плащане:<br><br>
+        <div class="highlight"><a href="https://skylab.bg/magazin/ap/181/" target="_blank" onclick="trackButtonClick('shop-faq')" style="color:var(--blue2);font-weight:700;">skylab.bg/magazin/ap/181/</a></div>
       </div>
     </div>
 
@@ -1728,18 +1616,16 @@ body {
         <div class="faq-arrow">⌄</div>
       </div>
       <div class="faq-a">
-        Да! Доставяме в следните държави:<br><br>
+        Да — доставка в 25+ държави в Европа:<br><br>
         🇦🇹 Австрия &nbsp; 🇧🇪 Белгия &nbsp; 🇧🇬 България &nbsp; 🇩🇪 Германия &nbsp; 🇬🇷 Гърция<br>
         🇩🇰 Дания &nbsp; 🇪🇪 Естония &nbsp; 🇮🇪 Ирландия &nbsp; 🇪🇸 Испания &nbsp; 🇮🇹 Италия<br>
         🇨🇾 Кипър &nbsp; 🇱🇻 Латвия &nbsp; 🇱🇹 Литва &nbsp; 🇱🇮 Лихтенщайн &nbsp; 🇱🇺 Люксембург<br>
         🇲🇹 Малта &nbsp; 🇳🇱 Нидерландия &nbsp; 🇵🇱 Полша &nbsp; 🇵🇹 Португалия &nbsp; 🇷🇴 Румъния<br>
-        🇸🇰 Словакия &nbsp; 🇸🇮 Словения &nbsp; 🇺🇳 Унгария &nbsp; 🇫🇮 Финландия &nbsp; 🇫🇷 Франция<br>
+        🇸🇰 Словакия &nbsp; 🇸🇮 Словения &nbsp; 🇭🇺 Унгария &nbsp; 🇫🇮 Финландия &nbsp; 🇫🇷 Франция<br>
         🇭🇷 Хърватия &nbsp; 🇨🇿 Чехия &nbsp; 🇨🇭 Швейцария &nbsp; 🇸🇪 Швеция<br><br>
-        <div class="highlight">За поръчка и доставка: <strong>skylab.bg/ap/181/</strong></div>
+        <div class="highlight">За поръчка и доставка: <a href="https://skylab.bg/magazin/ap/181/" target="_blank" onclick="trackButtonClick('shop-faq')" style="color:var(--blue2);font-weight:700;">skylab.bg/magazin/ap/181/</a></div>
       </div>
     </div>
-
-    
 
   </div>
 </div>
@@ -1786,11 +1672,6 @@ body {
   <a href="https://www.facebook.com/profile.php?id=61578697514413" target="_blank" class="vcard-item">
     <div class="vcard-ico" style="background:rgba(24,119,242,0.15);color:#1877F2;">&#128100;</div>
     <div class="vcard-info"><div class="vcard-label">Facebook</div><div class="vcard-val">Профил на Господин Минев</div></div>
-    <div class="vcard-arrow">&#8250;</div>
-  </a>
-  <a href="https://wa.me/?text=Здравейте%2C%20интересувам%20се%20от%20GANS%20продуктите." target="_blank" class="vcard-item">
-    <div class="vcard-ico" style="background:rgba(37,211,102,0.15);color:#25D366;">&#128172;</div>
-    <div class="vcard-info"><div class="vcard-label">WhatsApp</div><div class="vcard-val">Пишете ми директно</div></div>
     <div class="vcard-arrow">&#8250;</div>
   </a>
   <a href="mailto:gospodin.minev@abv.bg" class="vcard-item">
@@ -2625,12 +2506,12 @@ function renderProductCard(winner, pct, result) {
 function renderCombo(result) {
   var comboEl = document.getElementById('result-combo');
 
-  // ── G-24 winner → ЗАДЪЛЖИТЕЛНА основа Extra Health + Emotion Balance ──
+  // ── G-24 winner → силно препоръчителна комбинация с Extra Health + Emotion Balance ──
   if (result.g24Foundation && result.winner === 'g24') {
     var ex = PRODUCT_DATA['extra'];
     var em = PRODUCT_DATA['emotion'];
     var ghtml = '<div class="combo-card">'
-      + '<div class="combo-label">Основата, без която G-24 не работи пълноценно</div>'
+      + '<div class="combo-label">Силно препоръчвам заедно с G-24</div>'
       + '<div class="combo-product">'
       + '<div class="combo-dot" style="background:' + ex.color + '"></div>'
       + '<div><div class="combo-name">' + ex.name + '</div>'
@@ -2642,7 +2523,7 @@ function renderCombo(result) {
       + '<div class="combo-sub">' + em.tag + '</div></div>'
       + '</div>'
       + '<div style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.7;">'
-      + 'Тялото е свързана система — проблем в един орган засяга всичко останало. G-24 работи на ниво глюкозен метаболизъм и мозъчна функция, но за да даде пълен резултат, тялото първо трябва да е в баланс. Extra Health въвежда клетъчния ред, Emotion Balance успокоява нервната система — след това G-24 работи там, където трябва.'
+      + 'G-24 може да се ползва и самостоятелно, но в комбинация с Extra Health и Emotion Balance ефектът му е по-силен. Глюкозният метаболизъм зависи от цялото тяло — включително от стреса, който пряко влияе върху него.'
       + '</div>'
       + '</div>';
     comboEl.innerHTML = ghtml;
@@ -3185,7 +3066,7 @@ function showCat(id, btn) {
 
 // „Започнете от тези 3" — отваря категория + конкретен въпрос
 function openFaq(catId, idx) {
-  var order = ['general', 'products', 'usage', 'combos', 'safety', 'synergy', 'order'];
+  var order = ['general', 'products', 'usage', 'combos', 'safety', 'order'];
   var btn = document.querySelectorAll('.cat-btn')[order.indexOf(catId)];
   if (btn) showCat(catId, btn);
   var items = document.querySelectorAll('#cat-' + catId + ' .faq-item');
