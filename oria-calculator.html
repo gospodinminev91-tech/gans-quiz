@@ -691,8 +691,10 @@
     try{
       if(sessionStorage.getItem('oria_viewed'))return;
       sessionStorage.setItem('oria_viewed','1');
+      // ?src= етикет (QR кодове от събития) — само букви, цифри и тире
+      var _src='';try{_src=(new URLSearchParams(location.search).get('src')||'').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,30);}catch(e){}
       _sb.from('oria_clicks').insert({
-        button:_sharedVisit?'view-shared':'view',
+        button:_sharedVisit?'view-shared':('view'+(_src?'-'+_src:'')),
         people:parseInt($id('people').value),
         liters:parseFloat($id('liters').value),
         method:$id('method').value
