@@ -147,6 +147,23 @@ body {
   min-height: 48px;
 }
 .answer-btn:hover  { border-color: var(--border-sel); background: var(--card2); }
+
+/* Екран с категориите */
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.cat-card {
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 6px;
+  background: var(--card); border: 2px solid var(--border); border-radius: var(--radius);
+  padding: 18px 10px 16px; text-align: center; cursor: pointer; font-family: inherit; color: var(--text);
+  transition: border-color .15s, background .15s, transform .1s; min-height: 132px;
+}
+.cat-card:hover  { border-color: var(--border-sel); background: var(--card2); }
+.cat-card:active { transform: scale(0.98); }
+.cat-card.selected { border-color: var(--accent); background: rgba(240,165,0,0.06); }
+.cat-wide { grid-column: 1 / -1; min-height: 0; display: grid; grid-template-columns: auto 1fr; column-gap: 14px; row-gap: 2px; align-items: center; text-align: left; padding: 14px 16px; }
+.cat-wide .cat-ico { grid-row: 1 / span 2; }
+.cat-ico  { font-size: 30px; line-height: 1; }
+.cat-name { font-size: 15px; font-weight: 800; line-height: 1.3; }
+.cat-sub  { font-size: 12px; color: var(--muted2); line-height: 1.45; }
 .answer-btn.selected { border-color: var(--accent); background: rgba(240,165,0,0.06); }
 
 /* ── TEXT INPUT ── */
@@ -799,6 +816,23 @@ body {
     <button class="btn-start" id="btn-start" onclick="startQuiz()">
       Открийте своя профил →
     </button>
+  </div>
+
+  <!-- ══ КАТЕГОРИИ — втори екран (05.10.2026): изборът = main_concern, определя главния продукт ══ -->
+  <div class="page" id="p-category">
+    <button class="btn-back" onclick="showPage('p-welcome')">← Назад</button>
+    <div style="text-align:center;margin:8px 0 22px;">
+      <div class="welcome-badge">✦ Вашият профил</div>
+      <h2 style="font-size:clamp(24px,6vw,32px);font-weight:900;line-height:1.2;margin:14px 0 10px;color:var(--text);">Кое е най-близко<br><em style="color:var(--grn);font-style:normal;">до Вас?</em></h2>
+      <p style="font-size:14px;color:var(--muted2);line-height:1.6;max-width:360px;margin:0 auto;">Изберете една област — от нея тръгва Вашият профил.</p>
+    </div>
+    <div class="cat-grid">
+      <button class="cat-card" onclick="selectCategory(0)"><span class="cat-ico">🧘</span><span class="cat-name">Емоции и сън</span><span class="cat-sub">Стрес, напрежение, неспокоен сън</span></button>
+      <button class="cat-card" onclick="selectCategory(1)"><span class="cat-ico">🦵</span><span class="cat-name">Болки и движение</span><span class="cat-sub">Стави, кръст, скованост</span></button>
+      <button class="cat-card" onclick="selectCategory(2)"><span class="cat-ico">🛡️</span><span class="cat-name">Умора и имунитет</span><span class="cat-sub">Липса на енергия, чести боледувания</span></button>
+      <button class="cat-card" onclick="selectCategory(3)"><span class="cat-ico">🧠</span><span class="cat-name">Ум и памет</span><span class="cat-sub">Концентрация, памет, мъгла в главата</span></button>
+      <button class="cat-card cat-wide" onclick="selectCategory(4)"><span class="cat-ico">☑️</span><span class="cat-name">Нищо конкретно — профилактика</span><span class="cat-sub">Искам да поддържам тялото в добра форма</span></button>
+    </div>
   </div>
 
   <!-- ══ ВЪПРОСИ ══ -->
@@ -1996,11 +2030,12 @@ var PROMO_LINK   = 'https://www.facebook.com/profile.php?id=61578697514413';
   byId['symptoms'].sub = 'Отбележете всичко, което Ви засяга — включително основното.';
   byId['name'].q = 'Как да Ви наричаме в профила?';
   byId['name'].sub = 'По желание — може да оставите полето празно.';
-  var ORDER = ['main_concern', 'symptoms', 'for_whom', 'age', 'duration', 'sleep', 'stress', 'movement',
+  // main_concern НЕ е въпрос в списъка — избира се на отделния екран с категориите (p-category)
+  var ORDER = ['symptoms', 'for_whom', 'age', 'duration', 'sleep', 'stress', 'movement',
     'immunity', 'skin', 'digestion', 'energy', 'focus_type', 'lifestyle', 'water', 'experience',
     'tried_before', 'oncology', 'name'];
   var reordered = ORDER.filter(function(id) { return byId[id]; }).map(function(id) { return byId[id]; });
-  if (reordered.length === QUESTIONS.length + 1) {
+  if (reordered.length === QUESTIONS.length) {
     QUESTIONS.length = 0;
     reordered.forEach(function(q) { QUESTIONS.push(q); });
   }
@@ -2037,14 +2072,23 @@ function startQuiz() {
   state.history      = [];
   state.result       = null;
   state.progressRowId = null;
-  showPage('p-quiz');
-  renderQuestion();
+  document.querySelectorAll('#p-category .cat-card').forEach(function(c) { c.classList.remove('selected'); });
+  showPage('p-category');
   // Tracking отпадане — insert ред при старт на теста
   var pid = genUUID();
   state.progressRowId = pid;
   _supabase.from('quiz_progress_v4').insert({ id: pid, last_question: 0, completed: false }).then(function(r) {
     if (r.error) console.warn('progress insert:', r.error.message);
   });
+}
+
+// Екранът с категориите → записва main_concern и отваря въпросите
+function selectCategory(i) {
+  document.querySelectorAll('#p-category .cat-card').forEach(function(c, j) { c.classList.toggle('selected', j === i); });
+  state.answers['main_concern'] = i;
+  state.qIndex  = 0;
+  state.history = [];
+  setTimeout(function() { showPage('p-quiz'); renderQuestion(); }, 150);
 }
 
 // =============================================================
@@ -2058,7 +2102,7 @@ function renderQuestion() {
   document.getElementById('q-counter').textContent    = 'Въпрос ' + (state.qIndex + 1) + ' от ' + total;
   document.getElementById('q-pct').textContent        = pct + '%';
   document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('btn-back').style.visibility = state.qIndex > 0 ? 'visible' : 'hidden';
+  document.getElementById('btn-back').style.visibility = 'visible';
   document.getElementById('q-badge').textContent      = q.badge || '';
   document.getElementById('q-title').textContent      = q.q;
   document.getElementById('q-sub').textContent        = q.sub || '';
@@ -2282,7 +2326,7 @@ function goNext() {
 }
 
 function goBack() {
-  if (state.history.length === 0) return;
+  if (state.history.length === 0) { showPage('p-category'); return; }
   state.qIndex = state.history.pop();
   renderQuestion();
 }
