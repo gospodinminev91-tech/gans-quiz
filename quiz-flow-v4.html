@@ -875,6 +875,7 @@ body {
 
     <div class="result-product-name" id="result-product-name"></div>
     <div class="result-product-tag"  id="result-product-tag"></div>
+    <div id="result-why-line" style="display:none;max-width:440px;margin:10px auto 18px;text-align:center;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,0.72);"></div>
 
     <!-- Наблюдения -->
     <div class="result-section">
@@ -1823,6 +1824,79 @@ if (typeof computeFinalScores === 'function') {
   };
 }
 
+// ── Скоринг v6 (05.10.2026) — основното оплакване (main_concern) определя главния продукт ──
+// 0 Емоции и сън → Emotion · 1 Болки и движение → Move · 2 Умора и имунитет → Extra
+// 3 Ум и памет → Cerebro (под 55) / G-24 (55+); при онкология → най-силният от основните три
+// 4 Профилактика → Extra Health. Точките (v5) решават само допълнението.
+// Без main_concern (стари записи по ?id=) → чистата v5 логика.
+if (typeof computeFinalScores === 'function') {
+  var computeScoresV5 = computeFinalScores;
+  computeFinalScores = function(answers) {
+    var r = computeScoresV5(answers);
+    var mc = answers['main_concern'];
+    if (mc === undefined || mc === null) return r;
+
+    var p = r.pcts;
+    var noOnco = !r.noCerebroG24;
+    var ageExact = parseInt(answers['age_exact'], 10);
+    var is55 = !isNaN(ageExact) ? ageExact >= 55 : answers['age'] === 'over55';
+    var mindProd = is55 ? 'g24' : 'cerebro';
+    var mindPct = Math.max(p.cerebro || 0, p.g24 || 0);
+    var sym = answers['symptoms'] || [];
+    var mindSym = sym.some(function(k) { return k === 'concentration' || k === 'memory_decline' || k === 'brain_fog'; });
+    var realMind = mindSym || answers['focus_type'] === 1 || answers['focus_type'] === 2;
+    var bestMain = ['extra', 'emotion', 'move'].sort(function(a, b) { return p[b] - p[a]; })[0];
+
+    var winner = ['emotion', 'move', 'extra', null, 'extra'][mc];
+    if (mc === 3) winner = noOnco ? mindProd : (p[bestMain] > 0 ? bestMain : 'extra');
+
+    // Допълнение: най-силната ДРУГА група със сигнал ≥ 30%
+    var cands = [];
+    ['extra', 'emotion', 'move'].forEach(function(k) { if (k !== winner) cands.push([k, p[k]]); });
+    if (noOnco && realMind && winner !== 'cerebro' && winner !== 'g24') cands.push([mindProd, mindPct]);
+    cands.sort(function(a, b) { return b[1] - a[1]; });
+    var runnerUp = (mc !== 4 && cands.length && cands[0][1] >= 30) ? cands[0][0] : null;
+
+    var pcts = { extra: p.extra, emotion: p.emotion, move: p.move, cerebro: 0, g24: 0 };
+    pcts[mindProd] = mindPct;
+    if (winner === 'cerebro' || winner === 'g24') pcts[winner] = Math.max(mindPct, 1);
+    var sorted = Object.keys(pcts).sort(function(a, b) { return pcts[b] - pcts[a]; });
+    sorted.splice(sorted.indexOf(winner), 1); sorted.unshift(winner);
+    return {
+      scores: r.scores, pcts: pcts, sorted: sorted, winner: winner,
+      runnerUp: runnerUp, isCombo: !!runnerUp,
+      g24Foundation: winner === 'g24', noCerebroG24: r.noCerebroG24
+    };
+  };
+}
+
+// „Защо" — едно изречение с думите на човека (под името на продукта)
+function buildWhyLine(result) {
+  var a = state.answers || {};
+  var mc = a['main_concern'];
+  if (mc === undefined || mc === null) return '';
+  var AREA = ['емоции и сън', 'болки и движение', 'умора и имунитет', 'ум и памет'];
+  var LBL = { stress_tension: 'стрес и напрежение', anxiety: 'тревожност', sleep_disorder: 'нарушен сън',
+    irritability: 'раздразнителност', knee_pain: 'болки в коленете', back_pain: 'болки в кръста',
+    shoulder_pain: 'болки в раменете', morning_stiffness: 'скованост сутрин', fatigue: 'умора',
+    frequent_illness: 'чести боледувания', skin_problems: 'проблеми с кожата',
+    digestion_problems: 'проблеми с храносмилането', concentration: 'трудна концентрация',
+    memory_decline: 'влошаваща се памет', brain_fog: 'мозъчна мъгла' };
+  var GRP = [['stress_tension','anxiety','sleep_disorder','irritability'],
+    ['knee_pain','back_pain','shoulder_pain','morning_stiffness'],
+    ['fatigue','frequent_illness','skin_problems','digestion_problems'],
+    ['concentration','memory_decline','brain_fog']];
+  var name = PRODUCT_DATA[result.winner] ? PRODUCT_DATA[result.winner].name : '';
+  if (mc === 4) return 'Посочихте, че искате профилактика — затова ' + name + ', основата за ежедневна грижа.';
+  var picked = (a['symptoms'] || []).filter(function(k) { return GRP[mc].indexOf(k) > -1; })
+    .map(function(k) { return LBL[k]; });
+  var line = 'Посочихте ' + AREA[mc] + ' като основно';
+  if (picked.length) line += ' и отбелязахте: ' + picked.join(', ');
+  if (mc === 3 && result.noCerebroG24) return line + '. Cerebro и G-24 не се препоръчват при онкологични заболявания — затова ' + name + '.';
+  if (mc === 3) return line + '. ' + (result.winner === 'g24' ? 'За възраст над 55 г. препоръчвам G-24.' : 'За възраст под 55 г. препоръчвам Cerebro.');
+  return line + ' — затова ' + name + '.';
+}
+
 // ── G-24 — без формулировки за превенция на заболяване (override тук, scoring-v4.js не се пипа) ──
 if (typeof PRODUCT_DATA !== 'undefined' && PRODUCT_DATA.g24) {
   PRODUCT_DATA.g24.tag  = 'Глюкозен метаболизъм · Яснота на ума · Енергиен баланс';
@@ -1897,6 +1971,39 @@ var PROMO_LINK   = 'https://www.facebook.com/profile.php?id=61578697514413';
       { text: '🆕 Нямам — за пръв път търся решение',          key: 'none', isNone: true }
     ]
   });
+})();
+
+// ── Тест v6 (05.10.2026): основното оплакване първо, името накрая ──
+// Като при преглед: първо „какво Ви тревожи", после насочените въпроси. Изборът определя главния продукт.
+(function() {
+  var byId = {};
+  QUESTIONS.forEach(function(q) { byId[q.id] = q; });
+  byId['main_concern'] = {
+    id: 'main_concern',
+    type: 'radio',
+    q: 'Какво Ви тревожи най-много?',
+    sub: 'Изберете едно — то ще бъде основата на препоръката.',
+    badge: '🎯 Основно',
+    answers: [
+      { text: '🧘 Емоции и сън — стрес, напрежение, неспокоен сън' },
+      { text: '🦵 Болки и движение — стави, кръст, скованост' },
+      { text: '🛡️ Умора и имунитет — липса на енергия, чести боледувания' },
+      { text: '🧠 Ум и памет — концентрация, памет, мъгла в главата' },
+      { text: '☑️ Нищо конкретно — искам профилактика' }
+    ]
+  };
+  byId['symptoms'].q = 'Кое още усещате?';
+  byId['symptoms'].sub = 'Отбележете всичко, което Ви засяга — включително основното.';
+  byId['name'].q = 'Как да Ви наричаме в профила?';
+  byId['name'].sub = 'По желание — може да оставите полето празно.';
+  var ORDER = ['main_concern', 'symptoms', 'for_whom', 'age', 'duration', 'sleep', 'stress', 'movement',
+    'immunity', 'skin', 'digestion', 'energy', 'focus_type', 'lifestyle', 'water', 'experience',
+    'tried_before', 'oncology', 'name'];
+  var reordered = ORDER.filter(function(id) { return byId[id]; }).map(function(id) { return byId[id]; });
+  if (reordered.length === QUESTIONS.length + 1) {
+    QUESTIONS.length = 0;
+    reordered.forEach(function(q) { QUESTIONS.push(q); });
+  }
 })();
 
 // =============================================================
@@ -2333,6 +2440,10 @@ function showResult() {
   var tagEl    = document.getElementById('result-product-tag');
   noticeEl.style.display = 'none';
   cardEl.style.display = '';
+  var whyEl = document.getElementById('result-why-line');
+  var whyTxt = buildWhyLine(result);
+  whyEl.textContent = whyTxt;
+  whyEl.style.display = (whyTxt && !isMaintenance) ? 'block' : 'none';
   if (isMaintenance) {
     nameEl.textContent = 'Тяло в добра форма';
     nameEl.style.color = '#1fce6e';
