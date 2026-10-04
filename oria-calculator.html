@@ -681,8 +681,11 @@
       if(['b15','b11','jug','tap','manual'].indexOf(m)>-1){$id('method').value=m;onMethodChange();}
       if(m==='manual'&&q.has('s')){var s=parseFloat(q.get('s'));if(s>=0)$id('manual-spend').value=s;}
       calc();
-      $id('shared-banner').classList.remove('hidden');
-      _sharedVisit=true;
+      // От здравния тест (?src=quiz) — попълнено с нормата, но НЕ е споделена сметка от близък
+      if((q.get('src')||'')!=='quiz'){
+        $id('shared-banner').classList.remove('hidden');
+        _sharedVisit=true;
+      }
     }catch(e){}
   })();
 

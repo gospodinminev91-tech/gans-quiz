@@ -886,6 +886,7 @@ body {
   <div class="page" id="p-result">
     <div class="result-logo">GANS · Здравен профил</div>
     <div class="result-greeting" id="result-greeting"></div>
+    <div style="text-align:center;margin:-6px 0 14px;"><a href="#" onclick="restartQuiz();return false;" style="font-size:13px;color:var(--muted2);text-decoration:underline;">↻ Направете теста отново</a></div>
     <div id="result-notice" style="display:none;background:rgba(255,179,71,0.08);border:1px solid rgba(255,179,71,0.35);border-radius:14px;padding:16px 18px;margin-bottom:18px;font-size:14px;line-height:1.65;color:rgba(255,255,255,0.88);"></div>
 
     <!-- CTA отгоре — директен линк към продукта -->
@@ -1106,6 +1107,11 @@ body {
       });
     })();
     </script>
+
+    <!-- ══ НАПРАВЕТЕ ТЕСТА ОТНОВО ══ -->
+    <div class="result-section">
+      <button onclick="restartQuiz()" style="width:100%;padding:13px 0;font-size:15px;font-weight:700;font-family:inherit;border:1px solid rgba(255,255,255,0.18);border-radius:10px;background:transparent;color:rgba(255,255,255,0.85);cursor:pointer;">↻ Направете теста отново — за себе си или за близък</button>
+    </div>
 
     <!-- ══ СПОДЕЛЯНЕ — изпрати теста на близък ══ -->
     <div class="result-section" id="share-quiz">
@@ -2082,6 +2088,25 @@ function startQuiz() {
   });
 }
 
+// Нов тест от резултатната страница: махаме ?id= от адреса (иначе презареждането
+// отваря стария резултат) и излизаме от режим „само за четене", за да се запише новият тест.
+function restartQuiz() {
+  state._readonlyMode = false;
+  state.result = null;
+  state.resultRowId = null;
+  var src = null;
+  try { src = sessionStorage.getItem('gans_src'); } catch (e) {}
+  try { history.replaceState(null, '', location.pathname + (src ? '?src=' + src : '')); } catch (e) {}
+  if (typeof _updateManifest === 'function') _updateManifest();
+  var pf = document.getElementById('phone-form'), ps = document.getElementById('pl-success'), pb = document.getElementById('pl-btn');
+  if (pf) { pf.reset(); pf.style.display = ''; }
+  if (ps) ps.style.display = 'none';
+  if (pb) { pb.disabled = false; pb.textContent = 'Да, пишете ми'; }
+  var pn = document.getElementById('pl-name'); if (pn) pn.value = '';
+  showSection('quiz');
+  showPage('p-welcome');
+}
+
 // Екранът с категориите → записва main_concern и отваря въпросите
 function selectCategory(i) {
   document.querySelectorAll('#p-category .cat-card').forEach(function(c, j) { c.classList.toggle('selected', j === i); });
@@ -2839,18 +2864,34 @@ function renderWaterNote(idx) {
     // А) Над 2 литра
     'Тялото Ви е добре хидратирано. Водата поддържа клетъчния метаболизъм, транспорта на хранителни вещества и отвеждането на отпадните продукти — всичко това работи оптимално при добра хидратация.',
     // Б) 1–2 литра
-    'Добра основа, но за повечето възрастни оптималното количество е около 1.5–2 литра дневно. При по-малко количество, умората, концентрацията и ставите са първите, които усещат разликата.',
+    'Добра основа — остава съвсем малко до нормата. При недостиг умората, концентрацията и ставите са първите, които усещат разликата.',
     // В) По-малко от 1 литър
     'Под 1 литър на ден тялото работи в условия на хронично обезводняване. Резултатът е спад в енергията, по-бавно мислене, напрежение в ставите и по-трудно възстановяване — дори когато всичко останало е наред.',
     // Г) Рядко пия вода съзнателно
     'Без достатъчно вода клетките не могат да функционират нормално — независимо от всичко останало, което правите за здравето си. Хроничното обезводняване засяга концентрацията, имунитета, ставите и кожата едновременно.'
   ];
   if (idx === undefined || idx === null || !notes[idx]) return;
-  // ORIA cross-sell при ниска хидратация (под 1л или рядко)
-  var oriaLink = (idx === 2 || idx === 3)
-    ? ' <a href="oria-calculator.html" style="color:var(--blue2);text-decoration:none;font-weight:700;">Вижте колко вода всъщност Ви трябва →</a>'
-    : '';
-  text.innerHTML = notes[idx] + oriaLink;
+  // 06.10.2026: норма → разлика → лесна стъпка → мост към калкулатора ORIA (само при под 1 л / рядко)
+  var NORM = '<div style="margin-top:12px;padding:10px 12px;background:rgba(26,144,255,0.08);border-radius:10px;">'
+    + '📏 <strong>Ориентировъчната норма</strong> е около <strong>2 л течности на ден за жени и 2,5 л за мъже</strong> '
+    + '<span style="opacity:.7">(по препоръките на EFSA — Европейския орган за безопасност на храните)</span>.';
+  var GAP = [
+    '',
+    '<br>При 1–2 литра <strong>Ви липсва около половин литър на ден</strong>.',
+    '<br>Сега пиете под 1 литър — <strong>липсват Ви около 1–1,5 литра на ден</strong>.',
+    '<br>Пиете вода случайно, а тялото има нужда от <strong>около 2 литра всеки ден</strong>.'
+  ];
+  var html = notes[idx];
+  if (idx >= 1) {
+    html += NORM + GAP[idx] + '</div>';
+  }
+  if (idx === 2 || idx === 3) {
+    html += '<div style="margin-top:10px;">👉 Започнете с чаша вода сутрин и бутилка на бюрото.</div>'
+      + '<div style="margin-top:12px;">Ако ще пиете по 2 литра на ден, има значение и <strong>каква</strong> вода пиете. '
+      + '<a href="oria-calculator.html?p=1&l=2&src=quiz" onclick="trackButtonClick(\'oria-water\')" '
+      + 'style="color:var(--blue2);text-decoration:none;font-weight:700;">Сметнете колко струва чиста, заредена вода за Вас и семейството — в сравнение с бутилираната →</a></div>';
+  }
+  text.innerHTML = html;
   el.style.display = 'block';
 }
 
