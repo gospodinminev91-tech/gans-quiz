@@ -1943,6 +1943,10 @@ if (typeof PRODUCT_DATA !== 'undefined' && PRODUCT_DATA.g24) {
   PRODUCT_DATA.g24.desc = 'Специализирана подкрепа на глюкозния метаболизъм и мозъчната функция. Създава условия тялото да поддържа енергийния баланс и умствената яснота с напредване на възрастта.';
   PRODUCT_DATA.g24.reviews = [];
 }
+// ── Move Complex — без „намалява болката" (06.10.2026; override, scoring-v4.js не се пипа) ──
+if (typeof PRODUCT_DATA !== 'undefined' && PRODUCT_DATA.move) {
+  PRODUCT_DATA.move.desc = 'Подкрепа на опорно-двигателната система — стави, сухожилия и хрущяли. Създава условия тъканите да се възстановяват и движението да е по-свободно.';
+}
 
 if (typeof WHY_TEXT !== 'undefined') {
   WHY_TEXT.extra = {
@@ -2468,6 +2472,9 @@ function showResult() {
   renderProductCard(result.winner, result.pcts[result.winner], result);
 
   // Combo / G-24 задължителна основа (Extra Health + Emotion Balance)
+  // Първо се скрива — иначе след „Направете теста отново" остава картата от предишния резултат
+  var comboBox = document.getElementById('result-combo');
+  if (comboBox) { comboBox.innerHTML = ''; comboBox.style.display = 'none'; }
   if ((result.isCombo && result.runnerUp) || (result.g24Foundation && result.winner === 'g24')) {
     renderCombo(result);
   }
