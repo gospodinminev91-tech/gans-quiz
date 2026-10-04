@@ -1739,6 +1739,90 @@ if (typeof PRODUCT_LINKS !== 'undefined') {
 }
 
 // ── WHY_TEXT v2 — „огледало → механизъм → живот → простота" (сесия 19; override тук, за да не пипаме scoring-v4.js) ──
+// ── Скоринг v5 (04.10.2026) — замества computeFinalScores от scoring-v4.js ──
+// 1) Без точки за възраст — възрастта само избира Cerebro (под 55) или G-24 (55+).
+// 2) Cerebro и G-24 са една група „Ум и памет" с честен максимум (17).
+// 3) Победителят е първо от основните три (Extra, Emotion, Move). „Ум и памет" печели само
+//    ако е поне толкова силна (при отбелязан симптом за ума) или с 15 пункта по-силна
+//    (ако сигналът е само от отговора за фокус). Иначе — „По избор", при сигнал от 30%.
+// 4) Енергията — по одобрената матрица. 5) „Над 2 години" — +1 само за групите със симптом.
+// 6) Седящ начин на живот → +1 Move Complex.
+if (typeof computeFinalScores === 'function') {
+  computeFinalScores = function(answers) {
+    var MAXN = { extra: 24, emotion: 21, move: 17, mind: 17 };
+    var GROUP = { stress_tension:'emotion', anxiety:'emotion', sleep_disorder:'emotion', irritability:'emotion',
+      knee_pain:'move', back_pain:'move', shoulder_pain:'move', morning_stiffness:'move',
+      fatigue:'extra', frequent_illness:'extra', skin_problems:'extra', digestion_problems:'extra',
+      concentration:'mind', memory_decline:'mind', brain_fog:'mind' };
+    var PTS = { stress_tension:3, anxiety:4, sleep_disorder:3, irritability:2, knee_pain:3, back_pain:3,
+      shoulder_pain:3, morning_stiffness:2, fatigue:3, frequent_illness:3, skin_problems:2,
+      digestion_problems:2, concentration:3, memory_decline:4, brain_fog:2 };
+    var s = { extra: 0, emotion: 0, move: 0, mind: 0 };
+    var sym = answers['symptoms'] || [];
+    var hasGroup = {};
+    sym.forEach(function(k) { if (PTS[k]) { s[GROUP[k]] += PTS[k]; hasGroup[GROUP[k]] = true; } });
+    var isProphylactic = sym.length === 0 || (sym.length === 1 && sym[0] === 'none');
+    if (isProphylactic) s.extra += 6;
+    if (answers['duration'] === 3) Object.keys(hasGroup).forEach(function(g) { s[g] += 1; });
+    s.emotion += [0, 2, 3, 4][answers['sleep']] || 0;
+    s.emotion += [0, 0, 3, 4][answers['stress']] || 0;
+    s.move    += [0, 2, 3, 4][answers['movement']] || 0;
+    s.extra   += [0, 2, 3, 4][answers['immunity']] || 0;
+    s.extra   += [0, 2, 3, 4][answers['skin']] || 0;
+    s.extra   += [0, 1, 2, 3][answers['digestion']] || 0;
+    var en = answers['energy'];
+    if      (en === 1) { s.mind += 1; }
+    else if (en === 2) { s.mind += 2; }
+    else if (en === 3) { s.emotion += 1; s.mind += 2; }
+    else if (en === 4) { s.extra += 2; s.mind += 1; }
+    s.mind += [0, 4, 5, 2][answers['focus_type']] || 0;
+    if (answers['lifestyle'] === 2) s.move += 1;
+    if (answers['lifestyle'] === 3) s.extra += 1;
+
+    var noCerebroG24 = answers['oncology'] === 1;
+    if (noCerebroG24) s.mind = 0;
+
+    var pct = {};
+    Object.keys(s).forEach(function(k) { pct[k] = Math.min(100, Math.round(100 * s[k] / MAXN[k])); });
+
+    var ageExact = parseInt(answers['age_exact'], 10);
+    var is55 = !isNaN(ageExact) ? ageExact >= 55 : answers['age'] === 'over55';
+    var mindProd = is55 ? 'g24' : 'cerebro';
+    var mindSym  = sym.some(function(k) { return GROUP[k] === 'mind'; });
+    var realMind = mindSym || answers['focus_type'] === 1 || answers['focus_type'] === 2;
+    var main = ['extra', 'emotion', 'move'].sort(function(a, b) { return pct[b] - pct[a]; });
+
+    var winner = main[0], runnerUp = null;
+    var margin = mindSym ? 0 : 15;
+    var mindWins = !noCerebroG24 && realMind && pct.mind > 0 && pct.mind >= pct[main[0]] + margin;
+    if (isProphylactic && !(realMind && pct.mind >= pct.extra + 15)) mindWins = false;
+
+    if (mindWins) {
+      winner = mindProd;
+      if (pct[main[0]] >= 25) runnerUp = main[0];
+    } else if (isProphylactic) {
+      winner = 'extra';
+    } else if (!noCerebroG24 && realMind && pct.mind >= 30) {
+      runnerUp = mindProd;
+    } else if (pct[main[1]] > 0 && pct[main[0]] - pct[main[1]] <= 15) {
+      runnerUp = main[1];
+    }
+
+    // Формат, който очаква останалият код (pcts/scores за всичките 5 продукта)
+    var pcts = { extra: pct.extra, emotion: pct.emotion, move: pct.move, cerebro: 0, g24: 0 };
+    var scores = { extra: s.extra, emotion: s.emotion, move: s.move, cerebro: 0, g24: 0 };
+    pcts[mindProd] = pct.mind; scores[mindProd] = s.mind;
+    var sorted = Object.keys(pcts).sort(function(a, b) { return pcts[b] - pcts[a]; });
+    sorted.splice(sorted.indexOf(winner), 1); sorted.unshift(winner);
+
+    return {
+      scores: scores, pcts: pcts, sorted: sorted, winner: winner,
+      runnerUp: runnerUp, isCombo: !!runnerUp,
+      g24Foundation: winner === 'g24', noCerebroG24: noCerebroG24
+    };
+  };
+}
+
 // ── G-24 — без формулировки за превенция на заболяване (override тук, scoring-v4.js не се пипа) ──
 if (typeof PRODUCT_DATA !== 'undefined' && PRODUCT_DATA.g24) {
   PRODUCT_DATA.g24.tag  = 'Глюкозен метаболизъм · Яснота на ума · Енергиен баланс';
@@ -2530,8 +2614,9 @@ function renderCombo(result) {
   if (!runner) { comboEl.style.display = 'none'; return; }
   var prod = PRODUCT_DATA[runner];
 
+  var isMindAddon = (runner === 'cerebro' || runner === 'g24');
   var html = '<div class="combo-card">'
-    + '<div class="combo-label">Допълващ избор</div>'
+    + '<div class="combo-label">' + (isMindAddon ? 'По избор' : 'Допълващ избор') + '</div>'
     + '<div class="combo-product">'
     + '<div class="combo-dot" style="background:' + prod.color + '"></div>'
     + '<div><div class="combo-name">' + prod.name + '</div>'
